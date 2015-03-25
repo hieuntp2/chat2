@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Dota 2 Chat Hub</title>
+    <title>index</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.2 -->
     <link href="~/content/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -35,6 +35,7 @@
     <![endif]-->
 
     <script src="~/scripts/angular.min.js"></script>
+
     <script src="~/scripts/plugins/jquery/jquery-2.1.3.js"></script>
    
 
@@ -352,6 +353,7 @@
                 <!-- Main row -->
                 <div class="row">
                     @RenderBody()
+                    @RenderSection("dependencies", required: false)
                 </div><!-- /.row (main row) -->
             </section><!-- /.content -->
         </div><!-- /.content-wrapper -->
