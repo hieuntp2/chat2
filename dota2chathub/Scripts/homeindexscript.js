@@ -1,4 +1,12 @@
-﻿var app = angular.module('main_app', ['ngRoute']);
+﻿var app = angular.module("main_app", ['ngRoute']);
+
+app.config(function ($routeProvider) {
+    $routeProvider
+		.when('/searchtable', { controller: 'CompanyCtrl', templateUrl: 'views/searchtable.html' })
+		.when('/publicchat', { controller: 'chatboxcontroller', templateUrl: '../../PublicChat/Index' })
+        .when('/', { controller: 'chatboxcontroller', templateUrl: '../../PublicChat/Index' })    
+		
+});
 
 app.controller('modulecontroller', ['$scope', 'main_service', function ($scope, main_service) {
     var ctrll = this;
@@ -9,7 +17,7 @@ app.controller('modulecontroller', ['$scope', 'main_service', function ($scope, 
     }
 
     this.init = function () {
-        main_service.getmodule('../../PublicChat/Index', 'main_col_6');
+       // main_service.getmodule('../../PublicChat/Index', 'main_col_6');
     }
 }])
 
@@ -23,26 +31,32 @@ app.service('main_service', function ($http, $compile) {
 
             $("#" + div_insert + "").append(el);
 
-
         }).error(function () {
             alert("Lỗi khi lấy module " + address);
         });
     }
 })
 
-app.config(['$routeProvider',$routeProvider,
-  function ($routeProvider) {
-      $routeProvider.
-        when('/AddNewOrder', {
-            templateUrl: 'templates/add_order.html',
-            controller: 'AddOrderController'
-        }).
-        when('/ShowOrders', {
-            templateUrl: 'templates/show_orders.html',
-            controller: 'ShowOrdersController'
-        }).
-      when('../../publicchat/index', {
-          templateUrl: '/Module/PublicChat/BoxPublicChat.cshtml',
-          controller: 'chatboxcontroller'
-      })
-  }]);
+app.controller('chatboxcontroller', ['$http', '$scope', function ($http, $scope) {
+    var ctrll = this;
+    this.messages = [
+    {
+        name: 'hieu',
+        avatar: '',
+        time: 11,
+        content: 'message 1'
+    },
+    {
+        name: 'hieu2',
+        avatar: '2',
+        time: 11,
+        content: 'message 2'
+    }
+    ];
+
+    this.clickfunction = function () {
+        alert("OK");
+    }
+}])
+
+

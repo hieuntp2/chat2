@@ -1,17 +1,18 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+
 <script src="~/scripts/homeindexscript.js"></script>
 
 <div ng-app="main_app">
     <!-- Left col -->
     <section class="col-lg-3 connectedSortable" id="main_col_3_left"></section><!-- /.Left col -->
     <!--Miiddle collums-->
-    <ng-view class="col-lg-6 connectedSortable" ng-controller="modulecontroller as controller" id="main_col_6" ng-init="controller.init()">  
+    <div  class="col-lg-6 connectedSortable" ng-controller="modulecontroller as controller" id="main_col_6" ng-init="controller.init()">  
+        <div ng-view>
 
-        
-       
-    </ng-view>
+        </div> 
+    </div>
     
     <!--Miiddle collums-->
     <!-- right col (We are only adding the ID to make the widgets sortable)-->

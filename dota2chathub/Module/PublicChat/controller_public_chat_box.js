@@ -2,6 +2,7 @@
     angular.element('#public-chat-box').scope().addmessage('hieu', '../../Content/account_default.png', 'adfs');
 }
 
+var app = angular.module("main_app", []);
 app.controller('chatboxcontroller', ['$http', '$scope', function ($http, $scope) {
     var ctrll = this;
     this.messages = [
