@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using dota2chathub.Models;
+using Owin.Security.Providers.Steam;
 
 namespace dota2chathub
 {
@@ -63,6 +64,8 @@ namespace dota2chathub
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
+            app.UseSteamAuthentication("3C627B068B6CD1170B25D133C6ECED2C");
         }
     }
 }
