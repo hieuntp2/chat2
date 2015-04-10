@@ -243,7 +243,7 @@
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\baivietscripts.js" />
-    <Content Include="Scripts\homeindexscript.js" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.min.js" />
     <Content Include="Scripts\plugins\bootstrap-slider\bootstrap-slider.js" />
@@ -798,7 +798,7 @@
     <Content Include="Scripts\plugins\ckeditor\skins\moono\readme.md" />
     <Content Include="Scripts\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="Scripts\plugins\input-mask\phone-codes\phone-codes.json" />
-    <Content Include="Module\PublicChat\BoxPublicChat.html" />
+    <None Include="Module\PublicChat\BoxPublicChat.cshtml" />
     <Content Include="Views\templatebox.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
   </ItemGroup>

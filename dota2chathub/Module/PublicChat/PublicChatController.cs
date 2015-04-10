@@ -11,6 +11,7 @@ namespace dota2chathub.Module.PublicChat
         // GET: PublicChat
         public ActionResult Index()
         {
+            ViewBag.test = "acb";
             return PartialView("~/Module/PublicChat/BoxPublicChat.cshtml");
         }
     }
