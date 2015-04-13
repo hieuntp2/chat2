@@ -42,15 +42,11 @@ app.service('main_service', function ($http, $compile, $rootScope) {
         }).error(function () {
             alert("Lỗi khi lấy module " + address);
         });
-    }
-
-    // Reference the auto-generated proxy for the hub.
-    var chat = $.connection.ServerHub;
+    }    
 
     var proxy = null;
 
     var initialize = function () {
-
         //Getting the connection object
         connection = $.hubConnection();
 
@@ -61,23 +57,21 @@ app.service('main_service', function ($http, $compile, $rootScope) {
         connection.start();
 
         //Publishing an event when server pushes a greeting message
-        this.proxy.on('addNewMessageToPage', function (message) {
-            $rootScope.$emit("addNewMessageToPage", message);
+        this.proxy.on('acceptGreet', function (message) {
+            alert(message);
+            $rootScope.$emit("acceptGreet", message);
         });
-
     };
 
-    var send = function () {
+    var sendRequest = function () {
         //Invoking greetAll method defined in hub
         this.proxy.invoke('Send');
     };
 
     return {
         initialize: initialize,
-        send: send
+        sendRequest: sendRequest
     };
-
-
 })
 
 app.directive('priviteBox', function () {
@@ -100,41 +94,42 @@ app.directive('priviteBox', function () {
             }
             ];
 
-            $scope.addmessage = function (element) {
-                //var message = {};
-                //message.name = 'hieu';
-                //message.avatar = '';
-                //message.time =  12;
-                //message.content = 'this is new message';
+            $scope.sendmessage = function (element) {
+                main_service.sendRequest();
+            }
+
+            $scope.addmessage = function (username, message) {
+                var message = {};
+                message.name = username;
+                message.avatar = '';
+                message.time =  12;
+                message.content = message;
               
-                //$scope.messages.push(message);
+                $scope.messages.push(message);
                 
-                //$(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
-                main_service.send();
+                $(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
+                //main_service.send();
 
                 $('.chatboxbody').animate({
                     scrollTop: $('.chatboxbody').get(0).scrollHeight
                 }, 500);              
             }
 
+            $scope.greetAll = function () {
+                alert("greate all");    
+            }
+
             updateGreetingMessage = function (text) {
-                var message = {};
-                message.name = 'hieu';
-                message.avatar = '';
-                message.time = 12;
-                message.content = text;
-
-                alert("OK");
-
-                $scope.messages.push(message);
+                alert(message);
+                $scope.addmessage("hieu new",text);
             }
 
             main_service.initialize();
 
             //Updating greeting message after receiving a message through the event
-
-            $scope.$parent.$on("addNewMessageToPage", function (e, message) {
+            $scope.$parent.$on("acceptGreet", function (e, message) {
                 $scope.$apply(function () {
+                    alert(message);
                     updateGreetingMessage(message)
                 });
             });

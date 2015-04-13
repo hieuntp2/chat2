@@ -16,8 +16,8 @@ namespace dota2chathub.Module.PublicChat
         }
 
         public void Send()
-        {           
-            Clients.All.addNewMessageToPage("from server hub");
+        {
+            Clients.All.acceptGreet("from server hub");
         }
     }
 }
