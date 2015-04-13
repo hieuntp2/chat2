@@ -29,34 +29,62 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'main_service
 
     this.init = function () {
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
-        ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
     }
 }])
 
-app.service('main_service', function ($http, $compile) {
+app.service('main_service', function ($http, $compile, $rootScope) {
 
     this.getmodule = function (url, div_insert) {
         $http.get(url).success(function (data) {
 
             var el = $compile(data)($scope);
             $("#" + div_insert + "").append(el);
-
-            //var el = angular.element(data),
-            //compiled = $compile(el);
-
-            //$("#" + div_insert + "").append(el);
-
         }).error(function () {
             alert("Lỗi khi lấy module " + address);
         });
     }
+
+    // Reference the auto-generated proxy for the hub.
+    var chat = $.connection.ServerHub;
+
+    var proxy = null;
+
+    var initialize = function () {
+
+        //Getting the connection object
+        connection = $.hubConnection();
+
+        //Creating proxy
+        this.proxy = connection.createHubProxy('ServerHub');
+
+        //Starting connection
+        connection.start();
+
+        //Publishing an event when server pushes a greeting message
+        this.proxy.on('addNewMessageToPage', function (message) {
+            $rootScope.$emit("addNewMessageToPage", message);
+        });
+
+    };
+
+    var send = function () {
+        //Invoking greetAll method defined in hub
+        this.proxy.invoke('Send');
+    };
+
+    return {
+        initialize: initialize,
+        send: send
+    };
+
+
 })
 
 app.directive('priviteBox', function () {
     return {
-        restrict: 'E',       
-        controller: function ($scope, $http) {
-            var ctrll = this;
+        restrict: 'E',
+        scope: true,
+        controller: function ($scope, $http, main_service) {
             $scope.messages = [
             {
                 name: 'hieu',
@@ -72,11 +100,55 @@ app.directive('priviteBox', function () {
             }
             ];
 
-            $scope.clickfunction = function () {
-                alert("OK");
+            $scope.addmessage = function (element) {
+                //var message = {};
+                //message.name = 'hieu';
+                //message.avatar = '';
+                //message.time =  12;
+                //message.content = 'this is new message';
+              
+                //$scope.messages.push(message);
+                
+                //$(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
+                main_service.send();
+
+                $('.chatboxbody').animate({
+                    scrollTop: $('.chatboxbody').get(0).scrollHeight
+                }, 500);              
             }
+
+            updateGreetingMessage = function (text) {
+                var message = {};
+                message.name = 'hieu';
+                message.avatar = '';
+                message.time = 12;
+                message.content = text;
+
+                alert("OK");
+
+                $scope.messages.push(message);
+            }
+
+            main_service.initialize();
+
+            //Updating greeting message after receiving a message through the event
+
+            $scope.$parent.$on("addNewMessageToPage", function (e, message) {
+                $scope.$apply(function () {
+                    updateGreetingMessage(message)
+                });
+            });
         },
         controllerAs: 'controller'
     }
 });
+
+function autoscroll()
+{
+    $(".chatboxbody").scrollTop(1000);
+}
+
+
+
+
 

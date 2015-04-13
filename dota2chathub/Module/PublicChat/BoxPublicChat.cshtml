@@ -5,15 +5,14 @@
     <privite-box>
         <div class="box-header" style="cursor: move;">
             <i class="fa fa-comments-o"></i>
-            <h3 class="box-title">Chat</h3>
+            <h3 class="box-title">Public chat</h3>
             <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
                 <div class="btn-group" data-toggle="btn-toggle">
                     <button type="button" class="btn btn-default btn-sm active"><i class="fa fa-square text-green"></i></button>
                 </div>
             </div>
         </div>
-        <div class="box-body chat" id="public_chat_box">
-        @ViewBag.test
+        <div class="box-body chat chatboxbody" id="public_chat_box" style="max-height:350px; overflow-y: scroll;">    
             <!-- chat item -->
             <div class="item" ng-repeat="message in messages">
                 <img ng-src="{{message.avatar}}" alt="user image" class="online" />
@@ -23,29 +22,22 @@
                         {{message.name}}
                     </a>
                     {{message.content}}
-                </p>
-                <div class="attachment">
-                    <h4>Attachments:</h4>
-                    <p class="filename">
-                        Theme-thumbnail-image.jpg
-                    </p>
-                    <div class="pull-right">
-                        <button class="btn btn-primary btn-sm btn-flat">Open</button>
-                    </div>
-                </div><!-- /.attachment -->
+                </p>           
             </div>
             <!-- /.item -->
-
 
         </div><!-- /.chat -->
         <div class="box-footer">
             <div class="input-group">
                 <input class="form-control" id="txt_public_chat_input" placeholder="Type message..." />
                 <div class="input-group-btn">
-                    <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="controller.clickfunction()"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-success" onclick="autoscroll()" id="bt_public_chat_box_send" ng-click="addmessage()"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
         </div>
     </privite-box>
 </div><!-- /.box (chat box) -->
 <input type="hidden" id="displayname" />
+
+
+
