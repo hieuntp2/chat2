@@ -12,9 +12,10 @@ app.config(function ($routeProvider) {
 
 });
 
-app.controller('modulecontroller', ['$scope', '$http', '$compile', 'main_service', function ($scope, $http, $compile, main_service) {
+app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service', function ($scope, $http, $compile, hub_service) {
     var ctrll = this;
     this.modules = [];
+    hub_service.initialize();
 
     this.getmodule = function (address, id_div) {
         $http.get(address).success(function (data) {
@@ -32,7 +33,70 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'main_service
     }
 }])
 
-app.service('main_service', function ($http, $compile, $rootScope) {
+/////////////////////////////////////////////
+/////////// DIRECTIVE DEFINATION ////////////
+/////////////////////////////////////////////
+
+app.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which === 13) {
+                scope.$apply(function () {
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+app.directive('publicChat', function () {
+    return {
+
+        restrict: 'E',
+        scope: true,
+        controller: function ($scope, $http, hub_service) {
+            $scope.messages = [{ name: 'Server', avatar: '', content: 'This is the public chat room!' }];
+
+            $scope.sendmessage = function () {
+
+                // call a service to send a message to server
+                hub_service.sendRequest($("#txt_public_chat_input").val());
+                $("#txt_public_chat_input").val('');
+                $("#txt_public_chat_input").focus();
+            }
+
+            $scope.addmessage = function (messageobject) {               
+                var dt = new Date();
+                var message = {};
+
+                message.name = messageobject['name'];
+                message.avatar = messageobject['avatar'];
+                message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                message.content = messageobject['message'];
+
+                $scope.messages.push(message);
+
+                $(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
+                //hub_service.send();
+
+                $('.chatboxbody').animate({
+                    scrollTop: $('.chatboxbody').get(0).scrollHeight
+                }, 500);
+            }
+
+            // set the function will be excuted when server send a message to client
+            hub_service.receiveMessage($scope.addmessage);
+        },
+        controllerAs: 'controller'
+    }
+});
+
+///////////////////////////////////////////
+/////////// SERVICE DEFINATION ////////////
+///////////////////////////////////////////
+
+app.service('hub_service', function ($http, $compile, $rootScope, user_manage_service) {
 
     this.getmodule = function (url, div_insert) {
         $http.get(url).success(function (data) {
@@ -58,85 +122,97 @@ app.service('main_service', function ($http, $compile, $rootScope) {
 
         //Publishing an event when server pushes a greeting message
         this.proxy.on('acceptGreet', function (message) {
-            alert(message);
             $rootScope.$emit("acceptGreet", message);
         });
     };
 
-    var sendRequest = function () {
+    var receiveMessage = function (recevieMessageCallBack) {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('acceptGreet', function (message) {
+            $rootScope.$apply(function () {
+
+                var obj = $.parseJSON(message);                
+                var user = user_manage_service.getuser(obj.userid);
+
+                obj.linkavatar = user.avatar;
+                obj.name = user.name;
+                obj.avatar = user.avatar;
+
+                recevieMessageCallBack(obj);
+            });
+        });
+    }
+
+    var sendRequest = function (message) {
         //Invoking greetAll method defined in hub
-        this.proxy.invoke('Send');
+        this.proxy.invoke('PublicChatSend', message);
     };
 
     return {
         initialize: initialize,
-        sendRequest: sendRequest
+        sendRequest: sendRequest,
+        receiveMessage: receiveMessage
     };
 })
 
-app.directive('priviteBox', function () {
-    return {
-        restrict: 'E',
-        scope: true,
-        controller: function ($scope, $http, main_service) {
-            $scope.messages = [
+app.service('user_manage_service', function ($http, $compile, $rootScope) {
+    var listuser = [{
+        id: "1",
+        name: "service>hieu",
+        avatar: "../../content/account_default.png"
+    }];
+
+    this.adduser = function(userid, username, linkavatar)
+    {
+        // neu ton tai userid thi thoat ra
+        for (var i = 0; i < listuser.length; i++)
+        {
+            if(listuser[i].id == userid)
             {
-                name: 'hieu',
-                avatar: '',
-                time: 11,
-                content: 'message 1'
-            },
-            {
-                name: 'hieu2',
-                avatar: '2',
-                time: 11,
-                content: 'message 2'
+                return;
             }
-            ];
+        }
+        
+        // neu khong thi them vao
+        var user = {};
+        user.id = userid;
+        user.name = username;
+        user.avatar = linkavatar;
 
-            $scope.sendmessage = function (element) {
-                main_service.sendRequest();
-            }
-
-            $scope.addmessage = function (username, message) {
-                var message = {};
-                message.name = username;
-                message.avatar = '';
-                message.time =  12;
-                message.content = message;
-              
-                $scope.messages.push(message);
-                
-                $(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
-                //main_service.send();
-
-                $('.chatboxbody').animate({
-                    scrollTop: $('.chatboxbody').get(0).scrollHeight
-                }, 500);              
-            }
-
-            $scope.greetAll = function () {
-                alert("greate all");    
-            }
-
-            updateGreetingMessage = function (text) {
-                alert(message);
-                $scope.addmessage("hieu new",text);
-            }
-
-            main_service.initialize();
-
-            //Updating greeting message after receiving a message through the event
-            $scope.$parent.$on("acceptGreet", function (e, message) {
-                $scope.$apply(function () {
-                    alert(message);
-                    updateGreetingMessage(message)
-                });
-            });
-        },
-        controllerAs: 'controller'
+        listuser.push(user);
     }
-});
+
+    this.getusername = function(userid)
+    {
+        // neu ton tai userid thi thoat ra
+        for (var i = 0; i < listuser.length; i++) {
+            if (listuser[i].id == userid) {
+                return listuser[i].name;
+            }
+        }
+        return null;
+    }
+
+    this.getavatar = function (userid) {
+        // neu ton tai userid thi thoat ra
+        for (var i = 0; i < listuser.length; i++) {
+            if (listuser[i].id == userid) {
+                return listuser[i].avatar;
+            }
+        }
+        return null;
+    }
+
+    this.getuser = function (userid) {
+        // neu ton tai userid thi thoat ra
+        for (var i = 0; i < listuser.length; i++) {
+            if (listuser[i].id == userid) {
+                return listuser[i];
+            }
+        }
+        return null;
+    }
+})
 
 function autoscroll()
 {

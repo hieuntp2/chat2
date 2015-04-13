@@ -9,15 +9,32 @@ namespace dota2chathub.Module.PublicChat
 {
     [HubName("ServerHub")]
     public class ServerHub : Hub
-    {
-        public void Hello()
+    {     
+        ////////////////////////////////
+        /////// PUBLIC CHAT ROOM ///////
+        ////////////////////////////////
+        public void PublicChatSend(string message)
         {
-            Clients.All.hello();
+            ChatMessageObject mess = new ChatMessageObject()
+            {
+                userid = "1",
+                name = "hieu",
+                message = message
+            };
+            Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
         }
+    }
 
-        public void Send()
-        {
-            Clients.All.acceptGreet("from server hub");
-        }
+    public class ChatMessageObject
+    {
+        public string name { get; set; }
+        public string linkavatar { get; set; }
+        public string userid { get; set; }
+        public string message { get; set; }
+
+        /// <summary>
+        /// 0: public chat room
+        /// </summary>
+        public string idGroup { get; set; }
     }
 }

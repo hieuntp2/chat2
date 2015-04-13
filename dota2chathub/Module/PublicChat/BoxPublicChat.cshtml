@@ -2,7 +2,7 @@
 
 
 <div class="box box-success" >
-    <privite-box>
+    <public-chat>
         <div class="box-header" style="cursor: move;">
             <i class="fa fa-comments-o"></i>
             <h3 class="box-title">Public chat</h3>
@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-        <div class="box-body chat chatboxbody" id="public_chat_box" style="max-height:350px; overflow-y: scroll;">    
+        <div class="box-body chat chatboxbody" id="public_chat_box" style="max-height:350px; overflow-y: scroll;">
             <!-- chat item -->
             <div class="item" ng-repeat="message in messages">
                 <img ng-src="{{message.avatar}}" alt="user image" class="online" />
@@ -22,20 +22,20 @@
                         {{message.name}}
                     </a>
                     {{message.content}}
-                </p>           
+                </p>
             </div>
             <!-- /.item -->
 
         </div><!-- /.chat -->
         <div class="box-footer">
             <div class="input-group">
-                <input class="form-control" id="txt_public_chat_input" placeholder="Type message..." />
+                <input class="form-control" id="txt_public_chat_input" placeholder="Type message..." ng--enter="sendmessage()" />
                 <div class="input-group-btn">
-                    <button class="btn btn-success" onclick="autoscroll()" id="bt_public_chat_box_send" ng-click="sendmessage()"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="sendmessage()"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
         </div>
-    </privite-box>
+    </public-chat>
 </div><!-- /.box (chat box) -->
 <input type="hidden" id="displayname" />
 
