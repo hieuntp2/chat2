@@ -162,7 +162,7 @@ app.service('user_manage_service', function ($http, $compile, $rootScope) {
         avatar: "../../content/account_default.png"
     }];
 
-    this.getuserinfofromserver(userid)
+    this.getuserinfofromserver = function(userid)
     {
 
     }
