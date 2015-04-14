@@ -1,0 +1,40 @@
+﻿
+<!-- Create Group Chat Box -->
+<div class="modal fade" id="createGroupChatModal" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Tạo nhóm chát</h4>
+            </div>
+            <div class="modal-body">
+                <input required type="text" class="form-control" placeholder="Tên nhóm" id="_txt_creategroup_name" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createGroup()">Tạo</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<script>
+    function createGroup() {
+
+        var name = $("#_txt_creategroup_name").val();
+
+        if (name == null || name == "" || name == " ")
+        {
+            alert("Tên nhóm không được bỏ trống");
+            return;
+        }
+
+        if (name.length > 254)
+        {
+            alert("Tên nhóm không được quá 254 ký tự");
+        }
+        angular.element($("#indexcontext")).scope().createGroup(name);
+        $("#_txt_creategroup_name").val("");
+    }
+</script>
+

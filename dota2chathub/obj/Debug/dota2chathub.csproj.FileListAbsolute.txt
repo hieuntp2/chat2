@@ -356,3 +356,5 @@ F:\5. Project\7. chat\trunk\dota2chathub\obj\Debug\dota2chathub.pdb
 F:\5. Project\7. chat\trunk\dota2chathub\obj\Debug\dota2chathub.csprojResolveAssemblyReference.cache
 F:\5. Project\7. chat\trunk\dota2chathub\obj\Debug\dota2chathub.Migrations.Init.resources
 F:\5. Project\7. chat\trunk\dota2chathub\obj\Debug\dota2chathub.csproj.GenerateResource.Cache
+E:\6. My Project\New folder\trunk\dota2chathub\obj\Debug\dota2chathub.Migrations.Init.resources
+E:\6. My Project\New folder\trunk\dota2chathub\obj\Debug\dota2chathub.csproj.GenerateResource.Cache

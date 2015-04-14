@@ -3,16 +3,8 @@
 //      2. Khai báo controller cho phép load động các directive cần thiết.
 
 var app = angular.module("main_app", ['ngRoute']);
-
-app.config(function ($routeProvider) {
-    $routeProvider
-		.when('/searchtable', { controller: 'CompanyCtrl', templateUrl: 'views/searchtable.html' })
-		.when('/publicchat', { controller: 'chatboxcontroller', templateUrl: '../../PublicChat/Index' })
-        .when('/', { controller: 'chatboxcontroller', templateUrl: '../../PublicChat/Index' })
-
-});
-
-app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service', function ($scope, $http, $compile, hub_service) {
+app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service', 'account_infor_service', function ($scope, $http, $compile,
+    hub_service, account_infor_service) {
     var ctrll = this;
     this.modules = [];
     hub_service.initialize();
@@ -27,11 +19,17 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
             alert("Lỗi khi lấy module " + address);
         });
     }
-
     this.init = function () {
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
     }
-}])
+
+    $scope.createGroup = function (name) {
+        ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
+    }
+    this.showmodalcreateGroup = function () {
+        $('#createGroupChatModal').modal('show');
+    }
+}]);
 
 /////////////////////////////////////////////
 /////////// DIRECTIVE DEFINATION ////////////
@@ -49,6 +47,15 @@ app.directive('ngEnter', function () {
             }
         });
     };
+});
+app.directive('removeOnClick', function () {
+    return {
+        link: function (scope, elt, attrs) {
+            scope.remove = function () {
+                elt.html('');
+            };
+        }
+    }
 });
 app.directive('publicChat', function () {
     return {
@@ -85,6 +92,61 @@ app.directive('publicChat', function () {
                 }, 500);
             }
 
+            $scope.clearmessage = function ()
+            {
+                $scope.messages = [];
+            }
+
+            // set the function will be excuted when server send a message to client
+            hub_service.receiveMessage($scope.addmessage);
+        },
+        controllerAs: 'controller'
+    }
+});
+app.directive('groupChat', function () {
+    return {
+        restrict: 'E',
+        scope: true,
+        controller: function ($scope, $http, hub_service, groups_manage_service) {
+            $scope.idgroup = "";
+            $scope.name = "";
+            $scope.init = function(id,name)
+            {
+                $scope.idgroup = id;
+                $scope.name = name;
+
+                groups_manage_service.addGroup(id, name);
+            }
+
+            $scope.messages = [];
+
+            $scope.sendmessage = function () {
+
+                // call a service to send a message to server
+                hub_service.sendRequest($("#txt_public_chat_input").val());
+                $("#txt_public_chat_input").val('');
+                $("#txt_public_chat_input").focus();
+            }
+
+            $scope.addmessage = function (messageobject) {
+                var dt = new Date();
+                var message = {};
+
+                message.name = messageobject['name'];
+                message.avatar = messageobject['avatar'];
+                message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                message.content = messageobject['message'];
+
+                $scope.messages.push(message);
+
+                $(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
+                //hub_service.send();
+
+                $('.chatboxbody').animate({
+                    scrollTop: $('.chatboxbody').get(0).scrollHeight
+                }, 500);
+            }
+
             // set the function will be excuted when server send a message to client
             hub_service.receiveMessage($scope.addmessage);
         },
@@ -96,7 +158,7 @@ app.directive('publicChat', function () {
 /////////// SERVICE DEFINATION ////////////
 ///////////////////////////////////////////
 
-app.service('hub_service', function ($http, $compile, $rootScope, user_manage_service) {
+app.service('hub_service', function ($http, $compile, $rootScope, user_manage_service, groups_manage_service) {
 
     this.getmodule = function (url, div_insert) {
         $http.get(url).success(function (data) {
@@ -154,8 +216,7 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
         receiveMessage: receiveMessage
     };
 })
-
-app.service('user_manage_service', function ($http, $compile, $rootScope) {
+app.service('user_manage_service', function ($http) {
     var listuser = [{
         id: "1",
         name: "service>hieu",
@@ -218,11 +279,67 @@ app.service('user_manage_service', function ($http, $compile, $rootScope) {
         return null;
     }
 })
+app.service('groups_manage_service', function ($http) {
+    var groups = [];
+
+    this.addGroup = function(id,name)
+    {
+        var group = {
+            id: id,
+            name: name
+        }
+
+        groups.push(group);
+    }
+    this.removeGroup = function(id)
+    {
+        for(var i = 0; i < groups.length; i++)
+        {
+            if(groups[i].id == id)
+            {
+                delete groups[i];
+                alert("delete group " + i + ", " + groups.length);
+            }
+        }
+    }
+})
+app.service('account_infor_service', function ($http) {
+    var _current_userid = "1";
+    var _current_username = "hieu";
+    var _current_avatar = "";
+
+    this.setid = function(id) {
+        _current_userid = id;
+    }
+    this.getid = function()
+    {
+        return _current_userid;
+    }
+
+    this.setname = function (name) {
+        _current_username = name;
+    }
+    this.getname = function () {
+        return _current_username;
+    }
+
+    this.setavatar = function (avatar) {
+        _current_avatar = avatar;
+    }
+    this.getavatar = function () {
+        return _current_avatar;
+    }
+
+})
 
 function autoscroll()
 {
     $(".chatboxbody").scrollTop(1000);
 }
+
+
+
+
 
 
 

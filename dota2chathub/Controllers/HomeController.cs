@@ -6,17 +6,12 @@ using System.Web.Mvc;
 
 namespace dota2chathub.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
             return View();
-        }
-
-        public ActionResult Chat()
-        {
-            return View();
-        }
+        }      
     }
 }

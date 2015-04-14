@@ -176,7 +176,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Migrations\201504131636416_Init.cs" />
     <Compile Include="Migrations\201504131636416_Init.Designer.cs">
       <DependentUpon>201504131636416_Init.cs</DependentUpon>
@@ -218,7 +217,8 @@
     <Compile Include="Models\UserInfo.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Module\PublicChat\PublicChatHub.cs" />
+    <Compile Include="Module\GroupChat\GroupChatController.cs" />
+    <Compile Include="Hubs\ServerHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -294,6 +294,7 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
       <LastGenOutput>DBModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Module\GroupChat\controller_public_chat_box.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\baivietscripts.js" />
@@ -849,6 +850,7 @@
     <Content Include="Models\DBModel.edmx.diagram">
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Content>
+    <Content Include="Module\GroupChat\BoxGroupChat.cshtml" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\plugins\ckeditor\CHANGES.md" />
     <Content Include="Scripts\plugins\ckeditor\LICENSE.md" />
@@ -862,7 +864,7 @@
     <Content Include="Scripts\plugins\input-mask\phone-codes\phone-codes.json" />
     <None Include="Module\PublicChat\BoxPublicChat.cshtml" />
     <Content Include="Views\templatebox.cshtml" />
-    <Content Include="Views\Home\Chat.cshtml" />
+    <None Include="Views\Home\modal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

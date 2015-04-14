@@ -8,13 +8,17 @@
     <!-- Left col -->
     <section class="col-lg-3 connectedSortable" id="main_col_3_left"></section><!-- /.Left col -->
     <!--Miiddle collums-->
-    <div  class="col-lg-6 connectedSortable" ng-controller="modulecontroller as controller" id="main_col_6" ng-init="controller.init()">  
+    <div id="indexcontext" ng-controller="modulecontroller as controller" ng-init="controller.init()">
+        <div class="col-lg-6 connectedSortable" id="main_col_6">
+        </div>
 
+        <div class="btn-group" style="float:right; position:absolute; right:20px; bottom: 70px;">
+            <button class="btn btn-primary" aria-expanded="false" ng-click="controller.showmodalcreateGroup()">Tạo Chat nhóm</button>
+            <button class="btn btn-primary" aria-expanded="false" ng-click="">Chat riêng</button>
+        </div>    
+        @Html.Partial("~/views/home/modal.cshtml")  
     </div>
-    
-    <!--Miiddle collums-->
-    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+
     <section class="col-lg-3 connectedSortable" id="main_col_3_right">
     </section><!-- right col -->
 </div>
-
