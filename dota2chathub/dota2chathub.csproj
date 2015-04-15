@@ -829,7 +829,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Module\PriveChat\" />
-    <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -866,6 +865,7 @@
     <Content Include="Views\templatebox.cshtml" />
     <None Include="Views\Home\modal.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Shared\_topmenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

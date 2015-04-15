@@ -1,6 +1,5 @@
-﻿
-<!-- Create Group Chat Box -->
-<div class="modal fade" id="createGroupChatModal" >
+﻿<!-- Create Group Chat Box -->
+<div class="modal fade" id="createGroupChatModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +14,24 @@
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+</div>
+<!-- /.modal -->
+<!-- Custom Modal -->
+<div class="modal fade" id="customModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="customModal_header"></h4>
+            </div>
+            <div class="modal-body" id="_customModal_body">
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 <script>
@@ -23,18 +39,32 @@
 
         var name = $("#_txt_creategroup_name").val();
 
-        if (name == null || name == "" || name == " ")
-        {
+        if (name == null || name == "" || name == " ") {
             alert("Tên nhóm không được bỏ trống");
             return;
         }
 
-        if (name.length > 254)
-        {
+        if (name.length > 254) {
             alert("Tên nhóm không được quá 254 ký tự");
         }
         angular.element($("#indexcontext")).scope().createGroup(name);
         $("#_txt_creategroup_name").val("");
     }
+
+    // function for custom modal
+    function callCustomModal(header, body) {
+
+        $("#_customModal_body").html(body);
+        $("#customModal_header").val(header);
+
+        $('#customModal').modal('show');
+    }
+
+    function closeCustomModal() {           
+        $('#customModal').modal('hide');
+        $("#customModal_header").val("");
+        $("#_customModal_body").html("");
+    }
+
 </script>
 
