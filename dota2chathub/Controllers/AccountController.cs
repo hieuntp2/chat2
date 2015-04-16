@@ -9,7 +9,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using dota2chathub.Models;
-
+using PortableSteam;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace dota2chathub.Controllers
 {
     [Authorize]
@@ -364,6 +368,8 @@ namespace dota2chathub.Controllers
                         {
                             return View("ExternalLoginFailure");
                         }
+
+                        addNewUserInfor(model.idsteam);
                         var user = new ApplicationUser { UserName = model.idsteam, Email = model.idsteam  + "@dt2.chat" };
                         var result2 = await UserManager.CreateAsync(user);
                         if (result2.Succeeded)
@@ -393,6 +399,32 @@ namespace dota2chathub.Controllers
             UserInfo user = new UserInfo();
             user.steamid = userid;
 
+            //string url = string.Format("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids={0}", userid);
+            //WebRequest request = HttpWebRequest.Create(url);
+            //using (WebResponse response = request.GetResponse())
+            //{
+            //    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            //    {
+            //        JsonResult steamuser = Json(reader.ReadToEnd());
+            //        //Do whatever you need to do
+            //    }
+            //}
+
+            var client = new WebClient();
+            var content = client.DownloadString("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids=" +  userid);
+            JObject result = (JObject)JsonConvert.DeserializeObject(content);
+            
+
+            user.userid = userid;
+            user.username = (string)result["response"]["players"][0]["personaname"];
+            user.Totalscore = 0;
+            user.steamid = userid;
+            user.linkavatar = (string)result["response"]["players"][0]["avatarmedium"];
+            user.displayname = user.username;
+            user.birthday = DateTime.Now;
+
+            db.UserInfoes.Add(user);
+            db.SaveChanges();
 
         }
 
@@ -460,9 +492,9 @@ namespace dota2chathub.Controllers
         }
 
         //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //// POST: /Account/LogOff
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
@@ -555,5 +587,10 @@ namespace dota2chathub.Controllers
             }
         }
         #endregion
+    }
+
+    public class RootObjectSteamUser
+    {
+        
     }
 }

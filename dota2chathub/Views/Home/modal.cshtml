@@ -19,7 +19,7 @@
 <!-- Custom Modal -->
 <div class="modal fade" id="customModal">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" id="_custom_modal_content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="customModal_header"></h4>
@@ -51,11 +51,16 @@
         $("#_txt_creategroup_name").val("");
     }
 
+    function loadingCustomModal()
+    {
+        callCustomModal("Loading...", "<div class=\"overlay\"><i class=\"fa fa-refresh fa-spin\"></i></div>")
+    }
+
     // function for custom modal
     function callCustomModal(header, body) {
 
         $("#_customModal_body").html(body);
-        $("#customModal_header").val(header);
+        $("#customModal_header").html(header);
 
         $('#customModal').modal('show');
     }

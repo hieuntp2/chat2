@@ -22,7 +22,7 @@ namespace dota2chathub.Models
         public string linkavatar { get; set; }
         public string displayname { get; set; }
         public Nullable<int> Totalscore { get; set; }
-        public Nullable<System.DateTime> birthgday { get; set; }
+        public Nullable<System.DateTime> birthday { get; set; }
         public Nullable<int> dotarank { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }

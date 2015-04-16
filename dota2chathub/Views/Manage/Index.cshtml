@@ -1,222 +1,159 @@
-﻿@model tuvantuyensinhsv.v2.Models.IndexViewModel
+﻿@model dota2chathub.Models.UserInfo
 @{
-    ViewBag.Title = "Manage";
-    List<tuvantuyensinhsv.v2.Models.BaiViet> baiviets = ViewBag.baiviets;
-    List<tuvantuyensinhsv.v2.Models.Question> questions = ViewBag.questions;
+    //List<tuvantuyensinhsv.v2.Models.BaiViet> baiviets = ViewBag.baiviets;
+    //List<tuvantuyensinhsv.v2.Models.Question> questions = ViewBag.questions;
+    List<SelectListItem> langs = new List<SelectListItem>();
+    langs.Add(new SelectListItem
+    {
+        Text = "Tiếng việt",
+        Value = "vi"
+    });
+    langs.Add(new SelectListItem
+    {
+        Text = "English",
+        Value = "en"       
+    });
+
+
+    List<SelectListItem> locations = new List<SelectListItem>();
+    locations.Add(new SelectListItem
+    {
+        Text = "Việt Nam",
+        Value = "vn"
+    });
+    locations.Add(new SelectListItem
+    {
+        Text = "England",
+        Value = "us"       
+    });
 }
-
-<script src="~/content/plugins/datepicker/bootstrap-datepicker.js"></script>
-
 
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
-        <li><a href="#baiviet" data-toggle="tab">Bài viết</a></li>
-        <li><a href="#cauhoi" data-toggle="tab">Câu hỏi</a></li>
+        <li><a href="#game" data-toggle="tab">Game</a></li>
     </ul>
     <div class="tab-content">
         <!-- Font Awesome icons -->
         <div class="tab-pane active" id="profile">
-        <div class="alert-danger">@ViewBag.StatusMessage</div>
+            <div class="alert-danger">@ViewBag.StatusMessage</div>
             <div class="row">
                 <div class="col-lg-12">
-                    <form action="/Manage/Index" method="post">
-                        <div class="box box-info">
-                            <div class="box-header">
-                                <h3 style="margin-top:0px;">Profile: @User.Identity.Name</h3>
-                            </div>
-                            <div class="box-body">
-                                @Html.AntiForgeryToken()
 
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="col-lg-8">
-                                            <div class="form-group">
-                                                <label>Họ Tên</label>
-                                                <input name="hoTen" value="@Model.hoTen" type="text" class="form-control" placeholder="Họ tên" />
-                                            </div>
+                    <div class="box-body">
+                        
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input name="hoTen" value="@Model.username" type="text" class="form-control" disabled />
+                                    </div>
 
-                                            <div class="form-group">
-                                                <label>Sinh nhật</label>
-                                                <input name="sinhNhat" id="_manger_index_sinhnhat" value="@Model.sinhNhat" type="text" class="form-control" placeholder="Sinh nhật" />
-                                            </div>
+                                    <div class="form-group">
+                                        <label>Tên hiển thị</label>
+                                        <input name="displayname" id="_displayname" value="@Model.displayname" type="text" class="form-control" />
+                                    </div>
 
-                                            <div class="form-group">
-                                                <label>link avatar</label>
-                                                <input name="profile_avatar_link" value="@Model.profile_avatar_link" type="text" class="form-control" placeholder="Họ tên" />
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <br />
-                                            <label>Preview</label>
-                                            <br />
-                                            <img style="width:150px; height:150px;" src="@Model.profile_avatar_link" id="_manage_index_profile_preview" />
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Sinh nhật</label>
+                                        @Html.TextBox("displayname", Model.birthday.Value, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @id = "_birthday" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>link avatar</label>
+                                        <input id="_txt_link_avatar" onblur="changePreviewAvatar()" name="profile_avatar_link" value="@Model.linkavatar" type="text" class="form-control" placeholder="Họ tên" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Quốc gia</label>
+                                        @Html.DropDownListFor(m => m.location, locations, new { @class = "form-control", @id = "_lang" })                                      
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Ngôn ngữ</label>
+                                        @Html.DropDownListFor(m => m.language, langs, new { @class = "form-control", @id = "_location" })
                                     </div>
                                 </div>
-                                <hr />
-                                <div class="row">
-
-                                    <div class="col-lg-12" ng-controller="QuicksearchTruong as controller" ng-app="ProjectHApp" ng-init="controller.loadTruong('@Model.idTruong','@Model.idNganh')">
-                                        <div class="col-lg-8">
-                                            <div class="form-group">
-                                                <label>Trường (đại học, cao đẳng, trung cấp...) đã / đang theo học</label>
-                                                <input id="_hidden_idTruong" name="idTruong" value="@Model.idTruong" type="hidden" class="form-control" placeholder="Họ tên" />
-
-                                                <input class="form-control" id="QuickFindInput" ng-model="controller.truong.Ten" type="text" placeholder="Tag trường, ngành..." autocomplete="off" ng-blur="controller.changeschool()" />
-                                            </div>
-
-                                            <div class="form-group" name="idNganh">
-                                                <label>Ngành học</label>
-
-                                                <select name="idNganh" id="_selecte_nganh" class="form-control" ng-model="controller.selectednganh" value="{{controller.selectednganh.ID}}"
-                                                        ng-options="nganh as nganh.Ten for nganh in controller.nganhs track by nganh.ID" ng-blur="controller.changenganh()">
-                                                    @*<option ng-selected="selected" ng-repeat="nganh in controller.nganhs" value="{{nganh.ID}}">{{nganh.Ten}}</option>*@
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>Công việc hiện tại</label>
-                                                <input name="congViec" value="@Model.congViec" type="text" class="form-control" placeholder="Công việc hiện tại" />
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4">
-                                            <br />
-                                            <label>Preview</label>
-                                            <br />
-                                            <img style="width:150px; height:150px;" ng-src="{{controller.truong.Loai}}" id="_manage_index_school_image_preview" />
-                                        </div>
-                                    </div>
-                                  
+                                <div class="col-lg-4">
+                                    <br />
+                                    <label>Avatar preview</label>
+                                    <br />
+                                    <img style="width:150px; height:150px;" src="@Model.linkavatar" id="_manage_index_profile_preview" />
                                 </div>
-                            </div>
-                            <div class="box-footer">
-                                <input type="submit" class="btn btn-success" value="Cập nhật" />
-                                <button type="button" onclick="updateInforFromFacebook()" class="btn btn-primary">Cập nhật từ Facebook</button>
-                                <button type="button" onclick="changepassword()" class="btn btn-warning">Đổi mật khẩu</button>
                             </div>
                         </div>
-                    </form>
+
+                        <div class="box-footer">
+                            <input type="button" class="btn btn-success" value="Cập nhật" onclick="updateProfile('@Model.userid')" />
+                            <button type="button" onclick="" class="btn btn-primary">Cập nhật từ Steam</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
         </div><!-- /#fa-icons -->
         <!-- Bài viết-->
-        <div class="tab-pane" id="baiviet">
-            <p>Có @baiviets.Count bài viết</p>
-            <div class="box box-primary">
-                <div class="box-body no-padding">
-                    <div class="table-responsive mailbox-messages">
-                        <table class="table table-hover table-striped">
-                            <tbody>
-                                @if (baiviets.Count > 0)
-                                {
-                                    foreach (var bai in baiviets)
-                                    {
-                                        <tr style="cursor:pointer;" onclick="baivietredirect(@bai.ID)">
-                                            <td class="mailbox-name">@bai.TieuDe</td>
-                                            <td class="mailbox-subject">
-                                                @if (bai.NoiDung.Length > 100)
-                                                {
-                                                    Html.Raw(bai.NoiDung.Substring(100));
-                                                }
-                                                else
-                                                {
-                                                    Html.Raw(bai.NoiDung);
-                                                }
-                                            </td>
-                                            <td class="mailbox-attachment"></td>
-                                            <td class="mailbox-date">@bai.NgayCapNhat</td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <p>Chưa có bài viết nào</p>
-                                }
-                            </tbody>
-                        </table><!-- /.table -->
-                    </div><!-- /.mail-box-messages -->
-                </div><!-- /.box-body -->
-                <div class="box-footer">
-                    <button class="btn btn-info" onclick="redirectaddbaiviet()">Đăng bài</button>
-                </div>              
-            </div>
+        <div class="tab-pane" id="game">
+            <div class="box-body">
+                <p>Điểm: @Model.Totalscore</p>
+            </div><!-- /.box-body -->
 
         </div><!-- bài viết -->
 
-        <div class="tab-pane" id="cauhoi">
-        <p>Có @questions.Count câu hỏi</p>
-            <div class="box box-primary">
-                <div class="box-body no-padding">
-                    <div class="table-responsive mailbox-messages">
-                        <table class="table table-hover table-striped">
-                            <tbody>
-                                @if (questions.Count > 0)
-                                {
-                                    foreach (var question in questions)
-                                    {
-                                        <tr style="cursor:pointer;" onclick="baivietredirect(@question.id)">
-                                            <td class="mailbox-name">@question.Tieude</td>
-                                            <td class="mailbox-subject">
-                                                @if (question.Noidung.Length > 100)
-                                                {
-                                                    Html.Raw(question.Noidung.Substring(100));
-                                                }
-                                                else
-                                                {
-                                                    Html.Raw(question.Noidung);
-                                                }
-                                            </td>
-                                            <td class="mailbox-attachment"></td>
-                                            <td class="mailbox-date">@question.Ngaydang</td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <p>Chưa có câu hỏi nào</p>
-                                }
-                            </tbody>
-                        </table><!-- /.table -->
-                    </div><!-- /.mail-box-messages -->
-                </div><!-- /.box-body -->
-                <div class="box-footer">
-                    <button class="btn btn-info" onclick="redirectaddquestion()">Đăng câu hỏi</button>
-                </div>  
-            </div>
-        </div><!-- /#ion-icons -->
-
     </div><!-- /.tab-content -->
 </div>
-<script src="~/scripts/angularjs/_manage_index_js.js"></script>
 
 <script>
-    $(document).ready(function () {
-        $('#_manger_index_sinhnhat  ').datepicker({
-            format: 'mm-dd-yyyy'
+    function updateProfile(userid) {
+        var language = $("#_lang").val();
+        var location = $("#_location").val();
+        var linkavatar = $("#_txt_link_avatar").val();
+        var displayname = $("#_displayname").val();
+        var birthday = $("#_birthday").val();
+
+        $.ajax({
+            url: "../../manage/updateUserInfo",
+            type: "POST",
+            data: {
+                userid: userid,
+                language: language,
+                location: location,
+                linkavatar: linkavatar,
+                displayname: displayname,
+                birthday: birthday
+
+            },
+            success: function (data) {
+                "Update ok";
+            },
+            error: function () {
+                alert("Có lỗi upload dữ liệu");
+            }
         });
 
-    });
+        closeCustomModal();
 
-    function baivietredirect(id)
-    {
-        window.location.href = "/baiviets/details/"+id;
     }
 
-    function questionsredirect(id)
-    {
-        window.location.href = "/questions/details/"+id;
+    function changePreviewAvatar() {
+        $("#_manage_index_profile_preview").attr("src", $("#_txt_link_avatar").val());
     }
 
-    function changepassword()
-    {
+    function baivietredirect(id) {
+        window.location.href = "/baiviets/details/" + id;
+    }
+
+    function questionsredirect(id) {
+        window.location.href = "/questions/details/" + id;
+    }
+
+    function changepassword() {
         window.location.href = "/manage/changepassword";
     }
 
-    function redirectaddquestion()
-    {
+    function redirectaddquestion() {
         window.location.href = "/questions/create";
     }
 
@@ -224,8 +161,7 @@
         window.location.href = "/baiviets/create";
     }
 
-    function updateInforFromFacebook()
-    {
+    function updateInforFromFacebook() {
         window.location.href = "/manage/GetFacebookUserInfor";
     }
 </script>

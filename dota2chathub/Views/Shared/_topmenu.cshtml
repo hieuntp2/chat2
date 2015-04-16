@@ -57,12 +57,12 @@
 <script>
     function loadProfile()
     {
+        loadingCustomModal();
         $.ajax({
             url: "../../manage/index",
             type: "GET",
            
-            success: function (data) {
-                alert("ok");
+            success: function (data) {                
                 callCustomModal("Tài khoản", data);
             },
             error: function () {

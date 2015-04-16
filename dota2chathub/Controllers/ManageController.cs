@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using dota2chathub.Models;
+using System.Data.Entity;
 
 namespace dota2chathub.Controllers
 {
@@ -15,13 +16,13 @@ namespace dota2chathub.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        private ProjectDEntities db = new ProjectDEntities();
         public ManageController()
         {
         }
 
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public ActionResult Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -32,16 +33,23 @@ namespace dota2chathub.Controllers
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
 
-            var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+           // var userId = User.Identity.GetUserId();
+            UserInfo model = db.UserInfoes.SingleOrDefault(t => t.userid == "151312");
+           
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public ActionResult updateUserInfo([Bind(Include = "userid,language,location,linkavatar,displayname,birthday")] UserInfo userInfo)
+        {
+            if (ModelState.IsValid)
             {
-                HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            return View(model);
+                db.Entry(userInfo).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.userid = new SelectList(db.AspNetUsers, "Id", "Email", userInfo.userid);
+            return View(userInfo);
         }
 
         private UserInfo UpdateSteamInfor(string id)
