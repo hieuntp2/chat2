@@ -22,7 +22,7 @@ namespace dota2chathub.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +34,9 @@ namespace dota2chathub.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -120,7 +120,7 @@ namespace dota2chathub.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -155,8 +155,8 @@ namespace dota2chathub.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -341,10 +341,84 @@ namespace dota2chathub.Controllers
                 case SignInStatus.Failure:
                 default:
                     // If the user does not have an account, then prompt the user to create an account
+                   
+                    // return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { idsteam = loginInfo.Email });
+                    
+                    ExternalLoginConfirmationViewModel model = new ExternalLoginConfirmationViewModel();
+                    model.idsteam = parstSteamID(loginInfo.Login.ProviderKey);
+                    
+                   
+                    //return RedirectToAction("ExternalLoginConfirmation", new { model, returnUrl });
+
+                    /// The following code is POST for Action ExternalLoginCallback
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        return RedirectToAction("Index", "Manage");
+                    }
+
+                    if (ModelState.IsValid)
+                    {
+                        // Get the information about the user from the external login provider
+                        var info = await AuthenticationManager.GetExternalLoginInfoAsync();
+                        if (info == null)
+                        {
+                            return View("ExternalLoginFailure");
+                        }
+                        var user = new ApplicationUser { UserName = model.idsteam, Email = model.idsteam  + "@dt2.chat" };
+                        var result2 = await UserManager.CreateAsync(user);
+                        if (result2.Succeeded)
+                        {
+                            result2 = await UserManager.AddLoginAsync(user.Id, info.Login);
+                            if (result2.Succeeded)
+                            {
+                                // Add new user Info
+                                addNewUserInfor(model.idsteam);
+
+                                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                                return RedirectToLocal(returnUrl);
+                            }
+                        }
+                        AddErrors(result2);
+                    }
+
                     ViewBag.ReturnUrl = returnUrl;
-                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    return View(model);
+
             }
+        }
+
+        private void addNewUserInfor(string userid)
+        {
+            ProjectDEntities db = new ProjectDEntities();
+            UserInfo user = new UserInfo();
+            user.steamid = userid;
+
+
+        }
+
+        private string parstSteamID(string href)
+        {
+            string id = "" ;
+            for(int i = href.Length - 1; i >= 0; i--)
+            {
+                if(href[i] != '/')
+                {
+                    id += href[i];
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return Reverse(id); ;
+        }
+
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
 
         //
@@ -367,7 +441,7 @@ namespace dota2chathub.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.idsteam, Email = model.idsteam };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

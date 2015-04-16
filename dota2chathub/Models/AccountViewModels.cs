@@ -6,8 +6,8 @@ namespace dota2chathub.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Display(Name = "Steam ID")]
+        public string idsteam { get; set; }
     }
 
     public class ExternalLoginListViewModel
