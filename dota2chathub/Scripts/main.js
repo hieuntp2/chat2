@@ -24,6 +24,7 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     }
 
     $scope.createGroup = function (name) {
+   
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
     }
     this.showmodalcreateGroup = function () {
@@ -73,7 +74,7 @@ app.directive('publicChat', function () {
                 $("#txt_public_chat_input").focus();
             }
 
-            $scope.addmessage = function (messageobject) {               
+            $scope.addmessage = function (messageobject) {
                 var dt = new Date();
                 var message = {};
 
@@ -92,8 +93,7 @@ app.directive('publicChat', function () {
                 }, 500);
             }
 
-            $scope.clearmessage = function ()
-            {
+            $scope.clearmessage = function () {
                 $scope.messages = [];
             }
 
@@ -103,6 +103,7 @@ app.directive('publicChat', function () {
         controllerAs: 'controller'
     }
 });
+
 app.directive('groupChat', function () {
     return {
         restrict: 'E',
@@ -110,15 +111,19 @@ app.directive('groupChat', function () {
         controller: function ($scope, $http, hub_service, groups_manage_service) {
             $scope.idgroup = "";
             $scope.name = "";
-            $scope.init = function(id,name)
-            {
-                $scope.idgroup = id;
-                $scope.name = name;
+            $scope.messages = [];
+            $scope.inputMessage = "";
 
-                groups_manage_service.addGroup(id, name);
+
+            $scope.init = function (name) {              
+                $scope.name = name;
+                hub_service.createGroup(name);                
             }
 
-            $scope.messages = [];
+            $scope.receiveGroupIDclient = function (groupid) {           
+                $scope.idgroup = groupid;
+                groups_manage_service.addGroup($scope.idgroup, $scope.name);               
+            }
 
             $scope.sendmessage = function () {
 
@@ -149,6 +154,7 @@ app.directive('groupChat', function () {
 
             // set the function will be excuted when server send a message to client
             hub_service.receiveMessage($scope.addmessage);
+            hub_service.receiveGroupID($scope.receiveGroupIDclient);
         },
         controllerAs: 'controller'
     }
@@ -158,7 +164,7 @@ app.directive('groupChat', function () {
 /////////// SERVICE DEFINATION ////////////
 ///////////////////////////////////////////
 
-app.service('hub_service', function ($http, $compile, $rootScope, user_manage_service, groups_manage_service) {
+app.service('hub_service', function ($http, $compile, $rootScope, user_manage_service, groups_manage_service, account_infor_service) {
 
     this.getmodule = function (url, div_insert) {
         $http.get(url).success(function (data) {
@@ -168,7 +174,7 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
         }).error(function () {
             alert("Lỗi khi lấy module " + address);
         });
-    }    
+    }
 
     var proxy = null;
 
@@ -188,12 +194,13 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
         });
     };
 
+    // PublicChat Mesasge
     var receiveMessage = function (recevieMessageCallBack) {
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('acceptGreet', function (message) {
             $rootScope.$apply(function () {
 
-                var obj = $.parseJSON(message);                
+                var obj = $.parseJSON(message);
                 var user = user_manage_service.getuser(obj.userid);
 
                 obj.linkavatar = user.avatar;
@@ -204,18 +211,59 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
             });
         });
     }
-
     var sendRequest = function (message) {
         //Invoking greetAll method defined in hub
         this.proxy.invoke('PublicChatSend', message);
     };
 
+    // Group Chat Message
+    var createGroup = function (groupname) {
+      
+        this.proxy.invoke('createGroup', groupname, account_infor_service.getid());
+    }
+    var reciveGroupChatMessage = function (groupid, message) {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('acceptGreet', function (message) {
+            $rootScope.$apply(function () {
+
+                var obj = $.parseJSON(message);
+                var user = user_manage_service.getuser(obj.userid);
+
+                obj.linkavatar = user.avatar;
+                obj.name = user.name;
+                obj.avatar = user.avatar;
+
+                recevieMessageCallBack(obj);
+            });
+        });
+    }
+    var sendGroupMessage = function (iduser, idgroup, message) {
+        this.proxy.invoke('GroupChatSend', iduser, idgroup, message);
+    }
+
+    var receiveGroupID = function (receiveGroupIDCallBack) {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('receiveGroupID', function (groupid) {
+            $rootScope.$apply(function () {
+                receiveGroupIDCallBack(groupid);               
+            });
+        });
+    }
+
     return {
         initialize: initialize,
         sendRequest: sendRequest,
-        receiveMessage: receiveMessage
+        receiveMessage: receiveMessage,
+
+        //Group message
+        createGroup: createGroup,
+        receiveGroupID: receiveGroupID,
+        reciveGroupChatMessage: reciveGroupChatMessage,
+        sendGroupMessage: sendGroupMessage
     };
 })
+
+// Quan ly ds nguoi dung để tránh việc trao đổi thông tin nhiều lần
 app.service('user_manage_service', function ($http) {
     var listuser = [{
         id: "1",
@@ -223,22 +271,18 @@ app.service('user_manage_service', function ($http) {
         avatar: "../../content/account_default.png"
     }];
 
-    this.getuserinfofromserver = function(userid)
-    {
+    this.getuserinfofromserver = function (userid) {
 
     }
 
-    this.adduser = function(userid, username, linkavatar)
-    {
+    this.adduser = function (userid, username, linkavatar) {
         // neu ton tai userid thi thoat ra
-        for (var i = 0; i < listuser.length; i++)
-        {
-            if(listuser[i].id == userid)
-            {
+        for (var i = 0; i < listuser.length; i++) {
+            if (listuser[i].id == userid) {
                 return;
             }
         }
-        
+
         // neu khong thi them vao
         var user = {};
         user.id = userid;
@@ -248,8 +292,7 @@ app.service('user_manage_service', function ($http) {
         listuser.push(user);
     }
 
-    this.getusername = function(userid)
-    {
+    this.getusername = function (userid) {
         // neu ton tai userid thi thoat ra
         for (var i = 0; i < listuser.length; i++) {
             if (listuser[i].id == userid) {
@@ -281,9 +324,7 @@ app.service('user_manage_service', function ($http) {
 })
 app.service('groups_manage_service', function ($http) {
     var groups = [];
-
-    this.addGroup = function(id,name)
-    {
+    this.addGroup = function (id, name) {
         var group = {
             id: id,
             name: name
@@ -291,28 +332,26 @@ app.service('groups_manage_service', function ($http) {
 
         groups.push(group);
     }
-    this.removeGroup = function(id)
-    {
-        for(var i = 0; i < groups.length; i++)
-        {
-            if(groups[i].id == id)
-            {
+    this.removeGroup = function (id) {
+        for (var i = 0; i < groups.length; i++) {
+            if (groups[i].id == id) {
                 delete groups[i];
                 alert("delete group " + i + ", " + groups.length);
             }
         }
     }
 })
+
+// Thông tin người dùng hiện tại
 app.service('account_infor_service', function ($http) {
-    var _current_userid = "1";
+    var _current_userid = "151312";
     var _current_username = "hieu";
     var _current_avatar = "";
 
-    this.setid = function(id) {
+    this.setid = function (id) {
         _current_userid = id;
     }
-    this.getid = function()
-    {
+    this.getid = function () {
         return _current_userid;
     }
 
@@ -332,8 +371,7 @@ app.service('account_infor_service', function ($http) {
 
 })
 
-function autoscroll()
-{
+function autoscroll() {
     $(".chatboxbody").scrollTop(1000);
 }
 

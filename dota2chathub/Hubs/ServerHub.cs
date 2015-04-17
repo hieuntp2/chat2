@@ -5,6 +5,7 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using dota2chathub.Models;
+using Microsoft.AspNet.Identity;
 
 namespace dota2chathub.Module.PublicChat
 {
@@ -25,30 +26,40 @@ namespace dota2chathub.Module.PublicChat
             Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
         }
 
-
+        private static Dictionary<string, string> users = new Dictionary<string, string>();
+      
         ////////////////////////////////
         /////// GROUP CHAT ROOM ///////
         ////////////////////////////////
         private static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
-        public void GroupChatSend(string userid, string groupdi, string message)
+        
+        public void GroupChatSend(string userid, string groupid, string message)
         {
             ChatMessageObject mess = new ChatMessageObject()
             {
-                userid = "1",
-                name = "hieu",
+                userid = userid,
                 message = message
             };
-            Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
+            //Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
+            Clients.Group(groupid).reciveGroupChatMessage(groupid, Newtonsoft.Json.JsonConvert.SerializeObject(mess));
         }
-
         // add new group
-        public static string addGroup(string name, string hostid)
+        public void createGroup(string name, string hostid)
         {
             GroupChat group = new GroupChat(name);
             groups.Add(group.id, group);
             addUsertoGroup(hostid, group.id);
-            return group.id;
+
+            // Lấy giá trị connectionID của userid
+#if DEBUG
+            Groups.Add(users["151312"], group.id);
+#else
+            Groups.Add(users[hostid], group.id);
+#endif
+            Clients.Caller.receiveGroupID(group.id);
+          
         }
+
         public static bool addUsertoGroup(string iduser, string idGroup)
         {
             try
@@ -65,13 +76,52 @@ namespace dota2chathub.Module.PublicChat
             }
 
         }
-
         // invite someone to group
         public void sendInvitation(string hostid, string invid, string groupid)
         {
 
         }
 
+      
+        //////////////////////////////////////
+        ///////// Override Function //////////
+        //////////////////////////////////////
+        public override System.Threading.Tasks.Task OnConnected()
+        {
+            // Khi người dùng đăng nhập vào, thì đồng thời lưu userid-connectid vào list để quản lý
+            //users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
+
+#if DEBUG
+            users.Add("151312", Context.ConnectionId);            
+#else
+            users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
+#endif
+            return base.OnConnected();
+        }
+
+        public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
+        {
+            // Khi người dùng disconect thì đồng thời loại bỏ user ra khỏi list quản lý
+#if DEBUG
+            users.Remove("151312");
+#else
+            users.Remove(Context.User.Identity.GetUserId());
+#endif
+
+            return base.OnDisconnected(stopCalled);
+        }
+
+        public override System.Threading.Tasks.Task OnReconnected()
+        {
+#if DEBUG
+            users["151312"] = Context.ConnectionId;
+#else
+            users[Context.User.Identity.GetUserId()] = Context.ConnectionId;
+#endif
+            // Khi người dùng reconect thì ghi nhận lại connection id
+            //
+            return base.OnReconnected();
+        }
     }
 
     public class ChatMessageObject

@@ -11,7 +11,8 @@ namespace dota2chathub.Module.PublicChat
         // GET: PublicChat
         public ActionResult Index(string groupname, string userid)
         {
-            ViewBag.groupid = ServerHub.addGroup(groupname, userid);            
+            //ServerHub hub = new ServerHub();
+            //ViewBag.groupid = hub.createGroup(groupname, userid);            
             ViewBag.groupname = groupname;
 
             return PartialView("~/Module/GroupChat/BoxGroupChat.cshtml");

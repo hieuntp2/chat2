@@ -1,7 +1,7 @@
 ﻿@inherits System.Web.Mvc.WebViewPage
 
 <div class="box box-info" >
-    <group-chat ng-init="init('@ViewBag.groupid', '@ViewBag.groupname')">
+    <group-chat ng-init="init('@ViewBag.groupname')">
         <div class="box-header" style="cursor: move;">
             <i class="fa fa-comments-o"></i>
             <h3 class="box-title">{{name}}: {{idgroup}}</h3>
@@ -35,14 +35,15 @@
         </div><!-- /.chat -->
         <div class="box-footer">
             <div class="input-group">
-                <input class="form-control" id="txt_public_chat_input" placeholder="Type message..." ng--enter="sendmessage()" />
+                <input class="form-control" id="txt_public_chat_input" placeholder="Type message..." ng-enter="sendmessage()" ng-model="inputMessage" />
                 <div class="input-group-btn">
                     <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="sendmessage()"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
         </div>
     </group-chat>
-</div><!-- /.box (chat box) -->
+</div>
+<!-- /.box (chat box) -->
 
 
 
