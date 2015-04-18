@@ -58,9 +58,23 @@ app.directive('removeOnClick', function () {
         }
     }
 });
+app.directive('focusMe', function ($timeout) {
+    return {
+        link: function (scope, element, attrs) {
+            scope.$watch(attrs.focusMe, function (value) {
+                if (value === true) {
+                    console.log('value=', value);
+                    //$timeout(function() {
+                    element[0].focus();
+                    scope[attrs.focusMe] = false;
+                    //});
+                }
+            });
+        }
+    };
+});
 app.directive('publicChat', function () {
     return {
-
         restrict: 'E',
         scope: true,
         controller: function ($scope, $http, hub_service) {
@@ -108,7 +122,7 @@ app.directive('groupChat', function () {
     return {
         restrict: 'E',
         scope: true,
-        controller: function ($scope, $http, hub_service, groups_manage_service) {
+        controller: function ($scope, $http, hub_service, groups_manage_service, account_infor_service) {
             $scope.idgroup = "";
             $scope.name = "";
             $scope.messages = [];
@@ -120,41 +134,40 @@ app.directive('groupChat', function () {
                 hub_service.createGroup(name);                
             }
 
-            $scope.receiveGroupIDclient = function (groupid) {           
-                $scope.idgroup = groupid;
-                groups_manage_service.addGroup($scope.idgroup, $scope.name);               
+            $scope.receiveGroupIDclient = function (groupid) {
+                if (!$scope.idgroup.trim())
+                {
+                    $scope.idgroup = groupid;
+                    groups_manage_service.addGroup($scope.idgroup, $scope.name);
+                }                          
             }
 
-            $scope.sendmessage = function () {
-
-                // call a service to send a message to server
-                hub_service.sendRequest($("#txt_public_chat_input").val());
-                $("#txt_public_chat_input").val('');
-                $("#txt_public_chat_input").focus();
+            $scope.sendmessage = function () {             
+                if ($scope.inputMessage.trim())
+                {
+                    hub_service.sendGroupMessage(account_infor_service.getid(), $scope.idgroup, $scope.inputMessage);
+                    $scope.inputMessage = "";
+                }              
             }
 
-            $scope.addmessage = function (messageobject) {
-                var dt = new Date();
-                var message = {};
+            $scope.addmessage = function (messageobject, groupid) {               
+                if (groupid.trim() === $scope.idgroup.trim())
+                {    
+                    var dt = new Date();
+                    var message = {};
 
-                message.name = messageobject['name'];
-                message.avatar = messageobject['avatar'];
-                message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-                message.content = messageobject['message'];
+                    message.name = messageobject['name'];
+                    message.avatar = messageobject['avatar'];
+                    message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                    message.content = messageobject['message'];
 
-                $scope.messages.push(message);
-
-                $(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
-                //hub_service.send();
-
-                $('.chatboxbody').animate({
-                    scrollTop: $('.chatboxbody').get(0).scrollHeight
-                }, 500);
+                    $scope.messages.push(message);
+                }               
             }
 
             // set the function will be excuted when server send a message to client
-            hub_service.receiveMessage($scope.addmessage);
             hub_service.receiveGroupID($scope.receiveGroupIDclient);
+            hub_service.reciveGroupChatMessage($scope.addmessage);
         },
         controllerAs: 'controller'
     }
@@ -217,15 +230,14 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
     };
 
     // Group Chat Message
-    var createGroup = function (groupname) {
-      
+    var createGroup = function (groupname) {      
         this.proxy.invoke('createGroup', groupname, account_infor_service.getid());
     }
-    var reciveGroupChatMessage = function (groupid, message) {
-        //Attaching a callback to handle acceptGreet client call
-        this.proxy.on('acceptGreet', function (message) {
-            $rootScope.$apply(function () {
 
+    var reciveGroupChatMessage = function (reciveGroupChatMessageCallBack) {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('reciveGroupChatMessage', function (message, groupid) {
+            $rootScope.$apply(function () {
                 var obj = $.parseJSON(message);
                 var user = user_manage_service.getuser(obj.userid);
 
@@ -233,7 +245,7 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
                 obj.name = user.name;
                 obj.avatar = user.avatar;
 
-                recevieMessageCallBack(obj);
+                reciveGroupChatMessageCallBack(obj, groupid);
             });
         });
     }
@@ -266,7 +278,7 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
 // Quan ly ds nguoi dung để tránh việc trao đổi thông tin nhiều lần
 app.service('user_manage_service', function ($http) {
     var listuser = [{
-        id: "1",
+        id: "151312",
         name: "service>hieu",
         avatar: "../../content/account_default.png"
     }];
@@ -374,6 +386,12 @@ app.service('account_infor_service', function ($http) {
 function autoscroll() {
     $(".chatboxbody").scrollTop(1000);
 }
+
+
+
+///////////////////////////////////////////
+////////////////// ADDON //////////////////
+///////////////////////////////////////////
 
 
 

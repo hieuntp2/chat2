@@ -365,3 +365,10 @@ E:\6. My Project\New folder\trunk\dota2chathub\bin\PortableSteam.xml
 E:\6. My Project\New folder\trunk\dota2chathub\bin\System.Net.Http.Extensions.xml
 E:\6. My Project\New folder\trunk\dota2chathub\bin\System.Net.Http.Primitives.xml
 E:\6. My Project\New folder\trunk\dota2chathub\obj\Debug\dota2chathub.csproj.App.config
+F:\5. Project\7. chat\trunk\dota2chathub\bin\PortableSteam.dll
+F:\5. Project\7. chat\trunk\dota2chathub\bin\System.Net.Http.Extensions.dll
+F:\5. Project\7. chat\trunk\dota2chathub\bin\System.Net.Http.Primitives.dll
+F:\5. Project\7. chat\trunk\dota2chathub\bin\PortableSteam.xml
+F:\5. Project\7. chat\trunk\dota2chathub\bin\System.Net.Http.Extensions.xml
+F:\5. Project\7. chat\trunk\dota2chathub\bin\System.Net.Http.Primitives.xml
+F:\5. Project\7. chat\trunk\dota2chathub\obj\Debug\dota2chathub.csproj.App.config

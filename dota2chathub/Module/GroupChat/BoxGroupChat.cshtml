@@ -18,7 +18,7 @@
                 </div>             
             </div>
         </div>
-        <div class="box-body chat chatboxbody" id="public_chat_box" style="max-height:350px; overflow-y: scroll;">
+        <div class="box-body chat chatboxbody" id="group_chat_box" style="max-height:350px; overflow-y: scroll;">
             <!-- chat item -->
             <div class="item" ng-repeat="message in messages">
                 <img ng-src="{{message.avatar}}" alt="user image" class="online" />
@@ -35,7 +35,7 @@
         </div><!-- /.chat -->
         <div class="box-footer">
             <div class="input-group">
-                <input class="form-control" id="txt_public_chat_input" placeholder="Type message..." ng-enter="sendmessage()" ng-model="inputMessage" />
+                <input class="form-control" placeholder="Type message..." ng-enter="sendmessage();  focusInput=true" ng-model="inputMessage" focus-me="focusInput" />
                 <div class="input-group-btn">
                     <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="sendmessage()"><i class="fa fa-plus"></i></button>
                 </div>

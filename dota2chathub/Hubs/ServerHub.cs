@@ -19,7 +19,7 @@ namespace dota2chathub.Module.PublicChat
         {
             ChatMessageObject mess = new ChatMessageObject()
             {
-                userid = "1",
+                userid = "151312",
                 name = "hieu",
                 message = message
             };
@@ -41,7 +41,7 @@ namespace dota2chathub.Module.PublicChat
                 message = message
             };
             //Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
-            Clients.Group(groupid).reciveGroupChatMessage(groupid, Newtonsoft.Json.JsonConvert.SerializeObject(mess));
+            Clients.Group(groupid).reciveGroupChatMessage(Newtonsoft.Json.JsonConvert.SerializeObject(mess), groupid);
         }
         // add new group
         public void createGroup(string name, string hostid)
