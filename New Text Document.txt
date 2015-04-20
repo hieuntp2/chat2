@@ -1,4 +1,4 @@
 3C627B068B6CD1170B25D133C6ECED2C
 76561198037078495
 
-GEt user profile link: http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids=76561198037078495
+GEt user profile link: http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids=76561198037078495fd
