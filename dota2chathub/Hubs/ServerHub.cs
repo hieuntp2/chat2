@@ -26,7 +26,7 @@ namespace dota2chathub.Module.PublicChat
             Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
         }
 
-        private static Dictionary<string, string> users = new Dictionary<string, string>();
+        public static Dictionary<string, string> users = new Dictionary<string, string>();
       
         ////////////////////////////////
         /////// GROUP CHAT ROOM ///////
@@ -47,6 +47,7 @@ namespace dota2chathub.Module.PublicChat
         public void createGroup(string name, string hostid)
         {
             GroupChat group = new GroupChat(name);
+            group.hostid = hostid;
             groups.Add(group.id, group);
             addUsertoGroup(hostid, group.id);
 
@@ -122,6 +123,11 @@ namespace dota2chathub.Module.PublicChat
             //
             return base.OnReconnected();
         }
+
+        //////////////////////////////////////
+        ////////// STATIC Function ///////////
+        //////////////////////////////////////
+
     }
 
     public class ChatMessageObject
@@ -141,6 +147,7 @@ namespace dota2chathub.Module.PublicChat
     {
         public string id { set; get; }
         public string name { get; set; }
+        public string hostid { get; set; }
         //public Dictionary<string, UserInfo> users;
         public List<string> users;
 

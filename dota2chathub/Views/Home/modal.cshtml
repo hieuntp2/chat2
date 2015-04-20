@@ -16,6 +16,42 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+<!-- Invite User to Group Chat Box -->
+<div class="modal fade" id="inviteusermodal" inv-user-modal>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Mời tham gia</h4>
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <input required type="text" class="form-control" placeholder="Tên User" id="_txt_creategroup_name" ng-model="inputusersearch" ng-enter="finduser()" />
+                </div>
+            </div>
+            <div class="modal-body no-padding">
+                <p>{{message}}</p>
+
+                <ul class="users-list clearfix">
+                    <li style="cursor:pointer;" ng-click="addtoGroupChat(user.id)" ng-repeat="user in listuser">
+                        <img ng-src="{{user.avatar}}" alt="{{user.name}}" style=" width: 50px;">
+                        <a class="users-list-name" href="#">{{user.name}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <p>User trong nhóm</p>
+                <ul class="users-list clearfix">
+                    <li style="cursor:pointer;" ng-click="removeuser(ug.id)" ng-repeat="ug in groupusers">
+                        <img ng-src="{{ug.avatar}}" alt="{{ug.name}}" style=" width: 50px;">
+                        <a class="users-list-name" href="#">{{ug.name}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /. Invite User to Group Chat Box  -->
 <!-- Custom Modal -->
 <div class="modal fade" id="customModal">
     <div class="modal-dialog">
@@ -32,7 +68,6 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-
 
 <script>
     function createGroup() {
@@ -51,8 +86,7 @@
         $("#_txt_creategroup_name").val("");
     }
 
-    function loadingCustomModal()
-    {
+    function loadingCustomModal() {
         callCustomModal("Loading...", "<div class=\"overlay\"><i class=\"fa fa-refresh fa-spin\"></i></div>")
     }
 
@@ -65,11 +99,12 @@
         $('#customModal').modal('show');
     }
 
-    function closeCustomModal() {           
+    function closeCustomModal() {
         $('#customModal').modal('hide');
         $("#customModal_header").val("");
         $("#_customModal_body").html("");
     }
+
 
 </script>
 

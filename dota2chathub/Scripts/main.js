@@ -22,7 +22,6 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     this.init = function () {
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
     }
-
     $scope.createGroup = function (name) {
    
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
@@ -30,12 +29,82 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     this.showmodalcreateGroup = function () {
         $('#createGroupChatModal').modal('show');
     }
+    
 }]);
 
 /////////////////////////////////////////////
 /////////// DIRECTIVE DEFINATION ////////////
 /////////////////////////////////////////////
 
+app.directive('invUserModal', function () {
+    return {
+        restrict: 'A',
+        controller: function ($scope, $http, user_manage_service)
+        {            
+            $scope.showheadtable = false;
+            $scope.listuser = [];
+            $scope.groupusers = [];
+            $scope.inputusersearch = "";
+
+            $scope.finduser = function () {
+                
+                if ($scope.inputusersearch.trim())
+                {
+                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
+
+                        if (data.length == 0)
+                        {
+                            $scope.listuser = [];
+                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
+                            return;
+                        }
+
+                        $scope.showheadtable = true;
+                        $scope.message = "";
+                        for (var i = 0; i < data.length; i++) {                            
+                            var user = user_manage_service.getuser(data[i]);
+                            $scope.listuser.push(user);
+                        }
+                       
+                    }).error(function () {
+                        alert("Lỗi khi lấy module " + address);
+                    });
+                }                
+            }
+
+            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
+            // đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
+            $scope.addtoGroupChat = function(id)
+            {
+                // 
+                for (var i = 0; i < $scope.listuser.length; i++)
+                {
+                    if ($scope.listuser[i].id == id)
+                    {
+                        // Thêm người dùng này vào khi
+                        $scope.groupusers.push($scope.listuser[i]);
+                        $scope.listuser.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+
+            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
+            // đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
+            $scope.removeuser = function(id)
+            {
+                for (var i = 0; i < $scope.groupusers.length; i++) {
+                    if ($scope.groupusers[i].id == id) {
+                        $scope.listuser.push($scope.groupusers[i]);
+                        $scope.groupusers.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+        },
+        controllerAs: 'controller'
+    }
+});
 app.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
@@ -117,7 +186,6 @@ app.directive('publicChat', function () {
         controllerAs: 'controller'
     }
 });
-
 app.directive('groupChat', function () {
     return {
         restrict: 'E',
@@ -133,7 +201,6 @@ app.directive('groupChat', function () {
                 $scope.name = name;
                 hub_service.createGroup(name);                
             }
-
             $scope.receiveGroupIDclient = function (groupid) {
                 if (!$scope.idgroup.trim())
                 {
@@ -141,7 +208,6 @@ app.directive('groupChat', function () {
                     groups_manage_service.addGroup($scope.idgroup, $scope.name);
                 }                          
             }
-
             $scope.sendmessage = function () {             
                 if ($scope.inputMessage.trim())
                 {
@@ -149,7 +215,6 @@ app.directive('groupChat', function () {
                     $scope.inputMessage = "";
                 }              
             }
-
             $scope.addmessage = function (messageobject, groupid) {               
                 if (groupid.trim() === $scope.idgroup.trim())
                 {    
@@ -163,6 +228,11 @@ app.directive('groupChat', function () {
 
                     $scope.messages.push(message);
                 }               
+            }
+
+            $scope.invUser = function()
+            {
+                $('#inviteusermodal').modal('show');
             }
 
             // set the function will be excuted when server send a message to client
@@ -388,12 +458,18 @@ function autoscroll() {
 }
 
 
-
 ///////////////////////////////////////////
 ////////////////// ADDON //////////////////
 ///////////////////////////////////////////
 
-
+function findAndRemoveJson(array, property, value) {
+    $.each(array, function (index, result) {
+        if (result[property] == value) {
+            //Remove from array
+            array.splice(index, 1);
+        }
+    });
+}
 
 
 
