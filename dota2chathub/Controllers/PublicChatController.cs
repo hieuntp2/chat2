@@ -4,14 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace dota2chathub.Module.PublicChat
+namespace dota2chathub
 {
     public class PublicChatController : Controller
     {
         // GET: PublicChat
         public ActionResult Index()
         {
-            return PartialView("~/Module/PublicChat/BoxPublicChat.cshtml");
+            return PartialView();
         }
     }
 }

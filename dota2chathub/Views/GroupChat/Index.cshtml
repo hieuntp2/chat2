@@ -1,6 +1,4 @@
-﻿@inherits System.Web.Mvc.WebViewPage
-
-<div class="box box-info" >
+﻿<div class="box box-info">
     <group-chat ng-init="init('@ViewBag.groupname')">
         <div class="box-header" style="cursor: move;">
             <i class="fa fa-comments-o"></i>
@@ -17,7 +15,7 @@
                         <li class="divider"></li>
                         <li><a ng-click="exitchatgroup()">Thoát nhóm</a></li>
                     </ul>
-                </div>             
+                </div>
             </div>
         </div>
         <div class="box-body chat chatboxbody" id="group_chat_box" style="max-height:350px; overflow-y: scroll;">
@@ -46,7 +44,3 @@
     </group-chat>
 </div>
 <!-- /.box (chat box) -->
-
-
-
-

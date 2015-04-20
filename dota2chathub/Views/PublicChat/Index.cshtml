@@ -1,7 +1,4 @@
-﻿@inherits System.Web.Mvc.WebViewPage
-
-
-<div class="box box-success" >
+﻿<div class="box box-success">
     <public-chat>
         <div class="box-header ui-sortable-handle" style="cursor: move;">
             <i class="fa fa-comments-o"></i>
@@ -11,10 +8,10 @@
                 <div class="btn-group">
                     <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bars"></i></button>
                     <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a ng-click="clearmessage()">Xóa tin nhắn</a></li>                       
+                        <li><a ng-click="clearmessage()">Xóa tin nhắn</a></li>
                     </ul>
                 </div>
-            </div>         
+            </div>
         </div>
         <div class="box-body chat chatboxbody" id="public_chat_box" style="max-height:350px; overflow-y: scroll;">
             <!-- chat item -->
@@ -41,7 +38,3 @@
         </div>
     </public-chat>
 </div><!-- /.box (chat box) -->
-
-
-
-
