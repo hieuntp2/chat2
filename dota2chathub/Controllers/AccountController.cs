@@ -32,6 +32,29 @@ namespace dota2chathub.Controllers
             SignInManager = signInManager;
         }
 
+        private void addNewUserInfor(string userid)
+        {
+            ProjectDEntities db = new ProjectDEntities();
+            UserInfo user = new UserInfo();
+            user.steamid = userid;
+
+            var client = new WebClient();
+            var content = client.DownloadString("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids=" + userid);
+            JObject result = (JObject)JsonConvert.DeserializeObject(content);
+
+
+            user.userid = userid;
+            user.username = (string)result["response"]["players"][0]["personaname"];
+            user.Totalscore = 0;
+            user.steamid = userid;
+            user.linkavatar = (string)result["response"]["players"][0]["avatarmedium"];
+            user.displayname = user.username;
+            user.birthday = DateTime.Now;
+
+            db.UserInfoes.Add(user);
+            db.SaveChanges();
+        }
+
         public ApplicationSignInManager SignInManager
         {
             get
@@ -393,40 +416,7 @@ namespace dota2chathub.Controllers
             }
         }
 
-        private void addNewUserInfor(string userid)
-        {
-            ProjectDEntities db = new ProjectDEntities();
-            UserInfo user = new UserInfo();
-            user.steamid = userid;
-
-            //string url = string.Format("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids={0}", userid);
-            //WebRequest request = HttpWebRequest.Create(url);
-            //using (WebResponse response = request.GetResponse())
-            //{
-            //    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-            //    {
-            //        JsonResult steamuser = Json(reader.ReadToEnd());
-            //        //Do whatever you need to do
-            //    }
-            //}
-
-            var client = new WebClient();
-            var content = client.DownloadString("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids=" +  userid);
-            JObject result = (JObject)JsonConvert.DeserializeObject(content);
-            
-
-            user.userid = userid;
-            user.username = (string)result["response"]["players"][0]["personaname"];
-            user.Totalscore = 0;
-            user.steamid = userid;
-            user.linkavatar = (string)result["response"]["players"][0]["avatarmedium"];
-            user.displayname = user.username;
-            user.birthday = DateTime.Now;
-
-            db.UserInfoes.Add(user);
-            db.SaveChanges();
-
-        }
+        
 
         private string parstSteamID(string href)
         {

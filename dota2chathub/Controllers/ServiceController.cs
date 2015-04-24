@@ -6,6 +6,10 @@ using System.Web.Mvc;
 using dota2chathub.Models;
 using Microsoft.AspNet.SignalR;
 using dota2chathub.Module.PublicChat;
+using Microsoft.AspNet.Identity;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace dota2chathub.Controllers
 {
@@ -44,6 +48,21 @@ namespace dota2chathub.Controllers
             }
 
             return Json(users, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult getlistfriends()
+        {           
+            var client = new WebClient();
+            var content = client.DownloadString("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids=" + getCurrentUserID() + "&relationship=friend");
+            JObject result = (JObject)JsonConvert.DeserializeObject(content);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        private string getCurrentUserID()
+        {
+            return User.Identity.GetUserId();
+            
         }
     }
 }

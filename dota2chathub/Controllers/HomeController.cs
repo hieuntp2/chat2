@@ -6,7 +6,12 @@ using System.Web.Mvc;
 
 namespace dota2chathub.Controllers
 {
-    //[Authorize]
+#if DEBUG
+    [Authorize]
+#else
+     [Authorize]
+#endif
+
     public class HomeController : Controller
     {
         public ActionResult Index()
