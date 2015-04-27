@@ -122,9 +122,11 @@
 
     // function for Modal User Infor
 
-    function callUserInfor(name, avatar) {
-        $("#_modalUser_Name").html(name);
-        $('#modaluserinfor').modal('show');
+    function callUserInfor(data) {
+      // data.username, data.linkavatar, data.birthday, data.Totalscore
+
+       $("#_modalUser_Name").html(data.displayname);
+       $('#modaluserinfor').modal('show');
     }
 
     function closeUserInfor() {

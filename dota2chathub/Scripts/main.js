@@ -400,7 +400,7 @@ app.service('user_manage_service', function ($http) {
             user.name = data.username;
             user.avatar = data.linkavatar;
 
-            callUserInfor(user.name);
+            callUserInfor(data);
         }).error(function () {
             alert("Không tồn tại userid = " + userid);
         });       
