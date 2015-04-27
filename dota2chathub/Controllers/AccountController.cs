@@ -392,7 +392,7 @@ namespace dota2chathub.Controllers
                             return View("ExternalLoginFailure");
                         }
 
-                        addNewUserInfor(model.idsteam);
+                        //addNewUserInfor(model.idsteam);
                         var user = new ApplicationUser { UserName = model.idsteam, Email = model.idsteam  + "@dt2.chat" };
                         var result2 = await UserManager.CreateAsync(user);
                         if (result2.Succeeded)

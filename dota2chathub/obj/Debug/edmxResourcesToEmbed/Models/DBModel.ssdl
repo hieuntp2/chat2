@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="ProjectDModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="db10d35495bc444ae7ba81a48300ff10c8Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="__MigrationHistory">
     <Key>
       <PropertyRef Name="MigrationId" />
@@ -76,28 +76,16 @@
       <PropertyRef Name="userid" />
     </Key>
     <Property Name="userid" Type="nvarchar" MaxLength="128" Nullable="false" />
-    <Property Name="username" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="username" Type="nvarchar" MaxLength="255" />
     <Property Name="language" Type="nchar" MaxLength="2" />
     <Property Name="location" Type="nchar" MaxLength="2" />
     <Property Name="steamid" Type="nvarchar" MaxLength="128" />
     <Property Name="linkavatar" Type="nvarchar(max)" />
     <Property Name="displayname" Type="nvarchar" MaxLength="255" />
     <Property Name="Totalscore" Type="int" />
-    <Property Name="birthday" Type="datetime" />
+    <Property Name="birthday" Type="date" />
     <Property Name="dotarank" Type="int" />
   </EntityType>
-  <Association Name="FK_AspNetUsers_UserInfo">
-    <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
-    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="UserInfo">
-        <PropertyRef Name="userid" />
-      </Principal>
-      <Dependent Role="AspNetUsers">
-        <PropertyRef Name="Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
     <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -154,7 +142,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityContainer Name="ProjectDModelStoreContainer">
+  <EntityContainer Name="db10d35495bc444ae7ba81a48300ff10c8ModelStoreContainer">
     <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
@@ -163,10 +151,6 @@
     <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK_AspNetUsers_UserInfo" Association="Self.FK_AspNetUsers_UserInfo">
-      <End Role="UserInfo" EntitySet="UserInfo" />
-      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-    </AssociationSet>
     <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
       <End Role="AspNetUsers" EntitySet="AspNetUsers" />
       <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />

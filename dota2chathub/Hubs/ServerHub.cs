@@ -15,12 +15,11 @@ namespace dota2chathub.Module.PublicChat
         ////////////////////////////////
         /////// PUBLIC CHAT ROOM ///////
         ////////////////////////////////
-        public void PublicChatSend(string message)
+        public void PublicChatSend(string message, string userid)
         {
             ChatMessageObject mess = new ChatMessageObject()
             {
-                userid = "151312",
-                name = "hieu",
+                userid = userid,
                 message = message
             };
             Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));

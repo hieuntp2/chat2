@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using dota2chathub.Models;
-using Microsoft.AspNet.SignalR;
 using dota2chathub.Module.PublicChat;
 using Microsoft.AspNet.Identity;
 using System.Net;

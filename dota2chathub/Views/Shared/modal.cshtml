@@ -52,6 +52,24 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /. Invite User to Group Chat Box  -->
+
+
+<!-- User Infor Box -->
+<div class="modal fade" id="modaluserinfor">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="_modalUser_Name">
+               
+            </div>
+            <div class="modal-body no-padding">
+               
+            </div>
+           
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /. User Infor Box  -->
+
 <!-- Custom Modal -->
 <div class="modal fade" id="customModal">
     <div class="modal-dialog">
@@ -92,19 +110,27 @@
 
     // function for custom modal
     function callCustomModal(header, body) {
-
         $("#_customModal_body").html(body);
         $("#customModal_header").html(header);
-
         $('#customModal').modal('show');
     }
 
     function closeCustomModal() {
+        $('#_modalUser_Name').modal('hide');
+     
+    }
+
+    // function for Modal User Infor
+
+    function callUserInfor(name, avatar) {
+        $("#_modalUser_Name").html(name);
+        $('#modaluserinfor').modal('show');
+    }
+
+    function closeUserInfor() {
         $('#customModal').modal('hide');
         $("#customModal_header").val("");
         $("#_customModal_body").html("");
     }
-
-
 </script>
 

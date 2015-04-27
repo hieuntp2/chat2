@@ -4,18 +4,17 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6a6a55e42e26444cb199b1f71afe00cd" Name="Diagram1">
-        <EntityTypeShape EntityType="ProjectDModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProjectDModel.AspNetRole" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProjectDModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProjectDModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProjectDModel.AspNetUser" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProjectDModel.sysdiagram" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ProjectDModel.UserInfo" Width="1.5" PointX="7.5" PointY="3.125" IsExpanded="true" />
-        <AssociationConnector Association="ProjectDModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
-        <AssociationConnector Association="ProjectDModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
-        <AssociationConnector Association="ProjectDModel.AspNetUserRoles" ManuallyRouted="false" />
-        <AssociationConnector Association="ProjectDModel.FK_AspNetUsers_UserInfo" />
+      <Diagram DiagramId="ca522cd7c9f945798b76ba5d47662f32" Name="Diagram1">
+        <EntityTypeShape EntityType="db10d35495bc444ae7ba81a48300ff10c8Model.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetRole" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUser" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="db10d35495bc444ae7ba81a48300ff10c8Model.sysdiagram" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="db10d35495bc444ae7ba81a48300ff10c8Model.UserInfo" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
+        <AssociationConnector Association="db10d35495bc444ae7ba81a48300ff10c8Model.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="db10d35495bc444ae7ba81a48300ff10c8Model.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUserRoles" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -24,7 +24,5 @@ namespace dota2chathub.Models
         public Nullable<int> Totalscore { get; set; }
         public Nullable<System.DateTime> birthday { get; set; }
         public Nullable<int> dotarank { get; set; }
-    
-        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

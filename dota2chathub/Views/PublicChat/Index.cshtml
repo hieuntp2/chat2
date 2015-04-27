@@ -18,7 +18,7 @@
             <div class="item" ng-repeat="message in messages">
                 <img ng-src="{{message.avatar}}" alt="user image" class="online" />
                 <p class="message">
-                    <a href="#" class="name">
+                    <a ng-click="viewUserInfor(message.userid)" class="name" style="cursor:pointer;">
                         <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>{{message.time}}</small>
                         {{message.name}}
                     </a>

@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'E:\6. My Project\New folder\trunk\dota2chathub\Models\DBModel.edmx'. 
+﻿// T4 code generation is enabled for model 'F:\5. Project\8. chat\trunk\dota2chathub\Models\DBModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

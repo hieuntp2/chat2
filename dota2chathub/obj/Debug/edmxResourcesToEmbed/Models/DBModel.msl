@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="ProjectDModelStoreContainer" CdmEntityContainer="ProjectDEntities">
+  <EntityContainerMapping StorageEntityContainer="db10d35495bc444ae7ba81a48300ff10c8ModelStoreContainer" CdmEntityContainer="ProjectDEntities">
     <EntitySetMapping Name="C__MigrationHistory">
-      <EntityTypeMapping TypeName="ProjectDModel.C__MigrationHistory">
+      <EntityTypeMapping TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.C__MigrationHistory">
         <MappingFragment StoreEntitySet="__MigrationHistory">
           <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
           <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
@@ -12,7 +12,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="AspNetRoles">
-      <EntityTypeMapping TypeName="ProjectDModel.AspNetRole">
+      <EntityTypeMapping TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetRole">
         <MappingFragment StoreEntitySet="AspNetRoles">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -20,7 +20,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="AspNetUserClaims">
-      <EntityTypeMapping TypeName="ProjectDModel.AspNetUserClaim">
+      <EntityTypeMapping TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUserClaim">
         <MappingFragment StoreEntitySet="AspNetUserClaims">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -30,7 +30,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="AspNetUserLogins">
-      <EntityTypeMapping TypeName="ProjectDModel.AspNetUserLogin">
+      <EntityTypeMapping TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUserLogin">
         <MappingFragment StoreEntitySet="AspNetUserLogins">
           <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
           <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
@@ -39,7 +39,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="AspNetUsers">
-      <EntityTypeMapping TypeName="ProjectDModel.AspNetUser">
+      <EntityTypeMapping TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUser">
         <MappingFragment StoreEntitySet="AspNetUsers">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Email" ColumnName="Email" />
@@ -57,7 +57,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="sysdiagrams">
-      <EntityTypeMapping TypeName="ProjectDModel.sysdiagram">
+      <EntityTypeMapping TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.sysdiagram">
         <MappingFragment StoreEntitySet="sysdiagrams">
           <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="principal_id" ColumnName="principal_id" />
@@ -68,7 +68,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UserInfoes">
-      <EntityTypeMapping TypeName="ProjectDModel.UserInfo">
+      <EntityTypeMapping TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.UserInfo">
         <MappingFragment StoreEntitySet="UserInfo">
           <ScalarProperty Name="userid" ColumnName="userid" />
           <ScalarProperty Name="username" ColumnName="username" />
@@ -83,7 +83,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="AspNetUserRoles" TypeName="ProjectDModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+    <AssociationSetMapping Name="AspNetUserRoles" TypeName="db10d35495bc444ae7ba81a48300ff10c8Model.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
       <EndProperty Name="AspNetRoles">
         <ScalarProperty Name="Id" ColumnName="RoleId" />
       </EndProperty>

@@ -19,92 +19,25 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
             alert("Lỗi khi lấy module " + address);
         });
     }
-    this.init = function () {
+    this.init = function (userid) {        
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
+        account_infor_service.setid(userid);
     }
     $scope.createGroup = function (name) {
-   
+
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
     }
     this.showmodalcreateGroup = function () {
         $('#createGroupChatModal').modal('show');
     }
-    
+
 }]);
 
 /////////////////////////////////////////////
 /////////// DIRECTIVE DEFINATION ////////////
 /////////////////////////////////////////////
 
-app.directive('invUserModal', function () {
-    return {
-        restrict: 'A',
-        controller: function ($scope, $http, user_manage_service)
-        {            
-            $scope.showheadtable = false;
-            $scope.listuser = [];
-            $scope.groupusers = [];
-            $scope.inputusersearch = "";
 
-            $scope.finduser = function () {
-                
-                if ($scope.inputusersearch.trim())
-                {
-                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
-
-                        if (data.length == 0)
-                        {
-                            $scope.listuser = [];
-                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
-                            return;
-                        }
-
-                        $scope.showheadtable = true;
-                        $scope.message = "";
-                        for (var i = 0; i < data.length; i++) {                            
-                            var user = user_manage_service.getuser(data[i]);
-                            $scope.listuser.push(user);
-                        }
-                       
-                    }).error(function () {
-                        alert("Lỗi khi lấy module " + address);
-                    });
-                }                
-            }
-
-            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
-            // đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
-            $scope.addtoGroupChat = function(id)
-            {
-                // 
-                for (var i = 0; i < $scope.listuser.length; i++)
-                {
-                    if ($scope.listuser[i].id == id)
-                    {
-                        // Thêm người dùng này vào khi
-                        $scope.groupusers.push($scope.listuser[i]);
-                        $scope.listuser.splice(i, 1);
-                        return;
-                    }
-                }
-            }
-
-            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
-            // đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
-            $scope.removeuser = function(id)
-            {
-                for (var i = 0; i < $scope.groupusers.length; i++) {
-                    if ($scope.groupusers[i].id == id) {
-                        $scope.listuser.push($scope.groupusers[i]);
-                        $scope.groupusers.splice(i, 1);
-                        return;
-                    }
-                }
-            }
-        },
-        controllerAs: 'controller'
-    }
-});
 app.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
@@ -146,7 +79,7 @@ app.directive('publicChat', function () {
     return {
         restrict: 'E',
         scope: true,
-        controller: function ($scope, $http, hub_service) {
+        controller: function ($scope, $http, hub_service, user_manage_service) {
             $scope.messages = [{ name: 'Server', avatar: '', content: 'This is the public chat room!' }];
 
             $scope.sendmessage = function () {
@@ -161,6 +94,7 @@ app.directive('publicChat', function () {
                 var dt = new Date();
                 var message = {};
 
+                message.userid = messageobject['userid'];
                 message.name = messageobject['name'];
                 message.avatar = messageobject['avatar'];
                 message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
@@ -180,6 +114,11 @@ app.directive('publicChat', function () {
                 $scope.messages = [];
             }
 
+            $scope.viewUserInfor = function(userid)
+            {
+                user_manage_service.showmodalUserInfor(userid);
+            }
+
             // set the function will be excuted when server send a message to client
             hub_service.receiveMessage($scope.addmessage);
         },
@@ -197,27 +136,24 @@ app.directive('groupChat', function () {
             $scope.inputMessage = "";
 
 
-            $scope.init = function (name) {              
+            $scope.init = function (name) {
                 $scope.name = name;
-                hub_service.createGroup(name);                
+                hub_service.createGroup(name);
             }
             $scope.receiveGroupIDclient = function (groupid) {
-                if (!$scope.idgroup.trim())
-                {
+                if (!$scope.idgroup.trim()) {
                     $scope.idgroup = groupid;
                     groups_manage_service.addGroup($scope.idgroup, $scope.name);
-                }                          
+                }
             }
-            $scope.sendmessage = function () {             
-                if ($scope.inputMessage.trim())
-                {
+            $scope.sendmessage = function () {
+                if ($scope.inputMessage.trim()) {
                     hub_service.sendGroupMessage(account_infor_service.getid(), $scope.idgroup, $scope.inputMessage);
                     $scope.inputMessage = "";
-                }              
+                }
             }
-            $scope.addmessage = function (messageobject, groupid) {               
-                if (groupid.trim() === $scope.idgroup.trim())
-                {    
+            $scope.addmessage = function (messageobject, groupid) {
+                if (groupid.trim() === $scope.idgroup.trim()) {
                     var dt = new Date();
                     var message = {};
 
@@ -227,17 +163,53 @@ app.directive('groupChat', function () {
                     message.content = messageobject['message'];
 
                     $scope.messages.push(message);
-                }               
+                }
             }
 
-            $scope.invUser = function()
-            {
+            $scope.invUser = function () {
                 $('#inviteusermodal').modal('show');
             }
 
             // set the function will be excuted when server send a message to client
             hub_service.receiveGroupID($scope.receiveGroupIDclient);
             hub_service.reciveGroupChatMessage($scope.addmessage);
+        },
+        controllerAs: 'controller'
+    }
+});
+
+// Model defined controller
+app.directive('modalUserInfor', function () {
+    return {
+        restrict: 'A',
+        controller: function ($scope, $http, user_manage_service) {
+            $scope.name = "";
+            $scope.joinday = "";
+            $scope.score = 0;
+            $scope.avatar = "";
+
+            $scope.getuserinfor = function (userid) {
+                if ($scope.inputusersearch.trim()) {
+                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
+
+                        if (data.length == 0) {
+                            $scope.listuser = [];
+                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
+                            return;
+                        }
+
+                        $scope.showheadtable = true;
+                        $scope.message = "";
+                        for (var i = 0; i < data.length; i++) {
+                            var user = user_manage_service.getuser(data[i]);
+                            $scope.listuser.push(user);
+                        }
+
+                    }).error(function () {
+                        alert("Lỗi khi lấy module " + address);
+                    });
+                }
+            }
         },
         controllerAs: 'controller'
     }
@@ -286,7 +258,6 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
                 var obj = $.parseJSON(message);
                 var user = user_manage_service.getuser(obj.userid);
 
-                obj.linkavatar = user.avatar;
                 obj.name = user.name;
                 obj.avatar = user.avatar;
 
@@ -296,11 +267,11 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
     }
     var sendRequest = function (message) {
         //Invoking greetAll method defined in hub
-        this.proxy.invoke('PublicChatSend', message);
+        this.proxy.invoke('PublicChatSend', message, account_infor_service.getid());
     };
 
     // Group Chat Message
-    var createGroup = function (groupname) {      
+    var createGroup = function (groupname) {
         this.proxy.invoke('createGroup', groupname, account_infor_service.getid());
     }
 
@@ -320,14 +291,14 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
         });
     }
     var sendGroupMessage = function (iduser, idgroup, message) {
-        this.proxy.invoke('GroupChatSend', iduser, idgroup, message);
+        this.proxy.invoke('GroupChatSend', account_infor_service.getid(), idgroup, message);
     }
 
     var receiveGroupID = function (receiveGroupIDCallBack) {
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('receiveGroupID', function (groupid) {
             $rootScope.$apply(function () {
-                receiveGroupIDCallBack(groupid);               
+                receiveGroupIDCallBack(groupid);
             });
         });
     }
@@ -345,18 +316,25 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
     };
 })
 
+// Cấu trúc user:
+// user {id, name, avatar}
 // Quan ly ds nguoi dung để tránh việc trao đổi thông tin nhiều lần
 app.service('user_manage_service', function ($http) {
-    var listuser = [{
-        id: "151312",
-        name: "service>hieu",
-        avatar: "../../content/account_default.png"
-    }];
+    var listuser = [];
 
     this.getuserinfofromserver = function (userid) {
+        var user = {};
 
+        $http.get("../../service/getuserinfo?id=" + userid).success(function (data) {
+            user.id = data.userid;
+            user.name = data.username;
+            user.avatar = data.linkavatar;
+        }).error(function () {
+            alert("Không tồn tại userid = " + userid);
+        });
+
+        return user;
     }
-
     this.adduser = function (userid, username, linkavatar) {
         // neu ton tai userid thi thoat ra
         for (var i = 0; i < listuser.length; i++) {
@@ -373,17 +351,16 @@ app.service('user_manage_service', function ($http) {
 
         listuser.push(user);
     }
-
-    this.getusername = function (userid) {
+    this.adduser = function (user) {
         // neu ton tai userid thi thoat ra
         for (var i = 0; i < listuser.length; i++) {
-            if (listuser[i].id == userid) {
-                return listuser[i].name;
+            if (listuser[i].id == user.id) {
+                return;
             }
         }
-        return null;
-    }
 
+        listuser.push(user);
+    }
     this.getavatar = function (userid) {
         // neu ton tai userid thi thoat ra
         for (var i = 0; i < listuser.length; i++) {
@@ -393,15 +370,42 @@ app.service('user_manage_service', function ($http) {
         }
         return null;
     }
-
     this.getuser = function (userid) {
+
+        var user = {};
         // neu ton tai userid thi thoat ra
         for (var i = 0; i < listuser.length; i++) {
             if (listuser[i].id == userid) {
-                return listuser[i];
+                return user = listuser[i];
             }
         }
-        return null;
+
+        user = this.getuserinfofromserver(userid);
+        this.adduser(user);
+
+        return user;
+    }
+
+    this.showmodalUserInfor = function(userid)
+    {
+        closeUserInfor();
+        if (userid == null || userid == "")
+        {
+            return;
+        }
+        
+        var user = {};
+        $http.get("../../service/getuserinfo?id=" + userid).success(function (data) {
+            user.id = data.userid;
+            user.name = data.username;
+            user.avatar = data.linkavatar;
+
+            callUserInfor(user.name);
+        }).error(function () {
+            alert("Không tồn tại userid = " + userid);
+        });       
+
+          
     }
 })
 app.service('groups_manage_service', function ($http) {
@@ -469,6 +473,7 @@ function findAndRemoveJson(array, property, value) {
         }
     });
 }
+
 
 
 
