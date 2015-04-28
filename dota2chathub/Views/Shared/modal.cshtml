@@ -52,24 +52,22 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /. Invite User to Group Chat Box  -->
-
-
 <!-- User Infor Box -->
-<div class="modal fade" id="modaluserinfor">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header" id="_modalUser_Name">
-               
-            </div>
-            <div class="modal-body no-padding">
-               
-            </div>
-           
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
-<!-- /. User Infor Box  -->
 
+<div  id="_user_infor_view" class="box box-solid bg-aqua no-padding overlay" style="display:none; position: absolute; width: 250px; height:70px; top: 100px; left: 100px; z-index:10000;">
+    <div class="box-body no-padding">
+        <span style="float:left;">
+            <img id="_modalUser_avatar" style="width: 70px;" />
+        </span>
+        <span>
+            <label id="_modalUser_Name" class="modal-title">Loading..</label><br />
+            <label>Điểm: </label><span id="_modalUser_score"></span><br />
+            <label>Ngày tham gia:</label> <span id="_modalUser_joinday"></span>
+        </span>
+    </div>
+</div>
+
+<!-- /. User Infor Box  -->
 <!-- Custom Modal -->
 <div class="modal fade" id="customModal">
     <div class="modal-dialog">
@@ -117,16 +115,22 @@
 
     function closeCustomModal() {
         $('#_modalUser_Name').modal('hide');
-     
+
     }
 
     // function for Modal User Infor
 
     function callUserInfor(data) {
-      // data.username, data.linkavatar, data.birthday, data.Totalscore
+        // data.username, data.linkavatar, data.birthday, data.Totalscore
 
-       $("#_modalUser_Name").html(data.displayname);
-       $('#modaluserinfor').modal('show');
+        $("#_modalUser_Name").html(data.displayname);
+        $("#_modalUser_avatar").attr("src", data.linkavatar);
+        $("#_modalUser_score").html(data.Totalscore);
+        $("#_modalUser_joinday").html(data.birthday);
+        $("#_modalUser_steamid").html(data.steamid);
+
+
+        $('#modaluserinfor').modal('show');
     }
 
     function closeUserInfor() {
@@ -135,4 +139,3 @@
         $("#_customModal_body").html("");
     }
 </script>
-

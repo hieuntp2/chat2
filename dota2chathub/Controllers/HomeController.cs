@@ -21,7 +21,9 @@ namespace dota2chathub.Controllers
         public ActionResult Index()
         {
             string id = User.Identity.GetUserId();
-            ViewBag.userid = db.AspNetUsers.SingleOrDefault(t => t.Id == id).UserName;
+            string steamid = db.AspNetUsers.SingleOrDefault(t => t.Id == id).UserName;
+            ViewBag.userid = steamid;
+            ViewBag.userifor = db.UserInfoes.SingleOrDefault(t => t.userid == steamid);
             return View();
         }      
     }

@@ -19,7 +19,7 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
             alert("Lỗi khi lấy module " + address);
         });
     }
-    this.init = function (userid) {        
+    this.init = function (userid) {
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
         account_infor_service.setid(userid);
     }
@@ -114,9 +114,12 @@ app.directive('publicChat', function () {
                 $scope.messages = [];
             }
 
-            $scope.viewUserInfor = function(userid)
-            {
+            $scope.viewUserInfor = function (userid) {
                 user_manage_service.showmodalUserInfor(userid);
+            }
+
+            $scope.offUserInfor = function () {
+                user_manage_service.offUserInfor();
             }
 
             // set the function will be excuted when server send a message to client
@@ -329,6 +332,11 @@ app.service('user_manage_service', function ($http) {
             user.id = data.userid;
             user.name = data.username;
             user.avatar = data.linkavatar;
+            user.displayname = data.displayname;
+            user.score = data.Totalscore;
+            user.steamid = data.steamid;
+            user.birthday = data.birthday;
+
         }).error(function () {
             alert("Không tồn tại userid = " + userid);
         });
@@ -382,30 +390,35 @@ app.service('user_manage_service', function ($http) {
 
         user = this.getuserinfofromserver(userid);
         this.adduser(user);
-
         return user;
     }
 
-    this.showmodalUserInfor = function(userid)
-    {
-        closeUserInfor();
-        if (userid == null || userid == "")
-        {
+    this.offUserInfor = function () {
+        $("#_user_infor_view").css({ display: 'none' });
+    }
+
+    this.showmodalUserInfor = function (userid) {
+        if (userid == null || userid == "") {
             return;
         }
-        
-        var user = {};
-        $http.get("../../service/getuserinfo?id=" + userid).success(function (data) {
-            user.id = data.userid;
-            user.name = data.username;
-            user.avatar = data.linkavatar;
+        var data = this.getuser(userid.trim());
 
-            callUserInfor(data);
-        }).error(function () {
-            alert("Không tồn tại userid = " + userid);
-        });       
+        $("#_modalUser_Name").html(data.displayname);
+        $("#_modalUser_avatar").attr("src", data.avatar);
+        $("#_modalUser_score").html(data.score);
+        $("#_modalUser_steamid").html(data.steamid);
 
-          
+        var dateString = data.birthday.toString().substr(6);
+        var currentTime = new Date(parseInt(dateString));
+        var month = currentTime.getMonth() + 1;
+        var day = currentTime.getDate();
+        var year = currentTime.getFullYear();
+        var date = day + "/" + month + "/" + year;
+        $("#_modalUser_joinday").html(date);
+
+        $("#_user_infor_view").css({ top: y, left: x });
+
+        $("#_user_infor_view").fadeIn();
     }
 })
 app.service('groups_manage_service', function ($http) {
@@ -474,7 +487,10 @@ function findAndRemoveJson(array, property, value) {
     });
 }
 
-
+$(document).mousemove(function (e) {
+    window.x = e.pageX;
+    window.y = e.pageY;
+});
 
 
 

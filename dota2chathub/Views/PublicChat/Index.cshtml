@@ -1,4 +1,6 @@
-﻿<div class="box box-success">
+﻿<!--Public Group Chat-->
+
+<div class="box box-success">
     <public-chat>
         <div class="box-header ui-sortable-handle" style="cursor: move;">
             <i class="fa fa-comments-o"></i>
@@ -13,12 +15,14 @@
                 </div>
             </div>
         </div>
+
         <div class="box-body chat chatboxbody" id="public_chat_box" style="max-height:350px; overflow-y: scroll;">
+
             <!-- chat item -->
             <div class="item" ng-repeat="message in messages">
-                <img ng-src="{{message.avatar}}" alt="user image" class="online" />
+                <img ng-src="{{message.avatar}}" alt="user image" class="online" ng-mouseenter="viewUserInfor(message.userid)" ng-mouseleave="offUserInfor()" />
                 <p class="message">
-                    <a ng-click="viewUserInfor(message.userid)" class="name" style="cursor:pointer;">
+                    <a class="name" style="cursor:pointer;" >
                         <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>{{message.time}}</small>
                         {{message.name}}
                     </a>
@@ -28,6 +32,7 @@
             <!-- /.item -->
 
         </div><!-- /.chat -->
+
         <div class="box-footer">
             <div class="input-group">
                 <input class="form-control" id="txt_public_chat_input" placeholder="Type message..." ng--enter="sendmessage()" />
@@ -38,3 +43,5 @@
         </div>
     </public-chat>
 </div><!-- /.box (chat box) -->
+
+
