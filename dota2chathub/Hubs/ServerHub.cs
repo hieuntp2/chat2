@@ -76,13 +76,23 @@ namespace dota2chathub.Module.PublicChat
             }
 
         }
+
+
         // invite someone to group
         public void sendInvitation(string hostid, string invid, string groupid)
         {
 
         }
 
-      
+
+        ////////////////////////////////
+        /////// Private CHAT ROOM //////
+        ////////////////////////////////
+        public void sendMessage(string userid, string message)
+        {
+            Clients.Client["af"].getPrivateMessage();
+        }
+
         //////////////////////////////////////
         ///////// Override Function //////////
         //////////////////////////////////////
@@ -126,6 +136,11 @@ namespace dota2chathub.Module.PublicChat
         //////////////////////////////////////
         ////////// STATIC Function ///////////
         //////////////////////////////////////
+
+        public static bool checkUserOnline(string userid)
+        {
+            return users.ContainsKey(userid);
+        }
 
     }
 

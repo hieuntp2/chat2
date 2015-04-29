@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Microsoft.AspNet.SignalR;
 
 namespace dota2chathub.Controllers
 {
@@ -47,14 +48,36 @@ namespace dota2chathub.Controllers
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult getlistfriends()
+        public ActionResult getlistfriends(string steamid = null)
         {           
-            var client = new WebClient();
-            var content = client.DownloadString("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=3C627B068B6CD1170B25D133C6ECED2C&steamids=" + getCurrentUserID() + "&relationship=friend");
-            JObject result = (JObject)JsonConvert.DeserializeObject(content);
+            if(steamid == null)
+            {
+                steamid = getCurrentUserID();
+            }
 
+            var client = new WebClient();
+            var results = client.DownloadString("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=3C627B068B6CD1170B25D133C6ECED2C&steamid=" + steamid + "&relationship=friend");
+
+            // or
+            // check useronline here
+            //for (int i = 0; i < results.Length; i++)
+            //{
+            //    if (results.friendslist[i])
+            //    {
+            //        if(ServerHub.checkUserOnline(results[i]))
+            //        {
+            //            results[i].isonline = true;
+            //        }
+            //        else
+            //        {
+            //            results[i].isonline = false;
+            //        }
+            //    }
+            //}
+
+            JObject result = (JObject)JsonConvert.DeserializeObject(results);
             return Json(result, JsonRequestBehavior.AllowGet);
-        }
+        }       
 
         private string getCurrentUserID()
         {

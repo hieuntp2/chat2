@@ -21,6 +21,8 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     }
     this.init = function (userid) {
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
+        ctrll.getmodule('../../Home/FriendList', 'main_col_6');
+
         account_infor_service.setid(userid);
     }
     $scope.createGroup = function (name) {
@@ -36,7 +38,6 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
 /////////////////////////////////////////////
 /////////// DIRECTIVE DEFINATION ////////////
 /////////////////////////////////////////////
-
 
 app.directive('ngEnter', function () {
     return function (scope, element, attrs) {
@@ -181,6 +182,59 @@ app.directive('groupChat', function () {
     }
 });
 
+app.directive('privateChat', function () {
+    return {
+        restrict: 'E',
+        scope: true,
+        controller: function ($scope, $http, hub_service, groups_manage_service, account_infor_service) {
+            $scope.idgroup = "";
+            $scope.name = "";
+            $scope.messages = [];
+            $scope.inputMessage = "";
+
+
+            $scope.init = function (name) {
+                $scope.name = name;
+                hub_service.createGroup(name);
+            }
+            $scope.receiveGroupIDclient = function (groupid) {
+                if (!$scope.idgroup.trim()) {
+                    $scope.idgroup = groupid;
+                    groups_manage_service.addGroup($scope.idgroup, $scope.name);
+                }
+            }
+            $scope.sendmessage = function () {
+                if ($scope.inputMessage.trim()) {
+                    hub_service.sendGroupMessage(account_infor_service.getid(), $scope.idgroup, $scope.inputMessage);
+                    $scope.inputMessage = "";
+                }
+            }
+            $scope.addmessage = function (messageobject, groupid) {
+                if (groupid.trim() === $scope.idgroup.trim()) {
+                    var dt = new Date();
+                    var message = {};
+
+                    message.name = messageobject['name'];
+                    message.avatar = messageobject['avatar'];
+                    message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                    message.content = messageobject['message'];
+
+                    $scope.messages.push(message);
+                }
+            }
+
+            $scope.invUser = function () {
+                $('#inviteusermodal').modal('show');
+            }
+
+            // set the function will be excuted when server send a message to client
+            hub_service.receiveGroupID($scope.receiveGroupIDclient);
+            hub_service.reciveGroupChatMessage($scope.addmessage);
+        },
+        controllerAs: 'controller'
+    }
+});
+
 // Model defined controller
 app.directive('modalUserInfor', function () {
     return {
@@ -218,6 +272,74 @@ app.directive('modalUserInfor', function () {
     }
 });
 
+app.directive('friendsListBox', function () {
+    return {
+        restrict: 'A',
+        controller: function ($scope, $http, user_manage_service) {
+            $scope.friendlist = [];
+            $scope.message = "";
+            $scope.countOnline = 0;
+            $scope.getuserinfor = function (userid) {
+                if ($scope.inputusersearch.trim()) {
+                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
+
+                        if (data.length == 0) {
+                            $scope.listuser = [];
+                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
+                            return;
+                        }
+
+                        $scope.message = "Số người online: " + data.length;
+                        for (var i = 0; i < data.length; i++) {
+                            var user = user_manage_service.getuser(data[i]);
+                            $scope.listuser.push(user);
+                        }
+
+                    }).error(function () {
+                        alert("Lỗi khi lấy module " + address);
+                    });
+                }
+            }
+
+            $scope.init = function()
+            {
+                $scope.getfriendlist();
+            }
+
+            $scope.getfriendlist = function()
+            {
+                $http.get("../../Service/getlistfriends").success(function (data) {
+
+                    if (data.length == 0) {
+                        $scope.friendlist = [];
+                        $scope.message = "Danh sách bạn bè rỗng hoặc có lỗi xuất hiện.";
+                        return;
+                    }
+
+                    $scope.message = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var user = user_manage_service.getuser(data[i]);
+                        $scope.friendlist.push(user);
+                    }
+
+                }).error(function () {
+                    alert("Lỗi khi lấy danh sách bạn bè ");
+                });
+            }
+
+            $scope.updateFriends = function()
+            {
+                $scope.getfriendlist();
+            }
+
+            $scope.showPrivateChat = function(userid)
+            {
+                alert("chat to " + userid);
+            }
+        },
+        controllerAs: 'controller'
+    }
+});
 ///////////////////////////////////////////
 /////////// SERVICE DEFINATION ////////////
 ///////////////////////////////////////////

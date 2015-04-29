@@ -9,7 +9,7 @@ using dota2chathub.Models;
 namespace dota2chathub.Controllers
 {
 #if DEBUG
-     [Authorize]
+     //[Authorize]
 #else
      [Authorize]
 #endif
@@ -20,11 +20,27 @@ namespace dota2chathub.Controllers
 
         public ActionResult Index()
         {
-            string id = User.Identity.GetUserId();
+#if DEBUG
+            ViewBag.userid = "123";            
+            return View();
+#else
+string id = User.Identity.GetUserId();
             string steamid = db.AspNetUsers.SingleOrDefault(t => t.Id == id).UserName;
             ViewBag.userid = steamid;
             ViewBag.userifor = db.UserInfoes.SingleOrDefault(t => t.userid == steamid);
             return View();
-        }      
+#endif
+            //string id = User.Identity.GetUserId();
+            //string steamid = db.AspNetUsers.SingleOrDefault(t => t.Id == id).UserName;
+            //ViewBag.userid = steamid;
+            //ViewBag.userifor = db.UserInfoes.SingleOrDefault(t => t.userid == steamid);
+            //return View();
+        }
+
+        public ActionResult FriendList()
+        {
+            return PartialView();
+        }
+
     }
 }
