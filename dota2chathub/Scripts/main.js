@@ -21,7 +21,7 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     }
     this.init = function (userid) {
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
-        ctrll.getmodule('../../Home/FriendList', 'main_col_6');
+        ctrll.getmodule('../../Home/FriendList', 'main_col_3_left');
 
         account_infor_service.setid(userid);
     }
@@ -272,68 +272,51 @@ app.directive('modalUserInfor', function () {
     }
 });
 
-app.directive('friendsListBox', function () {
+app.directive('friendsBox', function () {
     return {
-        restrict: 'A',
+        restrict: 'E',
         controller: function ($scope, $http, user_manage_service) {
             $scope.friendlist = [];
             $scope.message = "";
             $scope.countOnline = 0;
-            $scope.getuserinfor = function (userid) {
-                if ($scope.inputusersearch.trim()) {
-                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
+            $scope.isloading = true;
+            $scope.init = function () {
 
-                        if (data.length == 0) {
-                            $scope.listuser = [];
-                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
-                            return;
-                        }
-
-                        $scope.message = "Số người online: " + data.length;
-                        for (var i = 0; i < data.length; i++) {
-                            var user = user_manage_service.getuser(data[i]);
-                            $scope.listuser.push(user);
-                        }
-
-                    }).error(function () {
-                        alert("Lỗi khi lấy module " + address);
-                    });
-                }
-            }
-
-            $scope.init = function()
-            {
                 $scope.getfriendlist();
             }
 
-            $scope.getfriendlist = function()
-            {
+            $scope.getfriendlist = function () {
+                $scope.isloading = true;
                 $http.get("../../Service/getlistfriends").success(function (data) {
-
                     if (data.length == 0) {
                         $scope.friendlist = [];
                         $scope.message = "Danh sách bạn bè rỗng hoặc có lỗi xuất hiện.";
                         return;
                     }
+                    var countonline = 0;
 
-                    $scope.message = "";
                     for (var i = 0; i < data.length; i++) {
-                        var user = user_manage_service.getuser(data[i]);
+                        if (data[i].isonline == true) {
+                            countonline += 1;
+                        }
+
+                        var user = user_manage_service.getuser(data[i].steamid);
+                        user.isonline = data[i].isonline;
                         $scope.friendlist.push(user);
                     }
 
+                    $scope.message = "Có " + countonline + "/" + data.length + " đang online";
+                    $scope.isloading = false;
                 }).error(function () {
                     alert("Lỗi khi lấy danh sách bạn bè ");
                 });
             }
 
-            $scope.updateFriends = function()
-            {
+            $scope.updateFriends = function () {
                 $scope.getfriendlist();
             }
 
-            $scope.showPrivateChat = function(userid)
-            {
+            $scope.showPrivateChat = function (userid) {
                 alert("chat to " + userid);
             }
         },

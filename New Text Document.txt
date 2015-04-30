@@ -155,3 +155,19 @@ http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=3C627B068B6CD117
 		
 	}
 }
+
+
+
+===================================================================================
+result = {
+  "friendslist": {
+    "friends": [
+      {
+        "steamid": "76561197999202330",
+        "relationship": "friend",
+        "friend_since": 1366623070
+      },
+      {
+        "steamid": "76561198016399054",
+        "relationship": "friend",
+...

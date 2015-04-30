@@ -1,34 +1,30 @@
 ﻿<!--Friend List-->
-
-<div class="box box-success">
-    <friends-list-box>
-        <div class="box-header ui-sortable-handle" style="cursor: move;">
-            <i class="fa fa-comments-o"></i>
-            <h3 class="box-title">Bạn bè (steam)</h3>
-            <div class="pull-right box-tools">
-                <!-- button with a dropdown -->
-                <div class="btn-group">
-                    <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bars"></i></button>
-                    <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a ng-click="updateFriends()">Cập nhật</a></li>
-                    </ul>
-                </div>
+<div class="box box-danger">
+    <friends-box>
+        <div class="box-header with-border">
+            <h3 class="box-title">Steam Friend in Chat Hub</h3>
+            <p><span class="label">{{$scope.message}}</span></p>           
+        </div><!-- /.box-header -->
+        <div class="box-body no-padding">
+            <div class="overlay" ng-show="isloading">
+                <i class="fa fa-refresh fa-spin"></i>
             </div>
-        </div>
 
-        <div class="box-body chat chatboxbody" id="public_chat_box" style="max-height:350px; overflow-y: scroll;" ng-init="init()">
-            <p>{{$scope.message}}</p>
-            <!-- chat item -->
-            <div class="item" ng-repeat="friend in friendlist">
-                <img ng-src="{{friend.avatar}}" alt="user image" class="online" ng-click="showPrivateChat(friend.id)"/>
-                <p class="message">
-                    <a class="name" style="cursor:pointer;">
-                        {{friend.name}}
-                    </a>
-                </p>
-            </div>
-            <!-- /.item -->
+            <ul class="users-list clearfix" id="public_chat_box" style="max-height:350px; overflow-y: auto;" ng-init="init()">
+                <li ng-repeat="friend in friendlist" ng-switch="friend.isonline">
+                    <img ng-switch-when="true" ng-src="{{friend.avatar}}" alt="Online" class="online">
+                    <a ng-switch-when="true" class="users-list-name" style="color:green; cursor:pointer;" ng-click="showPrivateChat(friend.id)">{{friend.name}}</a>
+                    
+                    
+                    <img ng-switch-when="false" ng-src="{{friend.avatar}}" alt="Offline" class="offline">
+                    <a ng-switch-when="false" class="users-list-name" ng-click="showPrivateChat(friend.id)">{{friend.name}}</a>
+                </li>
+            </ul><!-- /.users-list -->
+        </div><!-- /.box-body -->
+        <div class="box-footer text-center">
+            <a ng-click="updateFriends()" class="uppercase">refresh</a>
+        </div><!-- /.box-footer -->
 
-        </div><!-- /.chat -->
-    </friends-list-box>
-</div><!-- /.box (chat box) -->
+       
+    </friends-box>
+</div>

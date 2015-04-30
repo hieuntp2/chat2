@@ -90,7 +90,7 @@ namespace dota2chathub.Module.PublicChat
         ////////////////////////////////
         public void sendMessage(string userid, string message)
         {
-            Clients.Client["af"].getPrivateMessage();
+           // Clients.Client["af"].getPrivateMessage();
         }
 
         //////////////////////////////////////
