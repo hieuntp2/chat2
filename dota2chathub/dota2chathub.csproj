@@ -304,9 +304,12 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
       <LastGenOutput>DBModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\adirectives - Copy.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\baivietscripts.js" />
+    <Content Include="Scripts\acontrollers.js" />
+    <Content Include="Scripts\adirectives.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.min.js" />
@@ -800,6 +803,7 @@
     <Content Include="Scripts\plugins\timepicker\bootstrap-timepicker.js" />
     <Content Include="Scripts\plugins\timepicker\bootstrap-timepicker.min.css" />
     <Content Include="Scripts\plugins\timepicker\bootstrap-timepicker.min.js" />
+    <Content Include="Scripts\aservices.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -834,7 +838,9 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\NewFolder1\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
