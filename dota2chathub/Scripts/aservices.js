@@ -1,6 +1,6 @@
 ﻿
 app.service('hub_service', function ($http, $compile, $rootScope,
-    user_manage_service, account_infor_service) {
+    user_manage_service, account_infor_service, privatechat_manage_service) {
 
     var proxy = null;
 
@@ -78,19 +78,21 @@ app.service('hub_service', function ($http, $compile, $rootScope,
     var sendprivateMessage = function (userid, message) {
         this.proxy.invoke('sendprivateMessage', account_infor_service.getid(), message);
     }
+
     var recivePrivateChatMessage = function (privatemessageCallback) {
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('reciverprivatemessage', function (userid, message) {
             $rootScope.$apply(function () {
 
+                // Tìm kiếm xem có tồn tại private chat chưa
+                // Nếu chưa thì thêm private chat vào, sau đó mới gửi message
+                privatechat_manage_service.haveprivatechat(userid);
                 privatemessageCallback(userid, message);
             });
         });
     }
 
-
     return {
-
         initialize: initialize,
         sendRequest: sendRequest,
         receiveMessage: receiveMessage,
@@ -209,9 +211,16 @@ app.service('user_manage_service', function ($http) {
         $("#_user_infor_view").fadeIn();
     }
 })
+
+// Lưu trữ và quản lý các nhóm chat đang tồn tại
 app.service('groups_manage_service', function ($http) {
     var groups = [];
     this.addGroup = function (id, name) {
+
+        if (this.haveGroup(id)) {
+            return;
+        }
+
         var group = {
             id: id,
             name: name
@@ -219,7 +228,8 @@ app.service('groups_manage_service', function ($http) {
 
         groups.push(group);
     }
-    this.removeGroup = function (id) {
+    this.removeGroup = function (id) {     
+
         for (var i = 0; i < groups.length; i++) {
             if (groups[i].id == id) {
                 delete groups[i];
@@ -227,14 +237,30 @@ app.service('groups_manage_service', function ($http) {
             }
         }
     }
+    this.haveGroup = function(id)
+    {
+        for(var i = 0; i< groups.length; i++)
+        {
+            if(groups[i].id == id)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 })
 
 // Phương thức nhận chat là gửi đồng bộ qua tất cả các chat, sau đó mỗi controller tự kiếm tra xem mình có đúng với người nhận không
 // Nếu đúng thì sau đó mới thêm vào khung chát
 app.service('privatechat_manage_service', function ($http, hub_service) {
     var privates = [];
+    this.addprivatechat = function (userid) {
+        if (this.haveprivatechat(userid))
+        {
+            return;
+        }
 
-    this.addPrivateChat = function (userid) {
         var chat = {
             id: userid
         }
@@ -249,12 +275,33 @@ app.service('privatechat_manage_service', function ($http, hub_service) {
             }
         }
     }
-    this.checkPrivateChat = function (id) {
+    this.haveprivatechat = function (id) {
         for (var i = 0; i < privates.length; i++) {
             if (privates[i].id == id) {
-                return;
+                return true;
             }
         }
+
+        return false;
+    }
+
+    this.sendmessage = function(userid, message)
+    {
+
+    }
+
+    var receivemessage = function (receiveGroupIDCallBack) {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('receiveGroupID', function (groupid) {
+            $rootScope.$apply(function () {
+                receiveGroupIDCallBack(groupid);
+            });
+        });
+    }
+
+    return
+    {
+        addprivatechat: addprivatechat
     }
 })
 

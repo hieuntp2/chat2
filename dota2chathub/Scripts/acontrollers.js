@@ -1,6 +1,6 @@
 ﻿var app = angular.module("main_app", ['ngRoute']);
-app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service', 'account_infor_service', function ($scope, $http, $compile,
-    hub_service, account_infor_service) {
+app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service', 'account_infor_service',
+    function ($scope, $http, $compile,  hub_service, account_infor_service) {
     var ctrll = this;
     this.modules = [];
     hub_service.initialize();
@@ -24,7 +24,6 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
         this.isloading = false;
     }
     $scope.createGroup = function (name) {
-
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
     }
 
@@ -34,5 +33,4 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     this.showmodalcreateGroup = function () {
         $('#createGroupChatModal').modal('show');
     }
-
 }]);

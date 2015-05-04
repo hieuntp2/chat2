@@ -304,7 +304,6 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
       <LastGenOutput>DBModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\adirectives - Copy.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\baivietscripts.js" />
