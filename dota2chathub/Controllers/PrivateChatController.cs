@@ -10,8 +10,10 @@ namespace dota2chathub.Controllers
     {
         //
         // GET: /PrivateChat/
-        public ActionResult Index()
+        // id: userid
+        public ActionResult Index(string id)
         {
+            ViewBag.userid = id;
             return PartialView();
         }
 	}

@@ -88,9 +88,21 @@ namespace dota2chathub.Module.PublicChat
         ////////////////////////////////
         /////// Private CHAT ROOM //////
         ////////////////////////////////
-        public void sendMessage(string userid, string message)
+        public void sendprivateMessage(string userid, string message)
         {
-           // Clients.Client["af"].getPrivateMessage();
+
+            //string connectionid;
+            //try
+            //{
+            //    connectionid = users[userid];
+            //}
+            //catch
+            //{
+            //    return;
+            //}
+
+            //Clients.Client(connectionid).reciverprivatemessage(userid, message);
+            Clients.Caller.reciverprivatemessage(userid, message);
         }
 
         //////////////////////////////////////

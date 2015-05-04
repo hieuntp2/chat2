@@ -8,6 +8,7 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     var ctrll = this;
     this.modules = [];
     hub_service.initialize();
+    this.isloading = true;
 
     this.getmodule = function (address, id_div) {
         $http.get(address).success(function (data) {
@@ -24,10 +25,16 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
         ctrll.getmodule('../../Home/FriendList', 'main_col_3_left');
 
         account_infor_service.setid(userid);
+        this.isloading = false;
     }
     $scope.createGroup = function (name) {
-
+        
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
+    }
+
+    $scope.createPrivateChat = function(userid)
+    {
+        ctrll.getmodule('../../privatechat/Index?id=' + userid, 'main_col_6');
     }
     this.showmodalcreateGroup = function () {
         $('#createGroupChatModal').modal('show');
@@ -186,50 +193,52 @@ app.directive('privateChat', function () {
     return {
         restrict: 'E',
         scope: true,
-        controller: function ($scope, $http, hub_service, groups_manage_service, account_infor_service) {
-            $scope.idgroup = "";
+        controller: function ($scope, $http, hub_service, account_infor_service, user_manage_service) {
+            // id user chat to
+            $scope.id = "";
+
+            // name user chat to
             $scope.name = "";
+
             $scope.messages = [];
             $scope.inputMessage = "";
 
 
-            $scope.init = function (name) {
-                $scope.name = name;
-                hub_service.createGroup(name);
+            $scope.init = function (id) {
+                $scope.id = id;
+
+                var user = user_manage_service.getuser(id);
+                $scope.name = user.name;
             }
-            $scope.receiveGroupIDclient = function (groupid) {
-                if (!$scope.idgroup.trim()) {
-                    $scope.idgroup = groupid;
-                    groups_manage_service.addGroup($scope.idgroup, $scope.name);
-                }
-            }
+           
             $scope.sendmessage = function () {
                 if ($scope.inputMessage.trim()) {
-                    hub_service.sendGroupMessage(account_infor_service.getid(), $scope.idgroup, $scope.inputMessage);
+                    hub_service.sendprivateMessage(account_infor_service.getid(), $scope.inputMessage);
+
+                    $scope.addmessage(account_infor_service.getid(), $scope.inputMessage);
+
                     $scope.inputMessage = "";
                 }
             }
-            $scope.addmessage = function (messageobject, groupid) {
-                if (groupid.trim() === $scope.idgroup.trim()) {
+
+            $scope.addmessage = function (userid, message) {
+                
+                // Nếu message gửi đúng người thì mới thêm vào chat
+                if (userid.trim() === $scope.id.trim()) {
                     var dt = new Date();
                     var message = {};
 
-                    message.name = messageobject['name'];
-                    message.avatar = messageobject['avatar'];
+                    message.name = user_manage_service.getuser(userid).name;
+                    message.avatar = user_manage_service.getuser(userid).avatar;
                     message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-                    message.content = messageobject['message'];
+                    message.content = message;
 
                     $scope.messages.push(message);
                 }
             }
 
-            $scope.invUser = function () {
-                $('#inviteusermodal').modal('show');
-            }
-
             // set the function will be excuted when server send a message to client
-            hub_service.receiveGroupID($scope.receiveGroupIDclient);
-            hub_service.reciveGroupChatMessage($scope.addmessage);
+            hub_service.recivePrivateChatMessage($scope.addmessage);
         },
         controllerAs: 'controller'
     }
@@ -271,11 +280,10 @@ app.directive('modalUserInfor', function () {
         controllerAs: 'controller'
     }
 });
-
 app.directive('friendsBox', function () {
     return {
         restrict: 'E',
-        controller: function ($scope, $http, user_manage_service) {
+        controller: function ($scope, $http,$compile, user_manage_service, privatechat_manage_service) {
             $scope.friendlist = [];
             $scope.message = "";
             $scope.countOnline = 0;
@@ -317,7 +325,16 @@ app.directive('friendsBox', function () {
             }
 
             $scope.showPrivateChat = function (userid) {
-                alert("chat to " + userid);
+                $scope.getmodule("../../privatechat/index?id=" + userid, "main_col_3_left");
+            }
+
+            $scope.getmodule = function (address, id_div) {
+                $http.get(address).success(function (data) {
+                    var el = $compile(data)($scope);
+                    $("#" + id_div + "").append(el);
+                }).error(function () {
+                    alert("Lỗi khi lấy module " + address);
+                });
             }
         },
         controllerAs: 'controller'
@@ -327,17 +344,8 @@ app.directive('friendsBox', function () {
 /////////// SERVICE DEFINATION ////////////
 ///////////////////////////////////////////
 
-app.service('hub_service', function ($http, $compile, $rootScope, user_manage_service, groups_manage_service, account_infor_service) {
-
-    this.getmodule = function (url, div_insert) {
-        $http.get(url).success(function (data) {
-
-            var el = $compile(data)($scope);
-            $("#" + div_insert + "").append(el);
-        }).error(function () {
-            alert("Lỗi khi lấy module " + address);
-        });
-    }
+app.service('hub_service', function ($http, $compile, $rootScope,
+    user_manage_service, account_infor_service) {
 
     var proxy = null;
 
@@ -411,7 +419,25 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
         });
     }
 
+    // private chat
+    var sendprivateMessage = function (userid, message)
+    {
+        this.proxy.invoke('sendprivateMessage', account_infor_service.getid(), message);
+    }
+    var recivePrivateChatMessage = function (privatemessageCallback)
+    {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('reciverprivatemessage', function (userid, message) {
+            $rootScope.$apply(function () {
+               
+                privatemessageCallback(userid, message);
+            });
+        });
+    }
+
+
     return {
+
         initialize: initialize,
         sendRequest: sendRequest,
         receiveMessage: receiveMessage,
@@ -420,7 +446,11 @@ app.service('hub_service', function ($http, $compile, $rootScope, user_manage_se
         createGroup: createGroup,
         receiveGroupID: receiveGroupID,
         reciveGroupChatMessage: reciveGroupChatMessage,
-        sendGroupMessage: sendGroupMessage
+        sendGroupMessage: sendGroupMessage,
+
+        // private chat
+        sendprivateMessage: sendprivateMessage,
+        recivePrivateChatMessage: recivePrivateChatMessage
     };
 })
 
@@ -541,6 +571,38 @@ app.service('groups_manage_service', function ($http) {
             if (groups[i].id == id) {
                 delete groups[i];
                 alert("delete group " + i + ", " + groups.length);
+            }
+        }
+    }
+})
+
+// Phương thức nhận chat là gửi đồng bộ qua tất cả các chat, sau đó mỗi controller tự kiếm tra xem mình có đúng với người nhận không
+// Nếu đúng thì sau đó mới thêm vào khung chát
+app.service('privatechat_manage_service', function ($http, hub_service) {
+    var privates = [];
+
+    this.addPrivateChat = function (userid) {
+        var chat = {
+            id: userid
+        }
+
+        privates.push(chat);    
+    }
+    this.removeprivate = function (id) {
+        for (var i = 0; i < privates.length; i++) {
+            if (privates[i].id == id) {
+                delete privates[i];
+                alert("delete group " + i + ", " + groups.length);
+            }
+        }
+    }   
+    this.checkPrivateChat = function(id)
+    {
+        for(var i = 0; i < privates.length; i++)
+        {
+            if(privates[i].id == id )
+            {
+                return;
             }
         }
     }
