@@ -90,18 +90,6 @@ namespace dota2chathub.Module.PublicChat
         ////////////////////////////////
         public void sendprivateMessage(string userid, string message)
         {
-
-            //string connectionid;
-            //try
-            //{
-            //    connectionid = users[userid];
-            //}
-            //catch
-            //{
-            //    return;
-            //}
-
-            //Clients.Client(connectionid).reciverprivatemessage(userid, message);
             Clients.Caller.reciverprivatemessage(userid, message);
         }
 

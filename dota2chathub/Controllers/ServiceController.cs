@@ -8,6 +8,7 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Microsoft.AspNet.SignalR;
+using System;
 
 namespace dota2chathub.Controllers
 {
@@ -15,7 +16,59 @@ namespace dota2chathub.Controllers
     {
         ProjectDEntities db = new ProjectDEntities();
 
+#if DEBUG
         public ActionResult getuserinfo(string id)
+        {
+            UserInfo user = new UserInfo()
+            {
+                birthday = DateTime.Now,
+                displayname = "test friend 1",
+                linkavatar = "../../Content/account_default.png",
+                steamid = "testfriendid1",
+                userid = id,
+                username = "testfriendid1"
+            };
+           
+            return Json(user, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult finduser(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+            //B1: Tìm kiếm theo tên trong db
+            string[] words = name.Split(' ');
+            List<string> users = new List<string>();
+            users.Add("testfriendid1");
+            users.Add("testfriendid2");
+
+            return Json(users, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult getlistfriends(string steamid = null)
+        {
+            List<FriendInChatBox> listreturn = new List<FriendInChatBox>();
+            listreturn.Add(new FriendInChatBox()
+            {
+                steamid = "testfriendid1",
+                isonline = true
+            });
+            listreturn.Add(new FriendInChatBox()
+            {
+                steamid = "testfriendid2",
+                isonline = true
+            });
+            listreturn.Add(new FriendInChatBox()
+            {
+                steamid = "testfriendid3",
+                isonline = true
+            });
+            return Json(listreturn, JsonRequestBehavior.AllowGet);
+        }
+#else
+         public ActionResult getuserinfo(string id)
         {
             UserInfo user = null;
             try
@@ -103,6 +156,8 @@ namespace dota2chathub.Controllers
             }
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }
+#endif
+
 
         private bool checkUserID(string userid)
         {

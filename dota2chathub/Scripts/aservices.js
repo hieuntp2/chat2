@@ -1,7 +1,9 @@
 ﻿
 app.service('hub_service', function ($http, $compile, $rootScope,
-    user_manage_service, account_infor_service, privatechat_manage_service) {
+    user_manage_service, account_infor_service) {
 
+    //Getting the connection object
+    connection = $.hubConnection();
     var proxy = null;
 
     var initialize = function () {
@@ -13,11 +15,6 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 
         //Starting connection
         connection.start();
-
-        //Publishing an event when server pushes a greeting message
-        this.proxy.on('acceptGreet', function (message) {
-            $rootScope.$emit("acceptGreet", message);
-        });
     };
 
     // PublicChat Mesasge
@@ -55,8 +52,8 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 
                 obj.linkavatar = user.avatar;
                 obj.name = user.name;
-                obj.avatar = user.avatar;
 
+                obj.avatar = user.avatar;
                 reciveGroupChatMessageCallBack(obj, groupid);
             });
         });
@@ -84,6 +81,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         this.proxy.on('reciverprivatemessage', function (userid, message) {
             $rootScope.$apply(function () {
 
+                alert("1: hub receive private message");
                 // Tìm kiếm xem có tồn tại private chat chưa
                 // Nếu chưa thì thêm private chat vào, sau đó mới gửi message
                 privatechat_manage_service.haveprivatechat(userid);
@@ -228,7 +226,7 @@ app.service('groups_manage_service', function ($http) {
 
         groups.push(group);
     }
-    this.removeGroup = function (id) {     
+    this.removeGroup = function (id) {
 
         for (var i = 0; i < groups.length; i++) {
             if (groups[i].id == id) {
@@ -237,12 +235,9 @@ app.service('groups_manage_service', function ($http) {
             }
         }
     }
-    this.haveGroup = function(id)
-    {
-        for(var i = 0; i< groups.length; i++)
-        {
-            if(groups[i].id == id)
-            {
+    this.haveGroup = function (id) {
+        for (var i = 0; i < groups.length; i++) {
+            if (groups[i].id == id) {
                 return true;
             }
         }
@@ -253,11 +248,15 @@ app.service('groups_manage_service', function ($http) {
 
 // Phương thức nhận chat là gửi đồng bộ qua tất cả các chat, sau đó mỗi controller tự kiếm tra xem mình có đúng với người nhận không
 // Nếu đúng thì sau đó mới thêm vào khung chát
-app.service('privatechat_manage_service', function ($http, hub_service) {
+app.service('privatechat_manage_service', function ($http, $rootScope, hub_service) {
     var privates = [];
+
+    this.init = function()
+    {
+        //hub_service.recivePrivateChatMessage(receivemessagecallback);
+    }
     this.addprivatechat = function (userid) {
-        if (this.haveprivatechat(userid))
-        {
+        if (this.haveprivatechat(userid)) {
             return;
         }
 
@@ -265,8 +264,11 @@ app.service('privatechat_manage_service', function ($http, hub_service) {
             id: userid
         }
 
+        alert("1: start create chat");
+        receivemessagecallback(userid);
         privates.push(chat);
     }
+
     this.removeprivate = function (id) {
         for (var i = 0; i < privates.length; i++) {
             if (privates[i].id == id) {
@@ -285,24 +287,27 @@ app.service('privatechat_manage_service', function ($http, hub_service) {
         return false;
     }
 
-    this.sendmessage = function(userid, message)
+    // send message
+    var sendmessage = function (userid, message) {
+        hub_service.sendprivateMessage(userid, message);
+    }
+
+    // đăng ký call-back function và public ra callback-funcion
+    
+    var receivemessagecallback = function (receiveMessageCallBack) {
+        alert("2: private service reciver message");
+    }
+
+    var createprivatechat = function(createprivatechatcallback)
     {
-
+        alert("2: call function create private chat");
     }
 
-    var receivemessage = function (receiveGroupIDCallBack) {
-        //Attaching a callback to handle acceptGreet client call
-        this.proxy.on('receiveGroupID', function (groupid) {
-            $rootScope.$apply(function () {
-                receiveGroupIDCallBack(groupid);
-            });
-        });
-    }
-
-    return
-    {
-        addprivatechat: addprivatechat
-    }
+    return {
+        sendmessage: sendmessage,
+        createprivatechat: createprivatechat,
+        receivemessage: receivemessagecallback      
+    };
 })
 
 // Thông tin người dùng hiện tại

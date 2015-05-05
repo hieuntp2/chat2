@@ -146,7 +146,7 @@ app.directive('privateChat', function () {
     return {
         restrict: 'E',
         scope: true,
-        controller: function ($scope, $http, hub_service, account_infor_service, user_manage_service) {
+        controller: function ($scope, $http, privatechat_manage_service, account_infor_service, user_manage_service) {
             // id user chat to
             $scope.id = "";
 
@@ -166,10 +166,9 @@ app.directive('privateChat', function () {
 
             $scope.sendmessage = function () {
                 if ($scope.inputMessage.trim()) {
-                    hub_service.sendprivateMessage(account_infor_service.getid(), $scope.inputMessage);
+                    privatechat_manage_service.sendmessage(account_infor_service.getid(), $scope.inputMessage);
 
                     $scope.addmessage(account_infor_service.getid(), $scope.inputMessage);
-
                     $scope.inputMessage = "";
                 }
             }
@@ -177,6 +176,7 @@ app.directive('privateChat', function () {
             $scope.addmessage = function (userid, message) {
 
                 // Nếu message gửi đúng người thì mới thêm vào chat
+                alert("3: directive get a message from service" + userid + message);
                 if (userid.trim() === $scope.id.trim()) {
                     var dt = new Date();
                     var message = {};
@@ -191,7 +191,7 @@ app.directive('privateChat', function () {
             }
 
             // set the function will be excuted when server send a message to client
-            hub_service.recivePrivateChatMessage($scope.addmessage);
+            privatechat_manage_service.receivemessagecallback($scope.addmessage);
         },
         controllerAs: 'controller'
     }
