@@ -1,6 +1,6 @@
 ﻿var app = angular.module("main_app", ['ngRoute']);
 app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service', 'account_infor_service', 'privatechat_manage_service',
-    function ($scope, $http, $compile, hub_service, account_infor_service, privatechat_manage_service) {
+    function ($scope, $http, $compile,  hub_service, account_infor_service) {
     var ctrll = this;
     this.modules = [];
    
@@ -16,28 +16,29 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
             alert("Lỗi khi lấy module " + address);
         });
     }
+
     this.init = function (userid) {
 
         hub_service.initialize();
         ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
         ctrll.getmodule('../../Home/FriendList', 'main_col_3_left');
 
-        account_infor_service.setid(userid);
-
-        // Đăng ký sự kiện callback-function tạo lập private chat
-        //privatechat_manage_service.createprivatechat($scope.createPrivateChat);
-
-        this.isloading = false;
+        account_infor_service.setid(userid);      
+        this.isloading = false;        
     }
+
     $scope.createGroup = function (name) {
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
     }
 
-    $scope.createPrivateChat = function (userid) {
-        alert("3: main controller nhận call-funciton tạo private chat từ service");
-        ctrll.getmodule('../../privatechat/Index?id=' + userid, 'main_col_6');
-    }
+        // Đăng ký lắng nghe sự kiện tạo private chat
+    $scope.$on('module:createprivatechat', function (event, userid) {
+        ctrll.getmodule('../../privatechat/Index?id=' + userid, 'main_col_3_left');
+    });
 
+    $scope.$on('module:creategroupchat', function (event, name) {
+        ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
+    });
     this.showmodalcreateGroup = function () {
         $('#createGroupChatModal').modal('show');
     }

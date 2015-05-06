@@ -159,7 +159,6 @@ app.directive('privateChat', function () {
 
             $scope.init = function (id) {
                 $scope.id = id;
-
                 var user = user_manage_service.getuser(id);
                 $scope.name = user.name;
             }
@@ -168,13 +167,12 @@ app.directive('privateChat', function () {
                 if ($scope.inputMessage.trim()) {
                     privatechat_manage_service.sendmessage(account_infor_service.getid(), $scope.inputMessage);
 
-                    $scope.addmessage(account_infor_service.getid(), $scope.inputMessage);
+                    //$scope.addmessage(account_infor_service.getid(), $scope.inputMessage);
                     $scope.inputMessage = "";
                 }
             }
 
             $scope.addmessage = function (userid, message) {
-
                 // Nếu message gửi đúng người thì mới thêm vào chat
                 alert("3: directive get a message from service" + userid + message);
                 if (userid.trim() === $scope.id.trim()) {
@@ -188,10 +186,7 @@ app.directive('privateChat', function () {
 
                     $scope.messages.push(message);
                 }
-            }
-
-            // set the function will be excuted when server send a message to client
-            privatechat_manage_service.receivemessagecallback($scope.addmessage);
+            }           
         },
         controllerAs: 'controller'
     }
@@ -246,6 +241,12 @@ app.directive('friendsBox', function () {
                 $scope.getfriendlist();
             }
 
+            $scope.createprivatechat = function (userid) {
+                //$scope.getmodule("../../privatechat/index?id=" + userid, "main_col_3_left");
+
+                privatechat_manage_service.addprivatechat(userid);
+            }
+
             $scope.getfriendlist = function () {
                 $scope.isloading = true;
                 $http.get("../../Service/getlistfriends").success(function (data) {
@@ -272,13 +273,8 @@ app.directive('friendsBox', function () {
                     alert("Lỗi khi lấy danh sách bạn bè ");
                 });
             }
-
             $scope.updateFriends = function () {
                 $scope.getfriendlist();
-            }
-
-            $scope.showPrivateChat = function (userid) {
-                $scope.getmodule("../../privatechat/index?id=" + userid, "main_col_3_left");
             }
 
             $scope.getmodule = function (address, id_div) {

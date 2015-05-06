@@ -38,6 +38,22 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         this.proxy.invoke('PublicChatSend', message, account_infor_service.getid());
     };
 
+    // private chat
+    var sendprivateMessage = function (userid, message) {
+        this.proxy.invoke('sendprivateMessage', account_infor_service.getid(), message);
+    }
+
+    var recivePrivateChatMessage = function (recevieMessageCallBack) {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('fucntuionsf', function (userid, message) {
+            $rootScope.$apply(function () {
+
+                alert("asdfasdf");
+
+            });
+        });
+    }
+
     // Group Chat Message
     var createGroup = function (groupname) {
         this.proxy.invoke('createGroup', groupname, account_infor_service.getid());
@@ -71,24 +87,20 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         });
     }
 
-    // private chat
-    var sendprivateMessage = function (userid, message) {
-        this.proxy.invoke('sendprivateMessage', account_infor_service.getid(), message);
-    }
-
-    var recivePrivateChatMessage = function (privatemessageCallback) {
-        //Attaching a callback to handle acceptGreet client call
-        this.proxy.on('reciverprivatemessage', function (userid, message) {
-            $rootScope.$apply(function () {
-
-                alert("1: hub receive private message");
-                // Tìm kiếm xem có tồn tại private chat chưa
-                // Nếu chưa thì thêm private chat vào, sau đó mới gửi message
-                privatechat_manage_service.haveprivatechat(userid);
-                privatemessageCallback(userid, message);
-            });
-        });
-    }
+   
+    //var recivePrivateChatMessage = function (privatemessageCallback) {
+    //    //Attaching a callback to handle acceptGreet client call
+    //    this.proxy.on('recivePrivateChatMessage', function (userid, message) {
+    //        alert("1: hub receive private message");
+    //        $rootScope.$apply(function () {
+    //            alert("1: hub receive private message");
+    //            // Tìm kiếm xem có tồn tại private chat chưa
+    //            // Nếu chưa thì thêm private chat vào, sau đó mới gửi message
+    //            //privatechat_manage_service.haveprivatechat(userid);
+    //            //privatemessageCallback(userid, message);
+    //        });
+    //    });
+    //}
 
     return {
         initialize: initialize,
@@ -250,26 +262,25 @@ app.service('groups_manage_service', function ($http) {
 // Nếu đúng thì sau đó mới thêm vào khung chát
 app.service('privatechat_manage_service', function ($http, $rootScope, hub_service) {
     var privates = [];
-
+    var service = this;
     this.init = function()
     {
-        //hub_service.recivePrivateChatMessage(receivemessagecallback);
     }
-    this.addprivatechat = function (userid) {
-        if (this.haveprivatechat(userid)) {
+    var addprivatechat = function (userid) {
+        if (service.haveprivatechat(userid)) {
+            alert("already have " + userid);
             return;
         }
 
         var chat = {
             id: userid
         }
-
-        alert("1: start create chat");
-        receivemessagecallback(userid);
         privates.push(chat);
+        $rootScope.$broadcast('module:createprivatechat', userid);
+        return userid;
     }
 
-    this.removeprivate = function (id) {
+    var removeprivate = function (id) {
         for (var i = 0; i < privates.length; i++) {
             if (privates[i].id == id) {
                 delete privates[i];
@@ -298,14 +309,9 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
         alert("2: private service reciver message");
     }
 
-    var createprivatechat = function(createprivatechatcallback)
-    {
-        alert("2: call function create private chat");
-    }
-
     return {
+        addprivatechat: addprivatechat,
         sendmessage: sendmessage,
-        createprivatechat: createprivatechat,
         receivemessage: receivemessagecallback      
     };
 })

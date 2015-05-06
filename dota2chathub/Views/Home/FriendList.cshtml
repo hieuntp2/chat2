@@ -13,11 +13,11 @@
             <ul class="users-list clearfix" id="public_chat_box" style="max-height:350px; overflow-y: auto;" ng-init="init()">
                 <li ng-repeat="friend in friendlist" ng-switch="friend.isonline">
                     <img ng-switch-when="true" ng-src="{{friend.avatar}}" alt="Online" class="online">
-                    <a ng-switch-when="true" class="users-list-name" style="color:green; cursor:pointer;" ng-click="showPrivateChat(friend.id)">{{friend.name}}</a>
+                    <a ng-switch-when="true" class="users-list-name" style="color:green; cursor:pointer;" ng-click="createprivatechat(friend.id)">{{friend.name}}</a>
                     
                     
                     <img ng-switch-when="false" ng-src="{{friend.avatar}}" alt="Offline" class="offline">
-                    <a ng-switch-when="false" class="users-list-name" ng-click="showPrivateChat(friend.id)">{{friend.name}}</a>
+                    <a ng-switch-when="false" class="users-list-name" ng-click="createprivatechat(friend.id)">{{friend.name}}</a>
                 </li>
             </ul><!-- /.users-list -->
         </div><!-- /.box-body -->

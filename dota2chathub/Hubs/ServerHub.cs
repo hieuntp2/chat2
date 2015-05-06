@@ -88,10 +88,27 @@ namespace dota2chathub.Module.PublicChat
         ////////////////////////////////
         /////// Private CHAT ROOM //////
         ////////////////////////////////
+       
+
+#if DEBUG
         public void sendprivateMessage(string userid, string message)
         {
-            Clients.Caller.reciverprivatemessage(userid, message);
+            Clients.All.fucntuionsf(userid, message);
         }
+#else
+         public void sendprivateMessage(string userid, string message)
+        {
+            try
+            {
+                string connectionId = users[userid];
+                Clients.Client(connectionId).reciverprivatemessage(userid, message);
+            }
+            catch
+            {
+                Clients.Caller.reciverprivatemessage("", "User is offline");
+            }
+        }
+#endif
 
         //////////////////////////////////////
         ///////// Override Function //////////
