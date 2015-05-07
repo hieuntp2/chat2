@@ -173,20 +173,32 @@ app.directive('privateChat', function () {
             }
 
             $scope.addmessage = function (userid, message) {
+               
+                // Kiểm tra xem đã có tồn tại chat có user chưa
+                // Nếu chưa thì thêm vào sau đó chat
+                if (!privatechat_manage_service.haveprivatechat(userid))
+                {
+                    privatechat_manage_service.addprivatechat(userid);
+                }
+
                 // Nếu message gửi đúng người thì mới thêm vào chat
-                alert("3: directive get a message from service" + userid + message);
                 if (userid.trim() === $scope.id.trim()) {
                     var dt = new Date();
-                    var message = {};
+                    var item = {};
 
-                    message.name = user_manage_service.getuser(userid).name;
-                    message.avatar = user_manage_service.getuser(userid).avatar;
-                    message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-                    message.content = message;
+                    item.name = user_manage_service.getuser(userid).name;
+                    item.avatar = user_manage_service.getuser(userid).avatar;
+                    item.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                    item.content = message;
 
-                    $scope.messages.push(message);
+                    $scope.messages.push(item);
                 }
-            }           
+                else {
+                    
+                }
+            }
+
+            privatechat_manage_service.receivemessage($scope.addmessage);
         },
         controllerAs: 'controller'
     }

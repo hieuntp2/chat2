@@ -1,55 +1,46 @@
 ﻿
 app.service('hub_service', function ($http, $compile, $rootScope,
     user_manage_service, account_infor_service) {
-
-    //Getting the connection object
-    connection = $.hubConnection();
     var proxy = null;
-
+    
     var initialize = function () {
-        //Getting the connection object
+        //Getting the connection object        
         connection = $.hubConnection();
-
         //Creating proxy
         this.proxy = connection.createHubProxy('ServerHub');
-
-        //Starting connection
         connection.start();
     };
 
     // PublicChat Mesasge
-    var receiveMessage = function (recevieMessageCallBack) {
-        //Attaching a callback to handle acceptGreet client call
-        this.proxy.on('acceptGreet', function (message) {
-            $rootScope.$apply(function () {
-
-                var obj = $.parseJSON(message);
-                var user = user_manage_service.getuser(obj.userid);
-
-                obj.name = user.name;
-                obj.avatar = user.avatar;
-
-                recevieMessageCallBack(obj);
-            });
-        });
-    }
     var sendRequest = function (message) {
         //Invoking greetAll method defined in hub
         this.proxy.invoke('PublicChatSend', message, account_infor_service.getid());
     };
+    var receiveMessage = function (recevieMessageCallBack) {
+        //Attaching a callback to handle acceptGreet client call
+        this.proxy.on('acceptGreet', function (message) {
+            $rootScope.$apply(function () {
+                var obj = $.parseJSON(message);
+                var user = user_manage_service.getuser(obj.userid);
+                obj.name = user.name;
+                obj.avatar = user.avatar;
+                recevieMessageCallBack(obj);
+            });
+        });
+    }
+  
 
     // private chat
     var sendprivateMessage = function (userid, message) {
-        this.proxy.invoke('sendprivateMessage', account_infor_service.getid(), message);
+        this.proxy.invoke('sendprivateMessage', userid, message);
     }
 
-    var recivePrivateChatMessage = function (recevieMessageCallBack) {
+    var privatemessage = function (recevieMessageCallBack) {
         //Attaching a callback to handle acceptGreet client call
-        this.proxy.on('fucntuionsf', function (userid, message) {
+        this.proxy.on('recivePrivateChatMessage', function (userid, message) {
             $rootScope.$apply(function () {
-
-                alert("asdfasdf");
-
+                recevieMessageCallBack(userid, message);
+                return userid;
             });
         });
     }
@@ -87,35 +78,22 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         });
     }
 
-   
-    //var recivePrivateChatMessage = function (privatemessageCallback) {
-    //    //Attaching a callback to handle acceptGreet client call
-    //    this.proxy.on('recivePrivateChatMessage', function (userid, message) {
-    //        alert("1: hub receive private message");
-    //        $rootScope.$apply(function () {
-    //            alert("1: hub receive private message");
-    //            // Tìm kiếm xem có tồn tại private chat chưa
-    //            // Nếu chưa thì thêm private chat vào, sau đó mới gửi message
-    //            //privatechat_manage_service.haveprivatechat(userid);
-    //            //privatemessageCallback(userid, message);
-    //        });
-    //    });
-    //}
 
     return {
         initialize: initialize,
         sendRequest: sendRequest,
         receiveMessage: receiveMessage,
 
+        // private chat
+        sendprivateMessage: sendprivateMessage,
+        privatemessage: privatemessage,
+
         //Group message
         createGroup: createGroup,
         receiveGroupID: receiveGroupID,
         reciveGroupChatMessage: reciveGroupChatMessage,
-        sendGroupMessage: sendGroupMessage,
-
-        // private chat
-        sendprivateMessage: sendprivateMessage,
-        recivePrivateChatMessage: recivePrivateChatMessage
+        sendGroupMessage: sendGroupMessage
+       
     };
 })
 
@@ -267,7 +245,7 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
     {
     }
     var addprivatechat = function (userid) {
-        if (service.haveprivatechat(userid)) {
+        if (haveprivatechat(userid)) {
             alert("already have " + userid);
             return;
         }
@@ -279,6 +257,7 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
         $rootScope.$broadcast('module:createprivatechat', userid);
         return userid;
     }
+   
 
     var removeprivate = function (id) {
         for (var i = 0; i < privates.length; i++) {
@@ -288,7 +267,7 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
             }
         }
     }
-    this.haveprivatechat = function (id) {
+    var haveprivatechat = function (id) {
         for (var i = 0; i < privates.length; i++) {
             if (privates[i].id == id) {
                 return true;
@@ -306,13 +285,14 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
     // đăng ký call-back function và public ra callback-funcion
     
     var receivemessagecallback = function (receiveMessageCallBack) {
-        alert("2: private service reciver message");
+        hub_service.privatemessage(receiveMessageCallBack);
     }
 
     return {
         addprivatechat: addprivatechat,
         sendmessage: sendmessage,
-        receivemessage: receivemessagecallback      
+        receivemessage: receivemessagecallback,
+        haveprivatechat: haveprivatechat
     };
 })
 

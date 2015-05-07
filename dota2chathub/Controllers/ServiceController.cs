@@ -24,7 +24,7 @@ namespace dota2chathub.Controllers
                 birthday = DateTime.Now,
                 displayname = "test friend 1",
                 linkavatar = "../../Content/account_default.png",
-                steamid = "testfriendid1",
+                steamid = "151312",
                 userid = id,
                 username = "testfriendid1"
             };
@@ -52,7 +52,7 @@ namespace dota2chathub.Controllers
             List<FriendInChatBox> listreturn = new List<FriendInChatBox>();
             listreturn.Add(new FriendInChatBox()
             {
-                steamid = "testfriendid1",
+                steamid = "151312",
                 isonline = true
             });
             listreturn.Add(new FriendInChatBox()
