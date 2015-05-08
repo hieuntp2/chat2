@@ -75,7 +75,7 @@ namespace dota2chathub.Controllers
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }
 #else
-         public ActionResult getuserinfo(string id)
+        public ActionResult getuserinfo(string id)
         {
             UserInfo user = null;
             try
@@ -164,14 +164,31 @@ namespace dota2chathub.Controllers
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult findgroup(string name)
-        {
-            List<GroupsInfor> groups = new List<GroupsInfor>();
-           
-                return Json(groups, JsonRequestBehavior.AllowGet); 
-        }
+        
 #endif
 
+        public ActionResult findgroup(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
+            string[] words = name.Split(' ');
+            List<GroupChat> groups = new List<GroupChat>();
+
+            groups = (from item in ServerHub.groups
+                      where words.All(val => item.Value.name.Contains(val))
+                      select new GroupChat
+                      {
+                          hostid = item.Value.hostid,
+                          id = item.Value.id,
+                          name = item.Value.name
+                      }
+                          ).ToList();
+
+            return Json(groups, JsonRequestBehavior.AllowGet);
+        }
 
         private bool checkUserID(string userid)
         {
@@ -199,10 +216,4 @@ namespace dota2chathub.Controllers
         public bool isonline { get; set; }
     }
 
-    public class GroupsInfor
-    {
-        public string id { get; set; }
-        public string hostid { get; set; }
-        public string name { get; set; }
-    }
 }

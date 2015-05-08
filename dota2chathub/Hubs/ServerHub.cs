@@ -29,14 +29,14 @@ namespace dota2chathub.Module.PublicChat
         /////// Private CHAT ROOM //////
         ////////////////////////////////
 
+       
+#if DEBUG
         public void sendprivateMessage(string userid, string message)
         {
-            Clients.All.recivePrivateChatMessage(userid, message);
+            Clients.Caller.recivePrivateChatMessage(userid, message);
         }
-#if DEBUG
-       
 #else
-         public void sendprivateMessage(string userid, string message)
+        public void sendprivateMessage(string userid, string message)
         {
             try
             {
@@ -191,6 +191,11 @@ namespace dota2chathub.Module.PublicChat
             id = generateid.ToString();
             name = groupname;
             users = new List<string>();
+        }
+
+        public GroupChat()
+        {
+            // TODO: Complete member initialization
         }
 
         public void addUser(string id)

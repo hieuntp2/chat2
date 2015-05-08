@@ -293,33 +293,38 @@ app.directive('findGroup', function () {
     return {
         restrict: 'A',
         controller: function ($scope, $http, user_manage_service) {
-            $scope.showheadtable = false;
             $scope.groups = [];
             $scope.isloading = false;
-            $scope.finduser = function () {
-
-                if ($scope.inputusersearch.trim()) {
+            $scope.inputsearch = "";
+            $scope.findgroup = function () {
+                if ($scope.inputsearch.trim()) {
                     $scope.isloading = true;
-                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
+                    $http.get("../../Service/findgroup?name=" + $scope.inputsearch).success(function (data) {
                         $scope.isloading = false;
                         if (data.length == 0) {
-                            $scope.listuser = [];
-                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
+                            $scope.groups = [];
+                            $scope.message = "Không tìm thấy nhóm";
                             return;
                         }
-
-                        $scope.showheadtable = true;
                         $scope.message = "";
+                        $scope.inputsearch = "";
                         for (var i = 0; i < data.length; i++) {
-                            var user = user_manage_service.getuser(data[i]);
-                            $scope.listuser.push(user);
+                            var user = user_manage_service.getuser(data[i].hostid);
+                            data[i].host_name = user.name;
+                            data[i].host_avatar = user.avatar;
                         }
+                        $scope.groups = data;
 
                     }).error(function () {
                         $scope.isloading = false;
                         alert("Lỗi khi lấy module " + address);
                     });
                 }
+            }
+
+            $scope.choosegroup = function(groupid)
+            {
+                alert(groupid);
             }
 
             // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
