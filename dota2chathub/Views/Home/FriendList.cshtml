@@ -6,9 +6,7 @@
             <p><span class="label">{{$scope.message}}</span></p>           
         </div><!-- /.box-header -->
         <div class="box-body no-padding">
-            <div class="overlay" ng-show="isloading">
-                <i class="fa fa-refresh fa-spin"></i>
-            </div>
+          
 
             <ul class="users-list clearfix" id="public_chat_box" style="max-height:350px; overflow-y: auto;" ng-init="init()">
                 <li ng-repeat="friend in friendlist" ng-switch="friend.isonline">
@@ -20,6 +18,9 @@
                     <a ng-switch-when="false" class="users-list-name" ng-click="createprivatechat(friend.id)">{{friend.name}}</a>
                 </li>
             </ul><!-- /.users-list -->
+            <div class="overlay" ng-show="isloading">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
         </div><!-- /.box-body -->
         <div class="box-footer text-center">
             <a ng-click="updateFriends()" class="uppercase">refresh</a>

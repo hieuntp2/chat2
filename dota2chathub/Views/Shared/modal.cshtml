@@ -31,13 +31,15 @@
             </div>
             <div class="modal-body no-padding">
                 <p>{{message}}</p>
-
                 <ul class="users-list clearfix">
                     <li style="cursor:pointer;" ng-click="addtoGroupChat(user.id)" ng-repeat="user in listuser">
                         <img ng-src="{{user.avatar}}" alt="{{user.name}}" style=" width: 50px;">
                         <a class="users-list-name" href="#">{{user.name}}</a>
                     </li>
                 </ul>
+                <div class="overlay" ng-show="isloading">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
             </div>
             <div class="modal-footer">
                 <p>User trong nhóm</p>

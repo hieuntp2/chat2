@@ -39,7 +39,7 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     $scope.$on('module:creategroupchat', function (event, name) {
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
     });
-    this.showmodalcreateGroup = function () {
-        $('#createGroupChatModal').modal('show');
+    $scope.showmodalcreateGroup = function () {
+        $('#createGroupChatModal').modal('show');      
     }
 }]);

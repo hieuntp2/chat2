@@ -257,15 +257,15 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
         $rootScope.$broadcast('module:createprivatechat', userid);
         return userid;
     }
-   
-
     var removeprivate = function (id) {
         for (var i = 0; i < privates.length; i++) {
             if (privates[i].id == id) {
-                delete privates[i];
-                alert("delete group " + i + ", " + groups.length);
+                privates.splice(i, 1);
+                $('#' + id).remove();
             }
         }
+
+        
     }
     var haveprivatechat = function (id) {
         for (var i = 0; i < privates.length; i++) {
@@ -288,11 +288,19 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
         hub_service.privatemessage(receiveMessageCallBack);
     }
 
+
+    // Tái gửi lại mesage nội bộ
+    var internalresendmessage = function(userid, message)
+    {
+        $rootScope.$broadcast('recivePrivateChatMessage', userid, message);
+    }
     return {
         addprivatechat: addprivatechat,
         sendmessage: sendmessage,
         receivemessage: receivemessagecallback,
-        haveprivatechat: haveprivatechat
+        haveprivatechat: haveprivatechat,
+        internalresendmessage: internalresendmessage,
+        removeprivate: removeprivate
     };
 })
 
