@@ -27,8 +27,8 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
         this.isloading = false;        
     }
 
-    $scope.createGroup = function (name) {
-        ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
+    $scope.createGroup = function (name, password) {
+        ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&pass=' + password + '&&userid=' + account_infor_service.getid(), 'main_col_6');
     }
 
         // Đăng ký lắng nghe sự kiện tạo private chat
@@ -41,5 +41,9 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     });
     $scope.showmodalcreateGroup = function () {
         $('#createGroupChatModal').modal('show');      
+    }
+
+    $scope.showmodalfindgroup = function () {
+        $('#findgroupmodal').modal('show');
     }
 }]);

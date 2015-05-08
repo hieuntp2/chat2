@@ -47,6 +47,13 @@ namespace dota2chathub.Controllers
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
+        //public ActionResult findgroup(string name)
+        //{
+        //    List<GroupsInfor> groups = new List<GroupsInfor>();
+        //    groups = (fr)
+        //    return Json(groups, JsonRequestBehavior.AllowGet); 
+        //}
+
         public ActionResult getlistfriends(string steamid = null)
         {
             List<FriendInChatBox> listreturn = new List<FriendInChatBox>();
@@ -156,6 +163,13 @@ namespace dota2chathub.Controllers
             }
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult findgroup(string name)
+        {
+            List<GroupsInfor> groups = new List<GroupsInfor>();
+           
+                return Json(groups, JsonRequestBehavior.AllowGet); 
+        }
 #endif
 
 
@@ -183,5 +197,12 @@ namespace dota2chathub.Controllers
     {
         public string steamid { get; set; }
         public bool isonline { get; set; }
+    }
+
+    public class GroupsInfor
+    {
+        public string id { get; set; }
+        public string hostid { get; set; }
+        public string name { get; set; }
     }
 }

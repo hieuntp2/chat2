@@ -46,8 +46,8 @@ app.service('hub_service', function ($http, $compile, $rootScope,
     }
 
     // Group Chat Message
-    var createGroup = function (groupname) {
-        this.proxy.invoke('createGroup', groupname, account_infor_service.getid());
+    var createGroup = function (groupname, pass) {
+        this.proxy.invoke('createGroup', groupname, pass, account_infor_service.getid());
     }
 
     var reciveGroupChatMessage = function (reciveGroupChatMessageCallBack) {

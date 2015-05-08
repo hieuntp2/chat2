@@ -56,7 +56,7 @@ namespace dota2chathub.Module.PublicChat
         ////////////////////////////////
         /////// GROUP CHAT ROOM ///////
         ////////////////////////////////
-        private static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
+        public static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
         
         public void GroupChatSend(string userid, string groupid, string message)
         {
@@ -69,10 +69,11 @@ namespace dota2chathub.Module.PublicChat
             Clients.Group(groupid).reciveGroupChatMessage(Newtonsoft.Json.JsonConvert.SerializeObject(mess), groupid);
         }
         // add new group
-        public void createGroup(string name, string hostid)
+        public void createGroup(string name, string pass, string hostid)
         {
             GroupChat group = new GroupChat(name);
             group.hostid = hostid;
+            group.password = pass;
             groups.Add(group.id, group);
             addUsertoGroup(hostid, group.id);
 
@@ -180,6 +181,7 @@ namespace dota2chathub.Module.PublicChat
         public string id { set; get; }
         public string name { get; set; }
         public string hostid { get; set; }
+        public string password { get; set; }
         //public Dictionary<string, UserInfo> users;
         public List<string> users;
 

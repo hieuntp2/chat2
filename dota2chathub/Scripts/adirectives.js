@@ -91,6 +91,7 @@ app.directive('publicChat', function () {
     }
 });
 
+// Group Chat
 app.directive('groupChat', function () {
     return {
         restrict: 'A',
@@ -101,10 +102,12 @@ app.directive('groupChat', function () {
             $scope.messages = [];
             $scope.inputMessage = "";
             $scope.users = [];
+            $scope.pass = "";
 
-            $scope.init = function (name) {
+            $scope.init = function (name, pass) {
                 $scope.name = name;
-                hub_service.createGroup(name);
+                $scope.pass = pass;
+                hub_service.createGroup(name, pass);
             }
             $scope.receiveGroupIDclient = function (groupid) {
                 if (!$scope.idgroup.trim()) {
@@ -166,6 +169,132 @@ app.directive('invUserModal', function () {
             $scope.listuser = [];
             $scope.groupusers = [];
             $scope.inputusersearch = "";
+            $scope.isloading = false;
+            $scope.finduser = function () {
+
+                if ($scope.inputusersearch.trim()) {
+                    $scope.isloading = true;
+                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
+                        $scope.isloading = false;
+                        if (data.length == 0) {
+                            $scope.listuser = [];
+                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
+                            return;
+                        }
+
+                        $scope.showheadtable = true;
+                        $scope.message = "";
+                        for (var i = 0; i < data.length; i++) {
+                            var user = user_manage_service.getuser(data[i]);
+                            $scope.listuser.push(user);
+                        }
+
+                    }).error(function () {
+                        $scope.isloading = false;
+                        alert("Lỗi khi lấy module " + address);
+                    });
+                }
+            }
+
+            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
+            // đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
+            $scope.addtoGroupChat = function (id) {
+                // 
+                for (var i = 0; i < $scope.listuser.length; i++) {
+                    if ($scope.listuser[i].id == id) {
+                        // Thêm người dùng này vào khi
+                        $scope.groupusers.push($scope.listuser[i]);
+                        $scope.listuser.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+
+            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
+            // đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
+            $scope.removeuser = function (id) {
+                for (var i = 0; i < $scope.groupusers.length; i++) {
+                    if ($scope.groupusers[i].id == id) {
+                        $scope.listuser.push($scope.groupusers[i]);
+                        $scope.groupusers.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+        },
+        controllerAs: 'controller'
+    }
+});
+app.directive('createGroup', function () {
+    return {
+        restrict: 'A',
+        controller: function ($scope, $http, user_manage_service) {
+            $scope.showheadtable = false;
+            $scope.listuser = [];
+            $scope.groupusers = [];
+            $scope.inputusersearch = "";
+            $scope.isloading = false;
+            $scope.finduser = function () {
+
+                if ($scope.inputusersearch.trim()) {
+                    $scope.isloading = true;
+                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
+                        $scope.isloading = false;
+                        if (data.length == 0) {
+                            $scope.listuser = [];
+                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
+                            return;
+                        }
+
+                        $scope.showheadtable = true;
+                        $scope.message = "";
+                        for (var i = 0; i < data.length; i++) {
+                            var user = user_manage_service.getuser(data[i]);
+                            $scope.listuser.push(user);
+                        }
+
+                    }).error(function () {
+                        $scope.isloading = false;
+                        alert("Lỗi khi lấy module " + address);
+                    });
+                }
+            }
+
+            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
+            // đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
+            $scope.addtoGroupChat = function (id) {
+                // 
+                for (var i = 0; i < $scope.listuser.length; i++) {
+                    if ($scope.listuser[i].id == id) {
+                        // Thêm người dùng này vào khi
+                        $scope.groupusers.push($scope.listuser[i]);
+                        $scope.listuser.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+
+            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
+            // đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
+            $scope.removeuser = function (id) {
+                for (var i = 0; i < $scope.groupusers.length; i++) {
+                    if ($scope.groupusers[i].id == id) {
+                        $scope.listuser.push($scope.groupusers[i]);
+                        $scope.groupusers.splice(i, 1);
+                        return;
+                    }
+                }
+            }
+        },
+        controllerAs: 'controller'
+    }
+});
+app.directive('findGroup', function () {
+    return {
+        restrict: 'A',
+        controller: function ($scope, $http, user_manage_service) {
+            $scope.showheadtable = false;
+            $scope.groups = [];
             $scope.isloading = false;
             $scope.finduser = function () {
 
