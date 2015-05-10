@@ -292,7 +292,7 @@ app.directive('createGroup', function () {
 app.directive('findGroup', function () {
     return {
         restrict: 'A',
-        controller: function ($scope, $http, user_manage_service) {
+        controller: function ($scope, $http, user_manage_service, groups_manage_service) {
             $scope.groups = [];
             $scope.isloading = false;
             $scope.inputsearch = "";
@@ -324,7 +324,11 @@ app.directive('findGroup', function () {
 
             $scope.choosegroup = function(groupid)
             {
-                alert(groupid);
+                var password = prompt("Please enter group password:", "");
+
+                if (password && groupid) {
+                    groups_manage_service.joingroup(groupid, password);
+                }
             }
 
             // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 

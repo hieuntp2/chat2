@@ -34,7 +34,6 @@ app.service('hub_service', function ($http, $compile, $rootScope,
     var sendprivateMessage = function (userid, message) {
         this.proxy.invoke('sendprivateMessage', userid, message);
     }
-
     var privatemessage = function (recevieMessageCallBack) {
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('recivePrivateChatMessage', function (userid, message) {
@@ -49,7 +48,6 @@ app.service('hub_service', function ($http, $compile, $rootScope,
     var createGroup = function (groupname, pass) {
         this.proxy.invoke('createGroup', groupname, pass, account_infor_service.getid());
     }
-
     var reciveGroupChatMessage = function (reciveGroupChatMessageCallBack) {
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('reciveGroupChatMessage', function (message, groupid) {
@@ -67,6 +65,10 @@ app.service('hub_service', function ($http, $compile, $rootScope,
     }
     var sendGroupMessage = function (iduser, idgroup, message) {
         this.proxy.invoke('GroupChatSend', account_infor_service.getid(), idgroup, message);
+    }
+    var joingroup = function(groupid, password)
+    {
+        alert("service hub " + groupid + password);
     }
 
     var receiveGroupID = function (receiveGroupIDCallBack) {
@@ -92,7 +94,8 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         createGroup: createGroup,
         receiveGroupID: receiveGroupID,
         reciveGroupChatMessage: reciveGroupChatMessage,
-        sendGroupMessage: sendGroupMessage
+        sendGroupMessage: sendGroupMessage,
+        joingroup: joingroup
        
     };
 })
@@ -201,10 +204,9 @@ app.service('user_manage_service', function ($http) {
 })
 
 // Lưu trữ và quản lý các nhóm chat đang tồn tại
-app.service('groups_manage_service', function ($http) {
+app.service('groups_manage_service', function ($http, hub_service) {
     var groups = [];
     this.addGroup = function (id, name) {
-
         if (this.haveGroup(id)) {
             return;
         }
@@ -233,6 +235,15 @@ app.service('groups_manage_service', function ($http) {
         }
 
         return false;
+    }
+
+    var joingroup = function(groupid, password)
+    {
+        hub_service.joingroup(groupid, password);
+    }
+
+    return {
+        joingroup: joingroup
     }
 })
 

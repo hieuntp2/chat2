@@ -13,7 +13,6 @@ namespace dota2chathub.Controllers
 #else
      [Authorize]
 #endif
-
     public class HomeController : Controller
     {
          ProjectDEntities db = new ProjectDEntities();
