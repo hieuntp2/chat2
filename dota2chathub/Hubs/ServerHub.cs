@@ -40,7 +40,7 @@ namespace dota2chathub.Module.PublicChat
         {
             try
             {
-                string connectionId = users[userid];
+                string connectionId = StaticData.users[userid];
                 Clients.Client(connectionId).reciverprivatemessage(userid, message);
             }
             catch
@@ -50,13 +50,10 @@ namespace dota2chathub.Module.PublicChat
         }
 #endif
 
-
-        public static Dictionary<string, string> users = new Dictionary<string, string>();
-      
         ////////////////////////////////
         /////// GROUP CHAT ROOM ///////
         ////////////////////////////////
-        public static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
+      
         
         public void GroupChatSend(string userid, string groupid, string message)
         {
@@ -74,12 +71,12 @@ namespace dota2chathub.Module.PublicChat
             GroupChat group = new GroupChat(name);
             group.hostid = hostid;
             group.password = pass;
-            groups.Add(group.id, group);
-            addUsertoGroup(hostid, group.id);
+            StaticData.groups.Add(group.id, group);
+            StaticData.addUsertoGroup(hostid, group.id);
 
             // Lấy giá trị connectionID của userid
 #if DEBUG
-            Groups.Add(users["151312"], group.id);
+            Groups.Add(StaticData.users["151312"], group.id);
 #else
             Groups.Add(users[hostid], group.id);
 #endif
@@ -87,22 +84,25 @@ namespace dota2chathub.Module.PublicChat
           
         }
 
-        public static bool addUsertoGroup(string iduser, string idGroup)
+        public void joingroup(string name, string pass)
         {
-            try
-            {
-                GroupChat group;
-                groups.TryGetValue(idGroup, out group);
-                group.addUser(iduser);
+//            GroupChat group = new GroupChat(name);
+//            group.hostid = hostid;
+//            group.password = pass;
+//            StaticData.groups.Add(group.id, group);
+//            addUsertoGroup(hostid, group.id);
 
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+//            // Lấy giá trị connectionID của userid
+//#if DEBUG
+//            Groups.Add(StaticData.users["151312"], group.id);
+//#else
+//            Groups.Add(users[hostid], group.id);
+//#endif
+//            Clients.Caller.receiveGroupID(group.id);
 
         }
+
+        
 
 
         // invite someone to group
@@ -121,9 +121,9 @@ namespace dota2chathub.Module.PublicChat
             //users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
 
 #if DEBUG
-            users.Add("151312", Context.ConnectionId);            
+            StaticData.users.Add("151312", Context.ConnectionId);            
 #else
-            users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
+            StaticData.users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
 #endif
             return base.OnConnected();
         }
@@ -132,7 +132,7 @@ namespace dota2chathub.Module.PublicChat
         {
             // Khi người dùng disconect thì đồng thời loại bỏ user ra khỏi list quản lý
 #if DEBUG
-            users.Remove("151312");
+            StaticData.users.Remove("151312");
 #else
             users.Remove(Context.User.Identity.GetUserId());
 #endif
@@ -143,76 +143,16 @@ namespace dota2chathub.Module.PublicChat
         public override System.Threading.Tasks.Task OnReconnected()
         {
 #if DEBUG
-            users["151312"] = Context.ConnectionId;
+            StaticData.users["151312"] = Context.ConnectionId;
 #else
-            users[Context.User.Identity.GetUserId()] = Context.ConnectionId;
+            StaticData.users[Context.User.Identity.GetUserId()] = Context.ConnectionId;
 #endif
             // Khi người dùng reconect thì ghi nhận lại connection id
             //
             return base.OnReconnected();
-        }
-
-        //////////////////////////////////////
-        ////////// STATIC Function ///////////
-        //////////////////////////////////////
-
-        public static bool checkUserOnline(string userid)
-        {
-            return users.ContainsKey(userid);
-        }
+        }      
 
     }
 
-    public class ChatMessageObject
-    {
-        public string name { get; set; }
-        public string linkavatar { get; set; }
-        public string userid { get; set; }
-        public string message { get; set; }
-
-        /// <summary>
-        /// 0: public chat room
-        /// </summary>
-        public string idGroup { get; set; }
-    }
-
-    public class GroupChat
-    {
-        public string id { set; get; }
-        public string name { get; set; }
-        public string hostid { get; set; }
-        public string password { get; set; }
-        //public Dictionary<string, UserInfo> users;
-        public List<string> users;
-
-        public GroupChat(string groupname)
-        {
-            Guid generateid = Guid.NewGuid();
-            id = generateid.ToString();
-            name = groupname;
-            users = new List<string>();
-        }
-
-        public GroupChat()
-        {
-            // TODO: Complete member initialization
-        }
-
-        public void addUser(string id)
-        {
-            if (users.Contains(id))
-            {
-                return;
-            }
-            else
-            {
-                users.Add(id);
-            }
-        }
-
-        public void removeUser(string userid)
-        {
-            users.Remove(userid);
-        }
-    }
+   
 }

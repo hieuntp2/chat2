@@ -67,8 +67,8 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         this.proxy.invoke('GroupChatSend', account_infor_service.getid(), idgroup, message);
     }
     var joingroup = function(groupid, password)
-    {
-        alert("service hub " + groupid + password);
+    {        
+        $rootScope.$broadcast('module:joingroup', groupid, password);
     }
 
     var receiveGroupID = function (receiveGroupIDCallBack) {

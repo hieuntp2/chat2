@@ -47,13 +47,6 @@ namespace dota2chathub.Controllers
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
-        //public ActionResult findgroup(string name)
-        //{
-        //    List<GroupsInfor> groups = new List<GroupsInfor>();
-        //    groups = (fr)
-        //    return Json(groups, JsonRequestBehavior.AllowGet); 
-        //}
-
         public ActionResult getlistfriends(string steamid = null)
         {
             List<FriendInChatBox> listreturn = new List<FriendInChatBox>();
@@ -177,7 +170,7 @@ namespace dota2chathub.Controllers
             string[] words = name.Split(' ');
             List<GroupChat> groups = new List<GroupChat>();
 
-            groups = (from item in ServerHub.groups
+            groups = (from item in StaticData.groups
                       where words.All(val => item.Value.name.Contains(val))
                       select new GroupChat
                       {

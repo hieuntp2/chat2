@@ -15,5 +15,24 @@ namespace dota2chathub
             ViewBag.pass = pass;
             return PartialView();
         }
+
+        // GET: PublicChat
+        public ActionResult joingroup(string groupid, string pass, string userid)
+        {
+            if (StaticData.checkPassword(groupid, pass))
+            {
+                GroupChat group = StaticData.getGroup(groupid);
+                ViewBag.groupname = group.name;
+                ViewBag.pass = pass;
+                ViewBag.id = groupid;
+
+                StaticData.addUsertoGroup(userid, groupid);
+                return PartialView("Index");
+            }
+            else
+            {
+                return null;
+            }            
+        }
     }
 }

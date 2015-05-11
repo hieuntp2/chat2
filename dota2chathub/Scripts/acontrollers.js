@@ -39,6 +39,10 @@ app.controller('modulecontroller', ['$scope', '$http', '$compile', 'hub_service'
     $scope.$on('module:creategroupchat', function (event, name) {
         ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
     });
+
+    $scope.$on('module:joingroup', function (event, groupid, password) {
+        ctrll.getmodule('../../GroupChat/joingroup?groupid=' + groupid + '&&pass=' + password + '&&userid=' + account_infor_service.getid(), 'main_col_6');
+    });
     $scope.showmodalcreateGroup = function () {
         $('#createGroupChatModal').modal('show');      
     }
