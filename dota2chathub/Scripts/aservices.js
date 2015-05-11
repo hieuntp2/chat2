@@ -2,7 +2,7 @@
 app.service('hub_service', function ($http, $compile, $rootScope,
     user_manage_service, account_infor_service) {
     var proxy = null;
-    
+
     var initialize = function () {
         //Getting the connection object        
         connection = $.hubConnection();
@@ -28,7 +28,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
             });
         });
     }
-  
+
 
     // private chat
     var sendprivateMessage = function (userid, message) {
@@ -45,8 +45,8 @@ app.service('hub_service', function ($http, $compile, $rootScope,
     }
 
     // Group Chat Message
-    var createGroup = function (groupname, pass) {
-        this.proxy.invoke('createGroup', groupname, pass, account_infor_service.getid());
+    var createGroup = function (groupname, pass, groupid) {
+        this.proxy.invoke('joingroup', groupid, account_infor_service.getid());
     }
     var reciveGroupChatMessage = function (reciveGroupChatMessageCallBack) {
         //Attaching a callback to handle acceptGreet client call
@@ -63,11 +63,11 @@ app.service('hub_service', function ($http, $compile, $rootScope,
             });
         });
     }
-    var sendGroupMessage = function (iduser, idgroup, message) {
+    var sendGroupMessage = function (idgroup, message) {
         this.proxy.invoke('GroupChatSend', account_infor_service.getid(), idgroup, message);
     }
-    var joingroup = function(groupid, password)
-    {        
+    var joingroup = function (groupid, password) {
+        // Goi su kien module:joingroup de acontroller nhan su kien tham gia nhom
         $rootScope.$broadcast('module:joingroup', groupid, password);
     }
 
@@ -96,7 +96,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         reciveGroupChatMessage: reciveGroupChatMessage,
         sendGroupMessage: sendGroupMessage,
         joingroup: joingroup
-       
+
     };
 })
 
@@ -204,10 +204,10 @@ app.service('user_manage_service', function ($http) {
 })
 
 // Lưu trữ và quản lý các nhóm chat đang tồn tại
-app.service('groups_manage_service', function ($http, hub_service) {
+app.service('groups_manage_service', function ($http,$rootScope, hub_service) {
     var groups = [];
-    this.addGroup = function (id, name) {
-        if (this.haveGroup(id)) {
+    var addGroup = function (id, name) {
+        if (haveGroup(id)) {
             return;
         }
 
@@ -218,16 +218,15 @@ app.service('groups_manage_service', function ($http, hub_service) {
 
         groups.push(group);
     }
-    this.removeGroup = function (id) {
+    var removeGroup = function (id) {
 
         for (var i = 0; i < groups.length; i++) {
             if (groups[i].id == id) {
-                delete groups[i];
-                alert("delete group " + i + ", " + groups.length);
+                groups.splice(i, 1);
             }
         }
     }
-    this.haveGroup = function (id) {
+    var haveGroup = function (id) {
         for (var i = 0; i < groups.length; i++) {
             if (groups[i].id == id) {
                 return true;
@@ -237,13 +236,52 @@ app.service('groups_manage_service', function ($http, hub_service) {
         return false;
     }
 
-    var joingroup = function(groupid, password)
-    {
-        hub_service.joingroup(groupid, password);
+    var createGroup = function (name, pass, groupid) {
+        addGroup(groupid, name);
+        hub_service.createGroup(name, pass, groupid);
+    }
+    var joingroup = function (groupid, password) {
+        
+        if (haveGroup(groupid))
+        {
+            alert("Group you find is already in your page!");
+            return;
+        }
+        else {
+            addGroup(groupid, "");
+            hub_service.joingroup(groupid, password);
+        }       
+    }
+ 
+
+    var sendGroupMessage = function (groupid, message) {
+        hub_service.sendGroupMessage(groupid, message);
     }
 
+    var receiveGroupID = function(receiveGroupCallback)
+    {
+        hub_service.receiveGroupID(receiveGroupCallback);
+    }
+
+    var reciveGroupChatMessage = function(reciveGroupChatMessageCallBack)
+    {
+        hub_service.reciveGroupChatMessage(reciveGroupChatMessageCallBack);
+    }
+
+
+    //groupchat:ErrorPassword
+    $rootScope.$on('groupchat:ErrorPassword', function (event, groupid) {
+        alert("Password is incorrect!");
+        removeGroup(groupid);
+    });
     return {
-        joingroup: joingroup
+        createGroup: createGroup,
+        sendGroupMessage: sendGroupMessage,
+        joingroup: joingroup,
+        removeGroup: removeGroup,
+
+        reciveGroupChatMessage: reciveGroupChatMessage,
+        receiveGroupID: receiveGroupID
     }
 })
 
@@ -252,8 +290,7 @@ app.service('groups_manage_service', function ($http, hub_service) {
 app.service('privatechat_manage_service', function ($http, $rootScope, hub_service) {
     var privates = [];
     var service = this;
-    this.init = function()
-    {
+    this.init = function () {
     }
     var addprivatechat = function (userid) {
         if (haveprivatechat(userid)) {
@@ -276,7 +313,7 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
             }
         }
 
-        
+
     }
     var haveprivatechat = function (id) {
         for (var i = 0; i < privates.length; i++) {
@@ -294,15 +331,14 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
     }
 
     // đăng ký call-back function và public ra callback-funcion
-    
+
     var receivemessagecallback = function (receiveMessageCallBack) {
         hub_service.privatemessage(receiveMessageCallBack);
     }
 
 
     // Tái gửi lại mesage nội bộ
-    var internalresendmessage = function(userid, message)
-    {
+    var internalresendmessage = function (userid, message) {
         $rootScope.$broadcast('recivePrivateChatMessage', userid, message);
     }
     return {

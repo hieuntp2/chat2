@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,14 +11,16 @@ namespace dota2chathub
     {
         // GET: PublicChat
         public ActionResult Index(string groupname, string pass, string userid)
-        {        
+        {
+            string id = StaticData.createGroup(groupname, userid, pass);
             ViewBag.groupname = groupname;
             ViewBag.pass = pass;
+            ViewBag.id = id;
             return PartialView();
         }
 
         // GET: PublicChat
-        public ActionResult joingroup(string groupid, string pass, string userid)
+        public async Task<ActionResult> joingroup(string groupid, string pass, string userid)
         {
             if (StaticData.checkPassword(groupid, pass))
             {
@@ -26,12 +29,12 @@ namespace dota2chathub
                 ViewBag.pass = pass;
                 ViewBag.id = groupid;
 
-                StaticData.addUsertoGroup(userid, groupid);
+                await StaticData.addUsertoGroup(userid, groupid);
                 return PartialView("Index");
             }
             else
             {
-                return null;
+                return HttpNotFound();
             }            
         }
     }

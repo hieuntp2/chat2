@@ -28,7 +28,7 @@ namespace dota2chathub.Controllers
                 userid = id,
                 username = "testfriendid1"
             };
-           
+
             return Json(user, JsonRequestBehavior.AllowGet);
         }
 
@@ -170,7 +170,7 @@ namespace dota2chathub.Controllers
             string[] words = name.Split(' ');
             List<GroupChat> groups = new List<GroupChat>();
 
-            groups = (from item in StaticData.groups
+            groups = (from item in StaticData.getAllGroups()
                       where words.All(val => item.Value.name.Contains(val))
                       select new GroupChat
                       {

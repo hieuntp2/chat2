@@ -96,7 +96,7 @@ app.directive('groupChat', function () {
     return {
         restrict: 'A',
         scope: true,
-        controller: function ($scope, $http, hub_service, groups_manage_service, account_infor_service) {
+        controller: function ($scope, $http, groups_manage_service) {
             $scope.idgroup = "";
             $scope.name = "";
             $scope.messages = [];
@@ -104,10 +104,11 @@ app.directive('groupChat', function () {
             $scope.users = [];
             $scope.pass = "";
 
-            $scope.init = function (name, pass) {
+            $scope.init = function (name, pass, groupid) {
                 $scope.name = name;
                 $scope.pass = pass;
-                hub_service.createGroup(name, pass);
+                $scope.idgroup = groupid;
+                groups_manage_service.createGroup(name, pass, groupid);
             }
             $scope.receiveGroupIDclient = function (groupid) {
                 if (!$scope.idgroup.trim()) {
@@ -117,7 +118,7 @@ app.directive('groupChat', function () {
             }
             $scope.sendmessage = function () {
                 if ($scope.inputMessage.trim()) {
-                    hub_service.sendGroupMessage(account_infor_service.getid(), $scope.idgroup, $scope.inputMessage);
+                    groups_manage_service.sendGroupMessage($scope.idgroup, $scope.inputMessage);
                     $scope.inputMessage = "";
                 }
             }
@@ -151,16 +152,18 @@ app.directive('groupChat', function () {
 
             $scope.exit = function()
             {
+                groups_manage_service.removeGroup($scope.idgroup);
                 $("#" + $scope.idgroup).remove();
             }
 
             // set the function will be excuted when server send a message to client
-            hub_service.receiveGroupID($scope.receiveGroupIDclient);
-            hub_service.reciveGroupChatMessage($scope.addmessage);
+            groups_manage_service.receiveGroupID($scope.receiveGroupIDclient);
+            groups_manage_service.reciveGroupChatMessage($scope.addmessage);
         },
         controllerAs: 'controller'
     }
 });
+
 app.directive('invUserModal', function () {
     return {
         restrict: 'A',

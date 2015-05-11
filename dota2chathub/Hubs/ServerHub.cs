@@ -6,6 +6,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using dota2chathub.Models;
 using Microsoft.AspNet.Identity;
+using System.Threading.Tasks;
 
 namespace dota2chathub.Module.PublicChat
 {
@@ -52,9 +53,7 @@ namespace dota2chathub.Module.PublicChat
 
         ////////////////////////////////
         /////// GROUP CHAT ROOM ///////
-        ////////////////////////////////
-      
-        
+        ////////////////////////////////     
         public void GroupChatSend(string userid, string groupid, string message)
         {
             ChatMessageObject mess = new ChatMessageObject()
@@ -62,53 +61,19 @@ namespace dota2chathub.Module.PublicChat
                 userid = userid,
                 message = message
             };
-            //Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
             Clients.Group(groupid).reciveGroupChatMessage(Newtonsoft.Json.JsonConvert.SerializeObject(mess), groupid);
         }
-        // add new group
-        public void createGroup(string name, string pass, string hostid)
+
+        public async Task joingroup(string groupid, string userid)
         {
-            GroupChat group = new GroupChat(name);
-            group.hostid = hostid;
-            group.password = pass;
-            StaticData.groups.Add(group.id, group);
-            StaticData.addUsertoGroup(hostid, group.id);
+            await StaticData.addUsertoGroup(userid, groupid);
 
             // Lấy giá trị connectionID của userid
 #if DEBUG
-            Groups.Add(StaticData.users["151312"], group.id);
+            await Groups.Add(StaticData.getConnectionID("151312"), groupid);
 #else
-            Groups.Add(users[hostid], group.id);
+            await Groups.Add(users[hostid], group.id);
 #endif
-            Clients.Caller.receiveGroupID(group.id);
-          
-        }
-
-        public void joingroup(string name, string pass)
-        {
-//            GroupChat group = new GroupChat(name);
-//            group.hostid = hostid;
-//            group.password = pass;
-//            StaticData.groups.Add(group.id, group);
-//            addUsertoGroup(hostid, group.id);
-
-//            // Lấy giá trị connectionID của userid
-//#if DEBUG
-//            Groups.Add(StaticData.users["151312"], group.id);
-//#else
-//            Groups.Add(users[hostid], group.id);
-//#endif
-//            Clients.Caller.receiveGroupID(group.id);
-
-        }
-
-        
-
-
-        // invite someone to group
-        public void sendInvitation(string hostid, string invid, string groupid)
-        {
-
         }
 
 
@@ -121,7 +86,7 @@ namespace dota2chathub.Module.PublicChat
             //users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
 
 #if DEBUG
-            StaticData.users.Add("151312", Context.ConnectionId);            
+            StaticData.setConnectionId("151312", Context.ConnectionId);            
 #else
             StaticData.users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
 #endif
@@ -132,18 +97,19 @@ namespace dota2chathub.Module.PublicChat
         {
             // Khi người dùng disconect thì đồng thời loại bỏ user ra khỏi list quản lý
 #if DEBUG
-            StaticData.users.Remove("151312");
+            StaticData.removeOfflineUser("151312");
 #else
-            users.Remove(Context.User.Identity.GetUserId());
+            StaticData.users.Remove(Context.User.Identity.GetUserId());
+             StaticData.removeOfflineUser(Context.User.Identity.GetUserId());
 #endif
-
+            
             return base.OnDisconnected(stopCalled);
         }
 
         public override System.Threading.Tasks.Task OnReconnected()
         {
 #if DEBUG
-            StaticData.users["151312"] = Context.ConnectionId;
+            StaticData.setConnectionId("151312", Context.ConnectionId);
 #else
             StaticData.users[Context.User.Identity.GetUserId()] = Context.ConnectionId;
 #endif
@@ -151,8 +117,5 @@ namespace dota2chathub.Module.PublicChat
             //
             return base.OnReconnected();
         }      
-
     }
-
-   
 }
