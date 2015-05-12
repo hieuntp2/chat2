@@ -1,10 +1,11 @@
-﻿var app = angular.module("main_app", ['ngRoute']);
-app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile', 'hub_service', 'account_infor_service', 'privatechat_manage_service',
+﻿
+
+app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile', 'hub_service', 'account_infor_service',
     function ($scope, $rootScope, $http, $compile, hub_service, account_infor_service) {
         var ctrll = this;
         this.modules = [];
 
-        this.isloading = true;
+        ctrll.isloading = true;
 
         this.getmodule = function (address, id_div) {
             $http.get(address).success(function (data) {
@@ -33,15 +34,14 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
         }
 
         this.init = function (userid) {
-
             hub_service.initialize();
+
             ctrll.getmodule('../../PublicChat/Index', 'main_col_6');
             ctrll.getmodule('../../Home/FriendList', 'main_col_3_left');
-
-            account_infor_service.setid(userid);
+            account_infor_service.setid(userid);            
             this.isloading = false;
         }
-
+        //hub_service.initialize();
         $scope.createGroup = function (name, password) {
             ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&pass=' + password + '&&userid=' + account_infor_service.getid(), 'main_col_6');
         }

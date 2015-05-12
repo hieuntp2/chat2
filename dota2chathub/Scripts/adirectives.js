@@ -83,7 +83,7 @@ app.directive('publicChat', function () {
             $scope.offUserInfor = function () {
                 user_manage_service.offUserInfor();
             }
-
+           
             // set the function will be excuted when server send a message to client
             hub_service.receiveMessage($scope.addmessage);
         },

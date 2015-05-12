@@ -2,32 +2,22 @@
     ViewBag.Title = "Home Page";
 }
 
-@*<script src="~/scripts/main.js"></script>*@
-<script src="~/scripts/acontrollers.js"></script>
-<script src="~/scripts/adirectives.js"></script>
-<script src="~/scripts/aservices.js"></script>
-<div ng-app="main_app">
-    <!-- Left col -->
-    <section class="col-lg-3 connectedSortable" id="main_col_3_left"></section><!-- /.Left col -->
-    <!--Miiddle collums-->
-    <div id="indexcontext" ng-controller="modulecontroller as controller" ng-init="controller.init('@ViewBag.userid')">
-        <div class="col-lg-6 connectedSortable" id="main_col_6">
-        </div>
-
-        <div class="btn-group" style="float:right; position:absolute; right:20px; bottom: 70px;">
-            <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalcreateGroup()">Create group</button>
-            <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalfindgroup()">Find group</button>
-        </div>    
-      
+<!-- Left col -->
+<section class="col-lg-3 connectedSortable" id="main_col_3_left"></section><!-- /.Left col -->
+<!--Miiddle collums-->
+<div id="indexcontext">
+    <div class="col-lg-6 connectedSortable" id="main_col_6">
     </div>
-    @Html.Partial("modal")    
-    <section class="col-lg-3 connectedSortable" id="main_col_3_right">
-    </section><!-- right col -->
 
-    <div class="overlay" ng-show="controller.isloading">
-        <i class="fa fa-refresh fa-spin"></i>
+    <div class="btn-group" style="float:right; position:absolute; right:20px; bottom: 70px;">
+        <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalcreateGroup()">Create group</button>
+        <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalfindgroup()">Find group</button>
     </div>
+
 </div>
+<section class="col-lg-3 connectedSortable" id="main_col_3_right"></section><!-- right col -->
+
+
 
 
 

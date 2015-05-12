@@ -1,4 +1,4 @@
-﻿
+﻿var app = angular.module("main_app", ['ngRoute']);
 app.service('hub_service', function ($http, $compile, $rootScope,
     user_manage_service, account_infor_service) {
     var proxy = null;
@@ -8,6 +8,9 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         connection = $.hubConnection();
         //Creating proxy
         this.proxy = connection.createHubProxy('ServerHub');
+
+        // Cần thiết gọi hàm này ở đây để fix bug: vào lần đầu không khởi tạo được connection, phải nhấn F5 mới tạo được connection
+        this.proxy.on('');
         connection.start();
     };
 
@@ -79,7 +82,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
             });
         });
     }
-
+    
 
     return {
         initialize: initialize,

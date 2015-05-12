@@ -86,7 +86,7 @@ namespace dota2chathub.Module.PublicChat
             //users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
 
 #if DEBUG
-            StaticData.setConnectionId("151312", Context.ConnectionId);            
+             StaticData.setConnectionId("151312", Context.ConnectionId);            
 #else
             StaticData.users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
 #endif
