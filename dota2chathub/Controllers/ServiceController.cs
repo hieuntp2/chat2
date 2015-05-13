@@ -121,8 +121,6 @@ namespace dota2chathub.Controllers
             var results = client.DownloadString("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=3C627B068B6CD1170B25D133C6ECED2C&steamid=" + steamid + "&relationship=friend");
             JObject result = (JObject)JsonConvert.DeserializeObject(results);
 
-
-
             // or
             // check useronline here
 
@@ -155,9 +153,7 @@ namespace dota2chathub.Controllers
                 }
             }
             return Json(listreturn, JsonRequestBehavior.AllowGet);
-        }
-
-        
+        }    
 #endif
 
         public ActionResult findgroup(string name)
