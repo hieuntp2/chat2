@@ -13,6 +13,7 @@ namespace dota2chathub.Module.PublicChat
     [HubName("ServerHub")]
     public class ServerHub : Hub
     {
+        ProjectDEntities db = new ProjectDEntities();
         ////////////////////////////////
         /////// PUBLIC CHAT ROOM ///////
         ////////////////////////////////
@@ -37,12 +38,19 @@ namespace dota2chathub.Module.PublicChat
             Clients.Caller.recivePrivateChatMessage(userid, message);
         }
 #else
-        public void sendprivateMessage(string userid, string message)
+        public void sendprivateMessage(string fromuser, string touser, string message)
         {
             try
             {
-                string connectionId = StaticData.users[userid];
-                Clients.Client(connectionId).reciverprivatemessage(userid, message);
+                string connectionId = StaticData.getConnectionID(touser);
+                if(!string.IsNullOrWhiteSpace(connectionId))
+                {
+                    Clients.Caller.reciverprivatemessage("", "User is offline");
+                }
+                else
+                {
+                    Clients.Client(connectionId).reciverprivatemessage(fromuser, message);
+                }                
             }
             catch
             {
@@ -66,13 +74,13 @@ namespace dota2chathub.Module.PublicChat
 
         public async Task joingroup(string groupid, string userid)
         {
-            await StaticData.addUsertoGroup(userid, groupid);
+            StaticData.addUsertoGroup(userid, groupid);
 
             // Lấy giá trị connectionID của userid
 #if DEBUG
-            await Groups.Add(StaticData.getConnectionID("151312"), groupid);
+            Groups.Add(StaticData.getConnectionID("151312"), groupid);
 #else
-            await Groups.Add(users[hostid], group.id);
+            Groups.Add(StaticData.getConnectionID(userid), groupid);
 #endif
         }
 
@@ -83,12 +91,10 @@ namespace dota2chathub.Module.PublicChat
         public override System.Threading.Tasks.Task OnConnected()
         {
             // Khi người dùng đăng nhập vào, thì đồng thời lưu userid-connectid vào list để quản lý
-            //users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
-
 #if DEBUG
              StaticData.setConnectionId("151312", Context.ConnectionId);            
 #else
-            StaticData.users.Add(Context.User.Identity.GetUserId(), Context.ConnectionId);
+            StaticData.setConnectionIdbyAspNetUserID(Context.User.Identity.GetUserId(), Context.ConnectionId);
 #endif
             return base.OnConnected();
         }
@@ -99,8 +105,7 @@ namespace dota2chathub.Module.PublicChat
 #if DEBUG
             StaticData.removeOfflineUser("151312");
 #else
-            StaticData.users.Remove(Context.User.Identity.GetUserId());
-             StaticData.removeOfflineUser(Context.User.Identity.GetUserId());
+            StaticData.removeOfflineUserbyAspNetUser(Context.User.Identity.GetUserId());
 #endif
             
             return base.OnDisconnected(stopCalled);
@@ -111,7 +116,7 @@ namespace dota2chathub.Module.PublicChat
 #if DEBUG
             StaticData.setConnectionId("151312", Context.ConnectionId);
 #else
-            StaticData.users[Context.User.Identity.GetUserId()] = Context.ConnectionId;
+            StaticData.setConnectionIdbyAspNetUserID(Context.User.Identity.GetUserId(),Context.ConnectionId);
 #endif
             // Khi người dùng reconect thì ghi nhận lại connection id
             //

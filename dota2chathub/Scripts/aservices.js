@@ -35,7 +35,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 
     // private chat
     var sendprivateMessage = function (userid, message) {
-        this.proxy.invoke('sendprivateMessage', userid, message);
+        this.proxy.invoke('sendprivateMessage', account_infor_service.getid(), userid, message);
     }
     var privatemessage = function (recevieMessageCallBack) {
         //Attaching a callback to handle acceptGreet client call
@@ -55,6 +55,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('reciveGroupChatMessage', function (message, groupid) {
             $rootScope.$apply(function () {
+               
                 var obj = $.parseJSON(message);
                 var user = user_manage_service.getuser(obj.userid);
 
@@ -83,7 +84,6 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         });
     }
     
-
     return {
         initialize: initialize,
         sendRequest: sendRequest,
@@ -255,7 +255,6 @@ app.service('groups_manage_service', function ($http,$rootScope, hub_service) {
             hub_service.joingroup(groupid, password);
         }       
     }
- 
 
     var sendGroupMessage = function (groupid, message) {
         hub_service.sendGroupMessage(groupid, message);

@@ -98,7 +98,7 @@ namespace dota2chathub.Controllers
             // B2: Loại bỏ các người chơi ko online
             for (int i = 0; i < users.Count; i++)
             {
-                if (ServerHub.users.ContainsKey(users[i]))
+                if (StaticData.checkUserOnline(users[i]))
                 {
                     continue;
                 }
@@ -132,7 +132,7 @@ namespace dota2chathub.Controllers
                 string userid = result["friendslist"]["friends"][i]["steamid"].ToString();
                 if (checkUserID(userid))
                 {
-                    if (ServerHub.checkUserOnline(userid))
+                    if (StaticData.checkUserOnline(userid))
                     {
                         listreturn.Add(new FriendInChatBox()
                         {

@@ -83,7 +83,7 @@ app.directive('publicChat', function () {
             $scope.offUserInfor = function () {
                 user_manage_service.offUserInfor();
             }
-           
+
             // set the function will be excuted when server send a message to client
             hub_service.receiveMessage($scope.addmessage);
         },
@@ -140,18 +140,15 @@ app.directive('groupChat', function () {
                 $('#inviteusermodal').modal('show');
             }
 
-            $scope.getlistuser = function()
-            {
+            $scope.getlistuser = function () {
                 return $scope.users;
             }
 
-            $scope.setlistusers = function(users)
-            {
+            $scope.setlistusers = function (users) {
                 $scope.users = users;
             }
 
-            $scope.exit = function()
-            {
+            $scope.exit = function () {
                 groups_manage_service.removeGroup($scope.idgroup);
                 $("#" + $scope.idgroup).remove();
             }
@@ -325,8 +322,7 @@ app.directive('findGroup', function () {
                 }
             }
 
-            $scope.choosegroup = function(groupid)
-            {
+            $scope.choosegroup = function (groupid) {
                 var password = prompt("Please enter group password:", "");
 
                 if (password && groupid) {
@@ -387,19 +383,18 @@ app.directive('privateChat', function () {
 
             $scope.sendmessage = function () {
                 if ($scope.inputMessage.trim()) {
-                    privatechat_manage_service.sendmessage(account_infor_service.getid(), $scope.inputMessage);
+                    privatechat_manage_service.sendmessage($scope.id, $scope.inputMessage);
 
-                    //$scope.addmessage(account_infor_service.getid(), $scope.inputMessage);
+                    $scope.addselfmessage($scope.inputMessage);
                     $scope.inputMessage = "";
                 }
             }
 
             $scope.addmessage = function (userid, message) {
-               
+
                 // Kiểm tra xem đã có tồn tại chat có user chưa
                 // Nếu chưa thì thêm vào sau đó chat
-                if (!privatechat_manage_service.haveprivatechat(userid))
-                {
+                if (!privatechat_manage_service.haveprivatechat(userid)) {
                     privatechat_manage_service.addprivatechat(userid);
                     privatechat_manage_service.internalresendmessage(userid, message);
                 }
@@ -417,8 +412,21 @@ app.directive('privateChat', function () {
                     $scope.messages.push(item);
                 }
                 else {
-                    
+
                 }
+            }
+
+            $scope.addselfmessage = function (message) {
+                var userid = account_infor_service.getid();
+                var dt = new Date();
+                var item = {};
+
+                item.name = user_manage_service.getuser(userid).name;
+                item.avatar = user_manage_service.getuser(userid).avatar;
+                item.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                item.content = message;
+
+                $scope.messages.push(item);
             }
 
             $scope.exit = function () {

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-
+using dota2chathub.Models;
 namespace dota2chathub
 {
     public class StaticData
     {
         private static Dictionary<string, string> users = new Dictionary<string, string>();
         private static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
+
 
         public static Dictionary<string, GroupChat> getAllGroups()
         {
@@ -32,6 +33,25 @@ namespace dota2chathub
                 users.Add(userid, connectionid);
             }
         }
+
+        /// <summary>
+        /// Thêm/ cập nhật connectionID người dùng vào danh sách người dùng đang online theo AspNetUser ID
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="connectionid"></param>
+        public static void setConnectionIdbyAspNetUserID(string aspnetuserid, string connectionid)
+        {
+            string userid = getUserIDbyAspNetUserID(aspnetuserid);
+            if (users.ContainsKey(userid))
+            {
+                users[userid] = connectionid;
+            }
+            else
+            {
+                users.Add(userid, connectionid);
+            }
+        }
+        
         /// <summary>
         /// Lấy connectionid của người dùng
         /// </summary>
@@ -113,6 +133,7 @@ namespace dota2chathub
             return;
         }
 
+
         /// <summary>
         /// Kiếm tra người dùng có tồn tại trong group không
         /// </summary>
@@ -128,16 +149,22 @@ namespace dota2chathub
             return false;
         }
 
-        public static async Task removeUserfromGroup(string userid, string groupid)
+        public static async Task removeUserfromGroupID(string userid, string groupid)
         {
             if (groups.ContainsKey(groupid))
             {
                 groups[groupid].removeUser(userid);
 
                 // kiểm tra xem nếu nhóm còn 0 người đang onl thì xóa nhóm
-                await removeGroup(groupid);
+                removeGroup(groupid);
             }
         }
+
+        /// <summary>
+        /// Xóa người dùng khi offline bởi userid
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
         public static async Task removeOfflineUser(string userid)
         {
             if (users.ContainsKey(userid))
@@ -148,7 +175,29 @@ namespace dota2chathub
                     if (item.Value.checkUser(userid))
                     {
                         item.Value.removeUser(userid);
-                        await removeGroup(item.Key);
+                        removeGroup(item.Key);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Xóa người dùng khi offline bởi AspNetUserID
+        /// </summary>
+        /// <param name="aspnetuserid">AspNetUser ID</param>
+        /// <returns></returns>
+        public static async Task removeOfflineUserbyAspNetUser(string aspnetuserid)
+        {
+            string userid = getUserIDbyAspNetUserID(aspnetuserid);
+            if (users.ContainsKey(userid))
+            {
+                users.Remove(userid);
+                foreach (var item in groups)
+                {
+                    if (item.Value.checkUser(userid))
+                    {
+                        item.Value.removeUser(userid);
+                        removeGroup(item.Key);
                     }
                 }
             }
@@ -161,6 +210,13 @@ namespace dota2chathub
             group.password = password;
             StaticData.groups.Add(group.id, group);
             return group.id;
+        }
+
+        private static string getUserIDbyAspNetUserID(string aspnetuserid)
+        {
+            ProjectDEntities db = new ProjectDEntities();
+            string userid = db.AspNetUsers.SingleOrDefault(t => t.Id == aspnetuserid).UserName;
+            return userid;
         }
     }
 

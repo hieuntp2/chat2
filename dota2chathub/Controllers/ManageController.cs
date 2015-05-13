@@ -33,9 +33,15 @@ namespace dota2chathub.Controllers
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
 
-           // var userId = User.Identity.GetUserId();
+            
+
+#if DEBUG
             UserInfo model = db.UserInfoes.SingleOrDefault(t => t.userid == "151312");
-           
+#else
+            string userId = User.Identity.GetUserId();
+            AspNetUser user = db.AspNetUsers.SingleOrDefault(t => t.Id == userId);
+            UserInfo model = db.UserInfoes.SingleOrDefault(t => t.userid == user.UserName);
+#endif
             return PartialView(model);
         }
 
