@@ -179,6 +179,20 @@ namespace dota2chathub.Controllers
             return Json(groups, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult getUserInGroup(string groupid)
+        {
+            if(string.IsNullOrWhiteSpace(groupid))
+            {
+                return null;
+            }
+
+            List<string> user = StaticData.getListUserInGroup(groupid);
+            if(user != null)
+                return Json(user, JsonRequestBehavior.AllowGet); 
+            else
+                return null;
+        }
+
         private bool checkUserID(string userid)
         {
             UserInfo user = db.UserInfoes.SingleOrDefault(t => t.userid == userid);

@@ -46,10 +46,14 @@ app.directive('publicChat', function () {
 
             $scope.sendmessage = function () {
 
-                // call a service to send a message to server
-                hub_service.sendRequest($("#txt_public_chat_input").val());
-                $("#txt_public_chat_input").val('');
-                $("#txt_public_chat_input").focus();
+                if ($("#txt_public_chat_input").val())
+                {
+                    // call a service to send a message to server
+                    hub_service.sendRequest($("#txt_public_chat_input").val());
+                    $("#txt_public_chat_input").val('');
+                    $("#txt_public_chat_input").focus();
+                    scrollToBottomDiv("public_chat_box");
+                }               
             }
 
             $scope.addmessage = function (messageobject) {
@@ -63,13 +67,8 @@ app.directive('publicChat', function () {
                 message.content = messageobject['message'];
 
                 $scope.messages.push(message);
-
-                $(".chatboxbody").scrollTop($(".chatboxbody").offset().top);
-                //hub_service.send();
-
-                $('.chatboxbody').animate({
-                    scrollTop: $('.chatboxbody').get(0).scrollHeight
-                }, 500);
+                
+                scrollToBottomDiv("public_chat_box");               
             }
 
             $scope.clearmessage = function () {
@@ -96,7 +95,7 @@ app.directive('groupChat', function () {
     return {
         restrict: 'A',
         scope: true,
-        controller: function ($scope, $http, groups_manage_service) {
+        controller: function ($scope, $http, groups_manage_service, user_manage_service, account_infor_service) {
             $scope.idgroup = "";
             $scope.name = "";
             $scope.messages = [];
@@ -109,6 +108,7 @@ app.directive('groupChat', function () {
                 $scope.pass = pass;
                 $scope.idgroup = groupid;
                 groups_manage_service.createGroup(name, pass, groupid);
+                $scope.addusertogroup(account_infor_service.getid());
             }
             $scope.receiveGroupIDclient = function (groupid) {
                 if (!$scope.idgroup.trim()) {
@@ -133,24 +133,45 @@ app.directive('groupChat', function () {
                     message.content = messageobject['message'];
 
                     $scope.messages.push(message);
+
+                    scrollToBottomDiv("group_chat_box_content_" + $scope.idgroup);
+                    
                 }
             }
 
-            $scope.invUser = function () {
-                $('#inviteusermodal').modal('show');
-            }
+            $scope.refeshusers = function()
+            {
+                $http.get("../../service/getUserInGroup?groupid=" + $scope.idgroup).success(function (data) {
 
+                    $scope.users = [];
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        var user = user_manage_service.getuser(data[i]);
+                        $scope.users.push(user);
+                    }
+                }).error(function () {
+                    alert("Không tồn tại userid = " + userid);
+                });
+            }
             $scope.getlistuser = function () {
                 return $scope.users;
             }
-
             $scope.setlistusers = function (users) {
                 $scope.users = users;
             }
-
             $scope.exit = function () {
                 groups_manage_service.removeGroup($scope.idgroup);
                 $("#" + $scope.idgroup).remove();
+            }
+
+            $scope.addusertogroup = function(userid)
+            {
+                var user = user_manage_service.getuser(userid);
+                $scope.users.push(user);
+            }
+            $scope.privatechatuser = function(userid)
+            {
+                alert(userid);
             }
 
             // set the function will be excuted when server send a message to client
@@ -330,31 +351,32 @@ app.directive('findGroup', function () {
                 }
             }
 
-            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
-            // đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
-            $scope.addtoGroupChat = function (id) {
-                // 
-                for (var i = 0; i < $scope.listuser.length; i++) {
-                    if ($scope.listuser[i].id == id) {
-                        // Thêm người dùng này vào khi
-                        $scope.groupusers.push($scope.listuser[i]);
-                        $scope.listuser.splice(i, 1);
-                        return;
-                    }
-                }
-            }
+            // Not Use
+            //// Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
+            //// đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
+            //$scope.addtoGroupChat = function (id) {
+            //    // 
+            //    for (var i = 0; i < $scope.listuser.length; i++) {
+            //        if ($scope.listuser[i].id == id) {
+            //            // Thêm người dùng này vào khi
+            //            $scope.groupusers.push($scope.listuser[i]);
+            //            $scope.listuser.splice(i, 1);
+            //            return;
+            //        }
+            //    }
+            //}
 
-            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
-            // đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
-            $scope.removeuser = function (id) {
-                for (var i = 0; i < $scope.groupusers.length; i++) {
-                    if ($scope.groupusers[i].id == id) {
-                        $scope.listuser.push($scope.groupusers[i]);
-                        $scope.groupusers.splice(i, 1);
-                        return;
-                    }
-                }
-            }
+            //// Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
+            //// đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
+            //$scope.removeuser = function (id) {
+            //    for (var i = 0; i < $scope.groupusers.length; i++) {
+            //        if ($scope.groupusers[i].id == id) {
+            //            $scope.listuser.push($scope.groupusers[i]);
+            //            $scope.groupusers.splice(i, 1);
+            //            return;
+            //        }
+            //    }
+            //}
         },
         controllerAs: 'controller'
     }
@@ -410,6 +432,7 @@ app.directive('privateChat', function () {
                     item.content = message;
 
                     $scope.messages.push(item);
+                    scrollToBottomDiv("private_chat_box_content_" + $scope.id);                    
                 }
                 else {
 

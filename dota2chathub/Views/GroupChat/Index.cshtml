@@ -3,22 +3,27 @@
     <div class="box-header" style="cursor: move;">
         <i class="fa fa-comments-o"></i>
         <h3 class="box-title">{{name}}: {{idgroup}}</h3>
+        <ul class="users-list clearfix" id="public_chat_box" style="max-height:350px; overflow-y: auto;">
+            <li ng-repeat="user in users" class="ng-scope no-padding" style="width: 30px;">
+                <img style="width: 30px;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
+            </li>
+        </ul>
+
         <div class="pull-right box-tools">
             <!-- button with a dropdown -->
             <div class="btn-group">
                 <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bars"></i></button>
                 <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a ng-click="clearmessage()">Xóa tin nhắn</a></li>
+                    <li><a ng-click="clearmessage()">Delete message</a></li>
                     <li class="divider"></li>
-                    <li><a ng-click="showuser()">Người tham gia</a></li>
-                    <li><a ng-click="invUser()">Mời tham gia</a></li>
+                    <li><a ng-click="refeshusers()">Refesh user</a></li>
                     <li class="divider"></li>
-                    <li><a ng-click="exit()">Thoát nhóm</a></li>
+                    <li><a ng-click="exit()">Exit</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="box-body chat chatboxbody" id="group_chat_box" style="max-height:350px; overflow-y: scroll;">
+    <div class="box-body chat chatboxbody" id="{{ 'group_chat_box_content_' + idgroup }}" style="max-height:350px; overflow-y: scroll;">
         <!-- chat item -->
         <div class="item" ng-repeat="message in messages">
             <img ng-src="{{message.avatar}}" alt="user image" class="online" />

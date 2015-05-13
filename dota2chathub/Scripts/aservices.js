@@ -162,8 +162,9 @@ app.service('user_manage_service', function ($http) {
         }
         return null;
     }
-    this.getuser = function (userid) {
 
+    this.getuser = function (userid) {
+      
         var user = {};
         // neu ton tai userid thi thoat ra
         for (var i = 0; i < listuser.length; i++) {
@@ -176,11 +177,9 @@ app.service('user_manage_service', function ($http) {
         this.adduser(user);
         return user;
     }
-
     this.offUserInfor = function () {
         $("#_user_infor_view").css({ display: 'none' });
     }
-
     this.showmodalUserInfor = function (userid) {
         if (userid == null || userid == "") {
             return;
@@ -382,8 +381,11 @@ app.service('account_infor_service', function ($http) {
 
 })
 
-function autoscroll() {
-    $(".chatboxbody").scrollTop(1000);
+function scrollToBottomDiv(id_div)
+{   
+    $('#' + id_div).stop().animate({
+        scrollTop: $("#" + id_div)[0].scrollHeight
+    }, 800);
 }
 
 ///////////////////////////////////////////

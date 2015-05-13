@@ -79,6 +79,17 @@ namespace dota2chathub
             }
             return false;
         }
+
+        /// <summary>
+        /// Kiểm tra xem có tồn tại group hay không
+        /// </summary>
+        /// <param name="groupid">GroupID kiểm tra</param>
+        /// <returns></returns>
+        public static bool haveGroup(string groupid)
+        {
+            return groups.ContainsKey(groupid);
+        }
+
         public static GroupChat getGroup(string groupid)
         {
             if (groups.ContainsKey(groupid))
@@ -88,6 +99,19 @@ namespace dota2chathub
             return null;
         }
 
+        /// <summary>
+        /// Lấy danh sách userid trong group xác định
+        /// </summary>
+        /// <param name="groupid">GroupID</param>
+        /// <returns>Nếu có: trả về danh sách userid, nếu không thì trả về null</returns>
+        public static List<string> getListUserInGroup(string groupid)
+        {
+            if(haveGroup(groupid))
+            {
+                return groups[groupid].users;
+            }
+            return null;
+        }
 
         /// <summary>
         /// Thêm người dùng vào group đã tồn tại

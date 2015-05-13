@@ -47,10 +47,10 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <!-- ADD THE CLASS sidedar-collapse TO HIDE THE SIDEBAR PRIOR TO LOADING THE SITE -->
-<body class="skin-blue sidebar-collapse fixed box" ng-app="main_app">
+<body class="skin-blue sidebar-collapse fixed box">
     <!-- Site wrapper -->
 
-    <div class="wrapper" ng-controller="modulecontroller as controller" ng-init="controller.init('@ViewBag.userid')">
+    <div class="wrapper">
         <!-- =============================================== -->
         <!-- Left side column. contains the sidebar -->
         @Html.Partial("_LoginPartial")
@@ -233,9 +233,7 @@
             <strong>This website is under-construct. Please wait to release version. Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
         </footer>
 
-        <div class="overlay" ng-show="controller.isloading">
-            <i class="fa fa-refresh fa-spin"></i>
-        </div>
+       
 
         @Html.Partial("modal")
     </div><!-- ./wrapper -->

@@ -31,7 +31,6 @@ namespace dota2chathub.Module.PublicChat
         /////// Private CHAT ROOM //////
         ////////////////////////////////
 
-       
 #if DEBUG
         public void sendprivateMessage(string userid, string message)
         {

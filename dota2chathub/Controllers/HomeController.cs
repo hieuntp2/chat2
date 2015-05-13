@@ -9,26 +9,15 @@ using dota2chathub.Models;
 namespace dota2chathub.Controllers
 {
 #if DEBUG
-     //[Authorize]
-#else
-     [Authorize]
-#endif
+    //[Authorize]
     public class HomeController : Controller
     {
-         ProjectDEntities db = new ProjectDEntities();
+        ProjectDEntities db = new ProjectDEntities();
 
         public ActionResult Index()
         {
-#if DEBUG
-            ViewBag.userid = "151312";            
+            ViewBag.userid = "151312";
             return View();
-#else
-string id = User.Identity.GetUserId();
-            string steamid = db.AspNetUsers.SingleOrDefault(t => t.Id == id).UserName;
-            ViewBag.userid = steamid;
-            ViewBag.userifor = db.UserInfoes.SingleOrDefault(t => t.userid == steamid);
-            return View();
-#endif
         }
 
         public ActionResult FriendList()
@@ -38,3 +27,26 @@ string id = User.Identity.GetUserId();
 
     }
 }
+#else
+    [Authorize]
+    public class HomeController : Controller
+    {
+        ProjectDEntities db = new ProjectDEntities();
+
+        public ActionResult Index()
+        {
+            string id = User.Identity.GetUserId();
+            string steamid = db.AspNetUsers.SingleOrDefault(t => t.Id == id).UserName;
+            ViewBag.userid = steamid;
+            ViewBag.userifor = db.UserInfoes.SingleOrDefault(t => t.userid == steamid);
+            return View();
+        }
+
+        public ActionResult FriendList()
+        {
+            return PartialView();
+        }
+
+    }
+}
+#endif
