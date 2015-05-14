@@ -52,7 +52,6 @@ app.directive('publicChat', function () {
                     hub_service.sendRequest($("#txt_public_chat_input").val());
                     $("#txt_public_chat_input").val('');
                     $("#txt_public_chat_input").focus();
-                    scrollToBottomDiv("public_chat_box");
                 }               
             }
 
@@ -414,7 +413,7 @@ app.directive('privateChat', function () {
                     item.content = message;
 
                     $scope.messages.push(item);
-                    scrollToBottomDiv("private_chat_box_content_" + $scope.id);                    
+                    scrollToBottomDiv("private_chat_box_content_" + $scope.id);
                 }
                 else {
 
@@ -432,6 +431,7 @@ app.directive('privateChat', function () {
                 item.content = message;
 
                 $scope.messages.push(item);
+                scrollToBottomDiv("private_chat_box_content_" + $scope.id);
             }
 
             $scope.exit = function () {
@@ -540,3 +540,9 @@ app.directive('friendsBox', function () {
         controllerAs: 'controller'
     }
 });
+
+function scrollToBottomDiv(id_div) {
+    $('#' + id_div).stop().animate({
+        scrollTop: $("#" + id_div)[0].scrollHeight
+    }, 800);
+}

@@ -308,7 +308,6 @@
     </Content>
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\baivietscripts.js" />
     <Content Include="Scripts\acontrollers.js" />
     <Content Include="Scripts\adirectives.js" />
     <Content Include="Scripts\main.js" />

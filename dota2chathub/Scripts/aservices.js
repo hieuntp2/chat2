@@ -339,6 +339,11 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
         hub_service.privatemessage(receiveMessageCallBack);
     }
 
+    var getprivatemessagefromhub = function()
+    {
+
+    }
+
 
     // Tái gửi lại mesage nội bộ
     var internalresendmessage = function (userid, message) {

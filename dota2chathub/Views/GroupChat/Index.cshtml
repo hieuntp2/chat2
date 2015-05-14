@@ -3,7 +3,7 @@
     <div class="box-header" style="cursor: move;">
         <i class="fa fa-comments-o"></i>
         <h3 class="box-title">{{name}}: {{idgroup}}</h3>
-        <ul class="users-list clearfix" id="public_chat_box" style="max-height:350px; overflow-y: auto;">
+        <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;">
             <li ng-repeat="user in users" class="ng-scope no-padding" style="width: 30px;">
                 <img style="width: 30px;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
             </li>
