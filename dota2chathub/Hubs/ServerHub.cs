@@ -32,9 +32,9 @@ namespace dota2chathub.Module.PublicChat
         ////////////////////////////////
 
 #if DEBUG
-        public void sendprivateMessage(string userid, string message)
+        public void sendprivateMessage(string fromuser, string touser, string message)
         {
-            Clients.Caller.recivePrivateChatMessage(userid, message);
+            Clients.Caller.reciverprivatemessage(fromuser, message);
         }
 #else
         public void sendprivateMessage(string fromuser, string touser, string message)

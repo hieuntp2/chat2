@@ -63,8 +63,9 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 
                 obj.linkavatar = user.avatar;
                 obj.name = user.name;
-
                 obj.avatar = user.avatar;
+                obj.id = user.id;
+
                 reciveGroupChatMessageCallBack(obj, groupid);
             });
         });
@@ -295,7 +296,7 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
     var service = this;
     this.init = function () {
     }
-    var addprivatechat = function (userid) {
+    var addprivatechat = function (userid, message) {
         if (haveprivatechat(userid)) {
             alert("already have " + userid);
             return;
@@ -305,7 +306,7 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
             id: userid
         }
         privates.push(chat);
-        $rootScope.$broadcast('module:createprivatechat', userid);
+        $rootScope.$broadcast('module:createprivatechat', userid, message);
         return userid;
     }
     var removeprivate = function (id) {
@@ -337,18 +338,24 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
 
     var receivemessagecallback = function (receiveMessageCallBack) {
         hub_service.privatemessage(receiveMessageCallBack);
+       
     }
-
-    var getprivatemessagefromhub = function()
-    {
-
-    }
-
 
     // Tái gửi lại mesage nội bộ
     var internalresendmessage = function (userid, message) {
-        $rootScope.$broadcast('recivePrivateChatMessage', userid, message);
+        $rootScope.$broadcast('reciverprivatemessage', userid, message);
     }
+
+    var getMessageFromHub = function(userid, message)
+    {
+        if (!haveprivatechat(userid)) {
+            addprivatechat(userid, message);
+        }
+
+        $rootScope.$broadcast("directivePM::receivemessage", userid, message);
+    }
+
+    hub_service.privatemessage(getMessageFromHub);
     return {
         addprivatechat: addprivatechat,
         sendmessage: sendmessage,
@@ -387,8 +394,6 @@ app.service('account_infor_service', function ($http) {
     }
 
 })
-
-
 
 ///////////////////////////////////////////
 ////////////////// ADDON //////////////////

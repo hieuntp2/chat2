@@ -804,6 +804,7 @@
     <Content Include="Scripts\plugins\timepicker\bootstrap-timepicker.min.css" />
     <Content Include="Scripts\plugins\timepicker\bootstrap-timepicker.min.js" />
     <Content Include="Scripts\aservices.js" />
+    <Content Include="Views\PublicChat\TemplateCollect.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

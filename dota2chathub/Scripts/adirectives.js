@@ -134,7 +134,7 @@ app.directive('groupChat', function () {
                     $scope.messages.push(message);
 
                     scrollToBottomDiv("group_chat_box_content_" + $scope.idgroup);
-                    $scope.addusertogroup(message["id"]);
+                    $scope.addusertogroup(messageobject['id']);
                 }
             }
 
@@ -142,14 +142,14 @@ app.directive('groupChat', function () {
             {
                 for(var i = 0 ; i < $scope.users.length; i++)
                 {
-                    if(users[i].id == userid)
+                    if ($scope.users[i].id == userid)
                     {
                         return;
                     }
                 }
 
                 var user = user_manage_service.getuser(userid);
-                users.push(user);
+                $scope.users.push(user);
             }
 
             $scope.refeshusers = function()
@@ -367,7 +367,7 @@ app.directive('privateChat', function () {
     return {
         restrict: 'A',
         scope: true,
-        controller: function ($scope, $http, privatechat_manage_service, account_infor_service, user_manage_service) {
+        controller: function ($scope, $http, $rootScope, privatechat_manage_service, account_infor_service, user_manage_service) {
             // id user chat to
             $scope.id = "";
 
@@ -395,12 +395,12 @@ app.directive('privateChat', function () {
 
             $scope.addmessage = function (userid, message) {
 
-                // Kiểm tra xem đã có tồn tại chat có user chưa
-                // Nếu chưa thì thêm vào sau đó chat
-                if (!privatechat_manage_service.haveprivatechat(userid)) {
-                    privatechat_manage_service.addprivatechat(userid);
-                    privatechat_manage_service.internalresendmessage(userid, message);
-                }
+                //// Kiểm tra xem đã có tồn tại chat có user chưa
+                //// Nếu chưa thì thêm vào sau đó chat
+                //if (!privatechat_manage_service.haveprivatechat(userid)) {
+                //    privatechat_manage_service.addprivatechat(userid);
+                //    privatechat_manage_service.internalresendmessage(userid, message);
+                //}
 
                 // Nếu message gửi đúng người thì mới thêm vào chat
                 if (userid.trim() === $scope.id.trim()) {
@@ -438,7 +438,11 @@ app.directive('privateChat', function () {
                 privatechat_manage_service.removeprivate($scope.id);
             }
 
-            privatechat_manage_service.receivemessage($scope.addmessage);
+            $rootScope.$on('directivePM::receivemessage', function (event, userid, mesage) {
+                $scope.addmessage(userid, mesage);
+            });
+
+           // privatechat_manage_service.receivemessage($scope.addmessage);
         },
         controllerAs: 'controller'
     }

@@ -2,10 +2,14 @@
 <div class="box box-info" group-chat ng-init="init('@ViewBag.groupname', '@ViewBag.pass', '@ViewBag.id')" id="{{idgroup}}">
     <div class="box-header" style="cursor: move;">
         <i class="fa fa-comments-o"></i>
-        <h3 class="box-title">{{name}}: {{idgroup}}</h3>
+         <h4 class="box-title">
+             <a data-toggle="collapse" data-parent="#accordion" href="#{{ 'group_chat_box_body_' + idgroup }}">
+                 {{name}}:
+             </a>             
+        </h4>       
         <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;">
             <li ng-repeat="user in users" class="ng-scope no-padding" style="width: 30px;">
-                <img style="width: 30px;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
+                <img style="width: 30px; cursor: pointer;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
             </li>
         </ul>
 
@@ -23,28 +27,32 @@
             </div>
         </div>
     </div>
-    <div class="box-body chat chatboxbody" id="{{ 'group_chat_box_content_' + idgroup }}" style="max-height:350px; overflow-y: scroll;">
-        <!-- chat item -->
-        <div class="item" ng-repeat="message in messages">
-            <img ng-src="{{message.avatar}}" alt="user image" class="online" />
-            <p class="message">
-                <a href="#" class="name">
-                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>{{message.time}}</small>
-                    {{message.name}}
-                </a>
-                {{message.content}}
-            </p>
-        </div>
-        <!-- /.item -->
 
-    </div><!-- /.chat -->
-    <div class="box-footer">
-        <div class="input-group">
-            <input class="form-control" placeholder="Type message..." ng-enter="sendmessage();  focusInput=true" ng-model="inputMessage" focus-me="focusInput" />
-            <div class="input-group-btn">
-                <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="sendmessage()"><i class="fa fa-plus"></i></button>
+    <div id="{{ 'group_chat_box_body_' + idgroup }}" class="panel-collapse collapse in">
+        <div class="box-body chat chatboxbody" id="{{ 'group_chat_box_content_' + idgroup }}" style="max-height:350px; overflow-y: scroll;">
+            <!-- chat item -->
+            <div class="item" ng-repeat="message in messages">
+                <img ng-src="{{message.avatar}}" alt="user image" class="online" />
+                <p class="message">
+                    <a href="#" class="name">
+                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>{{message.time}}</small>
+                        {{message.name}}
+                    </a>
+                    {{message.content}}
+                </p>
+            </div>
+            <!-- /.item -->
+
+        </div><!-- /.chat -->
+        <div class="box-footer">
+            <div class="input-group">
+                <input class="form-control" placeholder="Type message..." ng-enter="sendmessage();  focusInput=true" ng-model="inputMessage" focus-me="focusInput" />
+                <div class="input-group-btn">
+                    <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="sendmessage()"><i class="fa fa-plus"></i></button>
+                </div>
             </div>
         </div>
     </div>
+    
 </div>
 <!-- /.box (chat box) -->

@@ -47,15 +47,24 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
         }
 
         // Đăng ký lắng nghe sự kiện tạo PRIVATE chat
-        $scope.$on('module:createprivatechat', function (event, userid) {
-            ctrll.getmodule('../../privatechat/Index?id=' + userid, 'main_col_3_left');
+        $scope.$on('module:createprivatechat', function (event, userid, message) {
+            var address = '../../privatechat/Index?id=' + userid;
+            $http.get(address).success(function (data) {
+                var el = $compile(data)($scope);
+                $("#main_col_3_left").append(el);
+
+                $rootScope.$broadcast('reciverprivatemessage', userid, message);
+
+            }).error(function () {
+                alert("Lỗi khi lấy module " + address);
+                return "error";
+            });
+            
         });
 
         // Đăng ký lắng nghe sự kiện tạo GROUP chat
         $scope.$on('module:creategroupchat', function (event, name) {
             ctrll.getmodule('../../GroupChat/Index?groupname=' + name + '&&userid=' + account_infor_service.getid(), 'main_col_6');
-
-
         });
 
         $scope.$on('module:joingroup', function (event, groupid, password) {
