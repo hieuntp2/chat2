@@ -7,10 +7,10 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <input type="text" id="_txt_creategroup_name" name="q" class="form-control" placeholder="Name">
+                    <input autocomplete="off" type="text" id="_txt_creategroup_name" name="q" class="form-control" placeholder="Name">
                 </div>
                 <div class="form-group">
-                    <input type="password" id="_txt_creategroup_password" class="form-control" placeholder="password">
+                    <input autocomplete="off" type="password" id="_txt_creategroup_password" class="form-control" placeholder="password">
                 </div>
                               
             </div>
@@ -28,7 +28,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="input-group">
-                    <input ng-enter="findgroup()" type="text" id="_txt_creategroup_name" ng-model="inputsearch" class="form-control" placeholder="Search...">
+                    <input autocomplete="off" ng-enter="findgroup()" type="text" id="_txt_creategroup_name" ng-model="inputsearch" class="form-control" placeholder="Search...">
                     <span class="input-group-btn">
                         <button ng-click="findgroup()" class="btn btn-flat"><i class="fa fa-search"></i></button>
                     </span>

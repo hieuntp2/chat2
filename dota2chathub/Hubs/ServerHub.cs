@@ -45,6 +45,7 @@ namespace dota2chathub.Module.PublicChat
                 if(string.IsNullOrWhiteSpace(connectionId))
                 {
                     Clients.Caller.reciverprivatemessage(touser, "Server: User is offline");
+                    //Clients.Client(StaticData.getConnectionID(fromuser)).reciverprivatemessage(touser, "Server: User is offline");
                 }
                 else
                 {

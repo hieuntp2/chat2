@@ -20,9 +20,11 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         this.proxy.invoke('PublicChatSend', message, account_infor_service.getid());
     };
     var receiveMessage = function (recevieMessageCallBack) {
+        
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('acceptGreet', function (message) {
             $rootScope.$apply(function () {
+               
                 var obj = $.parseJSON(message);
                 var user = user_manage_service.getuser(obj.userid);
                 obj.name = user.name;
@@ -39,7 +41,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
     }
     var privatemessage = function (recevieMessageCallBack) {
         //Attaching a callback to handle acceptGreet client call
-        this.proxy.on('recivePrivateChatMessage', function (userid, message) {
+        this.proxy.on('reciverprivatemessage', function (userid, message) {
             $rootScope.$apply(function () {
                 recevieMessageCallBack(userid, message);
                 return userid;
@@ -381,12 +383,7 @@ app.service('account_infor_service', function ($http) {
 
 })
 
-function scrollToBottomDiv(id_div)
-{   
-    $('#' + id_div).stop().animate({
-        scrollTop: $("#" + id_div)[0].scrollHeight
-    }, 800);
-}
+
 
 ///////////////////////////////////////////
 ////////////////// ADDON //////////////////

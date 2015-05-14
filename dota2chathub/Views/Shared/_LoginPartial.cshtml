@@ -43,8 +43,6 @@
                                     {
                                         @Html.AntiForgeryToken()
                                         <script>
-                                            
-                                            $.connection.stop();
                                             alert("connection stop");
                                         </script>
                                         <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>

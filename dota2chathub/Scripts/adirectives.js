@@ -135,8 +135,22 @@ app.directive('groupChat', function () {
                     $scope.messages.push(message);
 
                     scrollToBottomDiv("group_chat_box_content_" + $scope.idgroup);
-                    
+                    $scope.addusertogroup(message["id"]);
                 }
+            }
+
+            $scope.addusertogroup = function(userid)
+            {
+                for(var i = 0 ; i < $scope.users.length; i++)
+                {
+                    if(users[i].id == userid)
+                    {
+                        return;
+                    }
+                }
+
+                var user = user_manage_service.getuser(userid);
+                users.push(user);
             }
 
             $scope.refeshusers = function()
@@ -164,11 +178,6 @@ app.directive('groupChat', function () {
                 $("#" + $scope.idgroup).remove();
             }
 
-            $scope.addusertogroup = function(userid)
-            {
-                var user = user_manage_service.getuser(userid);
-                $scope.users.push(user);
-            }
             $scope.privatechatuser = function(userid)
             {
                 alert(userid);
@@ -350,33 +359,6 @@ app.directive('findGroup', function () {
                     groups_manage_service.joingroup(groupid, password);
                 }
             }
-
-            // Not Use
-            //// Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
-            //// đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
-            //$scope.addtoGroupChat = function (id) {
-            //    // 
-            //    for (var i = 0; i < $scope.listuser.length; i++) {
-            //        if ($scope.listuser[i].id == id) {
-            //            // Thêm người dùng này vào khi
-            //            $scope.groupusers.push($scope.listuser[i]);
-            //            $scope.listuser.splice(i, 1);
-            //            return;
-            //        }
-            //    }
-            //}
-
-            //// Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
-            //// đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
-            //$scope.removeuser = function (id) {
-            //    for (var i = 0; i < $scope.groupusers.length; i++) {
-            //        if ($scope.groupusers[i].id == id) {
-            //            $scope.listuser.push($scope.groupusers[i]);
-            //            $scope.groupusers.splice(i, 1);
-            //            return;
-            //        }
-            //    }
-            //}
         },
         controllerAs: 'controller'
     }
