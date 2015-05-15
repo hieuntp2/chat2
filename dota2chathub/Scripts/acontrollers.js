@@ -89,3 +89,23 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
             $('#findgroupmodal').modal('show');
         }
     }]);
+
+app.controller('maintabscontroller', ['$scope', function ($scope) {
+
+    // [{idtab, tabname, content}]
+    var tabs = [];
+
+    this.addtab = function(id, name, content)
+    {
+        var tab = {};
+        tab.id = id;
+        tab.name = name;
+        tab.content = content;
+
+        tabs.push(tab);
+    }
+
+    $scope.$on('maintab::addtab', function (event, id, name, content) {
+        this.addtab(id, name, content);
+    });
+}]);

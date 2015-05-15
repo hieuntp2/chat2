@@ -37,7 +37,7 @@ app.directive('focusMe', function ($timeout) {
     };
 });
 
-app.directive('publicChat', function () {
+app.directive('publicChat', function ($rootScope) {
     return {
         restrict: 'E',
         scope: true,
@@ -82,6 +82,12 @@ app.directive('publicChat', function () {
                 user_manage_service.offUserInfor();
             }
 
+            $scope.int = function()
+            {
+                // Broadcast de service quản lý các tab thêm tab mới vào
+                $rootScope.$broadcast('maintab::addtab', "public_chat_0", "public chat 0");
+            }
+
             // set the function will be excuted when server send a message to client
             hub_service.receiveMessage($scope.addmessage);
         },
@@ -94,7 +100,7 @@ app.directive('groupChat', function () {
     return {
         restrict: 'A',
         scope: true,
-        controller: function ($scope, $http, groups_manage_service, user_manage_service, account_infor_service) {
+        controller: function ($rootScope, $scope, $http, groups_manage_service, user_manage_service, account_infor_service) {
             $scope.idgroup = "";
             $scope.name = "";
             $scope.messages = [];
@@ -108,11 +114,16 @@ app.directive('groupChat', function () {
                 $scope.idgroup = groupid;
                 groups_manage_service.createGroup(name, pass, groupid);
                 $scope.addusertogroup(account_infor_service.getid());
+
+                // Broadcast de service quản lý các tab thêm tab mới vào
+                $rootScope.$broadcast('maintab::addtab', "group_chat_tab_content_"+groupid, name);
             }
             $scope.receiveGroupIDclient = function (groupid) {
                 if (!$scope.idgroup.trim()) {
                     $scope.idgroup = groupid;
                     groups_manage_service.addGroup($scope.idgroup, $scope.name);
+
+
                 }
             }
             $scope.sendmessage = function () {
@@ -254,70 +265,7 @@ app.directive('invUserModal', function () {
         controllerAs: 'controller'
     }
 });
-app.directive('createGroup', function () {
-    return {
-        restrict: 'A',
-        controller: function ($scope, $http, user_manage_service) {
-            $scope.showheadtable = false;
-            $scope.listuser = [];
-            $scope.groupusers = [];
-            $scope.inputusersearch = "";
-            $scope.isloading = false;
-            $scope.finduser = function () {
 
-                if ($scope.inputusersearch.trim()) {
-                    $scope.isloading = true;
-                    $http.get("../../Service/finduser?name=" + $scope.inputusersearch).success(function (data) {
-                        $scope.isloading = false;
-                        if (data.length == 0) {
-                            $scope.listuser = [];
-                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
-                            return;
-                        }
-
-                        $scope.showheadtable = true;
-                        $scope.message = "";
-                        for (var i = 0; i < data.length; i++) {
-                            var user = user_manage_service.getuser(data[i]);
-                            $scope.listuser.push(user);
-                        }
-
-                    }).error(function () {
-                        $scope.isloading = false;
-                        alert("Lỗi khi lấy module " + address);
-                    });
-                }
-            }
-
-            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds người dùng trong nhóm chát, 
-            // đồng thời loại người đó ra khỏi danh sách kết quả tìm kiếm
-            $scope.addtoGroupChat = function (id) {
-                // 
-                for (var i = 0; i < $scope.listuser.length; i++) {
-                    if ($scope.listuser[i].id == id) {
-                        // Thêm người dùng này vào khi
-                        $scope.groupusers.push($scope.listuser[i]);
-                        $scope.listuser.splice(i, 1);
-                        return;
-                    }
-                }
-            }
-
-            // Khi chọn vào biểu tượng, thì thêm người dùng vào ds kết quả tìm kiếm, 
-            // đồng thời loại người đó ra khỏi danh sách người dùng trong nhóm chat
-            $scope.removeuser = function (id) {
-                for (var i = 0; i < $scope.groupusers.length; i++) {
-                    if ($scope.groupusers[i].id == id) {
-                        $scope.listuser.push($scope.groupusers[i]);
-                        $scope.groupusers.splice(i, 1);
-                        return;
-                    }
-                }
-            }
-        },
-        controllerAs: 'controller'
-    }
-});
 app.directive('findGroup', function () {
     return {
         restrict: 'A',

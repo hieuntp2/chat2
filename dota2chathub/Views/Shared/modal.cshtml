@@ -1,5 +1,5 @@
 ﻿<!-- Create Group -->
-<div class="modal fade" id="createGroupChatModal" create-group>
+<div class="modal fade" id="createGroupChatModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -93,7 +93,7 @@
 
         var name = $("#_txt_creategroup_name").val();
         var password = $("#_txt_creategroup_password").val();
-        if (name == null || name == "" || name == " ") {
+        if (!name) {
             alert("Tên nhóm không được bỏ trống");
             return;
         }

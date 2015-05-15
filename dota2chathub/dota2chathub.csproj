@@ -306,6 +306,7 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
       <LastGenOutput>DBModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\acontrollers.v2.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\acontrollers.js" />
@@ -880,6 +881,10 @@
     <Content Include="Views\PublicChat\Index.cshtml" />
     <Content Include="Views\Home\FriendList.cshtml" />
     <Content Include="Views\PrivateChat\Index.cshtml" />
+    <Content Include="Views\Home\Index.v2.cshtml" />
+    <Content Include="Views\PublicChat\Index.v2.cshtml" />
+    <Content Include="Views\Home\FriendList2.cshtml" />
+    <Content Include="Views\GroupChat\Index.v2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

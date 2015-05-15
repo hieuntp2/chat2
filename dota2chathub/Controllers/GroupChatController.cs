@@ -10,13 +10,21 @@ namespace dota2chathub
     public class GroupChatController : Controller
     {
         // GET: PublicChat
-        public ActionResult Index(string groupname, string pass, string userid)
+        public ActionResult Index(string groupname, string pass, string userid, string v=null)
         {
             string id = StaticData.createGroup(groupname, userid, pass);
             ViewBag.groupname = groupname;
             ViewBag.pass = pass;
             ViewBag.id = id;
-            return PartialView();
+
+            if (v == null)
+            {
+                return PartialView();
+            }
+            else
+            {
+                return PartialView("Index.v" + v);
+            }  
         }
 
         // GET: PublicChat
