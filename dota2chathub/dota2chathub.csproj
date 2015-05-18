@@ -889,6 +889,7 @@
     <Content Include="Views\Home\Index.v2.cshtml" />
     <Content Include="Views\PublicChat\Index.v2.cshtml" />
     <Content Include="Views\GroupChat\Index.v2.cshtml" />
+    <Content Include="Views\Shared\mini_control.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

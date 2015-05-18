@@ -41,11 +41,12 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
         }
         
         $scope.$on('module:joingroup', function (event, groupid, password) {
-            var address = '../../GroupChat/joingroup?groupid=' + groupid + '&&pass=' + password + '&&userid=' + account_infor_service.getid();
+            var address = '../../GroupChat/joingroup?groupid=' + groupid + '&&pass=' + password + '&&userid=' + account_infor_service.getid() + "&&v=2";
+            
+
             $http.get(address).success(function (data) {
                 var el = $compile(data)($scope);
-                $("#" + 'main_col_6' + "").append(el);
-
+                $("#main_content_box").append(el);
             }).error(function () {
                 $rootScope.$broadcast('groupchat:ErrorPassword', groupid);
             });
@@ -100,6 +101,8 @@ app.controller('maintabscontroller', ['$scope', '$timeout', function ($scope, $t
     // Xóa tab khi có sự kiện close tab xảy ra
     $scope.$on('maintab::closetab', function (event, id) {
         id = "group_chat_tab_content_" + id;
+        $("#" + id).remove();
+        alert(id);
         for (var i = 0; i < ctrl.tabs.length; i++)
         {
             if(ctrl.tabs[i].id == id)
@@ -107,7 +110,7 @@ app.controller('maintabscontroller', ['$scope', '$timeout', function ($scope, $t
                 ctrl.tabs.splice(i, 1);
             }
         }
-        
+       
     });
 
     // Khi nhân được sự kiện nhận message, thì tìm kiếm tab id

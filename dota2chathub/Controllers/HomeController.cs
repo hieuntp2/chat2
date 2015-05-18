@@ -9,7 +9,6 @@ using dota2chathub.Models;
 namespace dota2chathub.Controllers
 {
 #if DEBUG
-    //[Authorize]
     public class HomeController : Controller
     {
         ProjectDEntities db = new ProjectDEntities();

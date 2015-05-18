@@ -24,7 +24,7 @@ namespace dota2chathub.Module.PublicChat
                 userid = userid,
                 message = message
             };
-            Clients.All.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
+            Clients.Others.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
         }
 
         ////////////////////////////////
@@ -69,7 +69,7 @@ namespace dota2chathub.Module.PublicChat
                 userid = userid,
                 message = message
             };
-            Clients.Group(groupid).reciveGroupChatMessage(Newtonsoft.Json.JsonConvert.SerializeObject(mess), groupid);
+            Clients.OthersInGroup(groupid).reciveGroupChatMessage(Newtonsoft.Json.JsonConvert.SerializeObject(mess), groupid);
         }
 
         public async Task joingroup(string groupid, string userid)

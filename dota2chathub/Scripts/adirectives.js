@@ -26,8 +26,6 @@ app.directive('focusMe', function ($timeout) {
         link: function (scope, element, attrs) {
             scope.$watch(attrs.focusMe, function (value) {
                 if (value === true) {
-                    console.log('value=', value);
-                    //$timeout(function() {
                     element[0].focus();
                     scope[attrs.focusMe] = false;
                     //});
@@ -41,13 +39,14 @@ app.directive('publicChat', function ($rootScope) {
     return {
         restrict: 'E',
         scope: true,
-        controller: function ($scope, $http, hub_service, user_manage_service) {
+        controller: function ($scope, $http, hub_service, user_manage_service, account_infor_service) {
             $scope.messages = [{ name: 'Server', avatar: '', content: 'This is the public chat room!' }];
 
             $scope.sendmessage = function () {
 
                 if ($("#txt_public_chat_input").val())
                 {
+                    $scope.selfaddmessage($("#txt_public_chat_input").val());
                     // call a service to send a message to server
                     hub_service.sendRequest($("#txt_public_chat_input").val());
                     $("#txt_public_chat_input").val('');
@@ -63,13 +62,27 @@ app.directive('publicChat', function ($rootScope) {
                 message.name = messageobject['name'];
                 message.avatar = messageobject['avatar'];
                 message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-                message.content = messageobject['message'];
+                message.content = messageobject['message'];                
 
-                
+                $scope.messages.push(message);                
+                scrollToBottomDiv("public_chat_box");               
+            }
+
+            $scope.selfaddmessage = function(content)
+            {
+                var dt = new Date();
+                var message = {};
+
+                var user = user_manage_service.getuser(account_infor_service.getid());
+                message.userid = user.id;
+
+                message.name = user.name;
+                message.avatar = user.avatar;
+                message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                message.content = content;
 
                 $scope.messages.push(message);
-                
-                scrollToBottomDiv("public_chat_box");               
+                scrollToBottomDiv("public_chat_box");
             }
 
             $scope.clearmessage = function () {
@@ -128,8 +141,10 @@ app.directive('groupChat', function () {
 
                 }
             }
+
             $scope.sendmessage = function () {
                 if ($scope.inputMessage.trim()) {
+                    $scope.selfaddmessage($scope.inputMessage);
                     groups_manage_service.sendGroupMessage($scope.idgroup, $scope.inputMessage);
                     $scope.inputMessage = "";
                 }
@@ -149,6 +164,21 @@ app.directive('groupChat', function () {
                     scrollToBottomDiv("group_chat_box_content_" + $scope.idgroup);
                     $scope.addusertogroup(messageobject['id']);
                 }
+            }
+            $scope.selfaddmessage = function (content) {
+                var dt = new Date();
+                var message = {};
+
+                var user = user_manage_service.getuser(account_infor_service.getid());
+                message.userid = user.id;
+
+                message.name = user.name;
+                message.avatar = user.avatar;
+                message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                message.content = content;
+
+                $scope.messages.push(message);
+                scrollToBottomDiv("public_chat_box");
             }
 
             $scope.addusertogroup = function(userid)
@@ -303,9 +333,8 @@ app.directive('findGroup', function () {
             }
 
             $scope.choosegroup = function (groupid) {
-                var password = prompt("Please enter group password:", "");
-
-                if (password && groupid) {
+                if (groupid) {
+                    var password = prompt("Please enter group password:", "");
                     groups_manage_service.joingroup(groupid, password);
                 }
             }

@@ -32,8 +32,6 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 
                 // gọi sự kiện này để thông báo tabcontroller là có sự kiện này xảy ra
                 $rootScope.$broadcast('maintab::receivemessage', 'public_chat_0');
-
-                playgroupmessage();
             });
         });
     }
@@ -423,15 +421,5 @@ $(document).mousemove(function (e) {
     window.y = e.pageY;
 });
 
-var sound_groupmessage = document.createElement('audio');
-sound_groupmessage.setAttribute('src', '../../Content/sound/group.wma');
-function playgroupmessage() {
-    sound_groupmessage.play();
-}
 
-var sound_privatemessage = document.createElement('audio');
-sound_privatemessage.setAttribute('src', '../../Content/sound/private.wma');
-function playprivatemessage() {
-    sound_privatemessage.play();
-}
 

@@ -28,7 +28,7 @@ namespace dota2chathub
         }
 
         // GET: PublicChat
-        public async Task<ActionResult> joingroup(string groupid, string pass, string userid)
+        public async Task<ActionResult> joingroup(string groupid, string pass, string userid, string v = null)
         {
             if (StaticData.checkPassword(groupid, pass))
             {
@@ -38,7 +38,15 @@ namespace dota2chathub
                 ViewBag.id = groupid;
 
                 await StaticData.addUsertoGroup(userid, groupid);
-                return PartialView("Index");
+
+                if (v == null)
+                {
+                    return PartialView("Index");
+                }
+                else
+                {
+                    return PartialView("Index.v" + v);
+                } 
             }
             else
             {
