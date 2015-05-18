@@ -22,7 +22,6 @@
         </div>
         <div id="publicchatbox-content" class="panel-collapse panel-collapse collapse in">
             <div class="box-body chat chatboxbody" id="{{'public_chat_box'}}" style="max-height:350px; overflow-y: scroll;">
-
                 <!-- chat item -->
                 <div class="item" ng-repeat="message in messages">
                     <img ng-src="{{message.avatar}}" alt="user image" class="online" ng-mouseenter="viewUserInfor(message.userid)" ng-mouseleave="offUserInfor()" />
@@ -46,10 +45,11 @@
                     </div>
                 </div>
             </div>
-        </div>
-       
+        </div>      
     </public-chat>
 </div>
+
+
 <!-- /.box (chat box) -->
 
 

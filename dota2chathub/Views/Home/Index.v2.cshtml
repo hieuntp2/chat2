@@ -14,9 +14,9 @@
 
     <div class="col-lg-10 connectedSortable" id="main_col_6">
         <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs" ng-controller="maintabscontroller as tabscontroller" ng-model="tabscontroller.tabs">
-                <li ng-repeat="tab in tabscontroller.tabs">
-                    <a href="#{{tab.id}}" data-toggle="tab">{{tab.name}}</a>
+            <ul class="nav nav-tabs" ng-controller="maintabscontroller as tabscontroller" ng-model="tabscontroller.tabs" id="homelisttabs">
+                <li ng-repeat="tab in tabscontroller.tabs" id="{{'tab_header_panel' + tab.id}}">
+                    <a href="#{{tab.id}}" data-toggle="tab" ng-click="tabonclick(tab.id)">{{tab.name}}</a>
                 </li>
             </ul>
             <div class="tab-content" ng-model="controller.tabs" id="main_content_box">

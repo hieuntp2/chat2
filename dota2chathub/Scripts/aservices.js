@@ -19,8 +19,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         //Invoking greetAll method defined in hub
         this.proxy.invoke('PublicChatSend', message, account_infor_service.getid());
     };
-    var receiveMessage = function (recevieMessageCallBack) {
-        
+    var receiveMessage = function (recevieMessageCallBack) {        
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('acceptGreet', function (message) {
             $rootScope.$apply(function () {
@@ -30,6 +29,11 @@ app.service('hub_service', function ($http, $compile, $rootScope,
                 obj.name = user.name;
                 obj.avatar = user.avatar;
                 recevieMessageCallBack(obj);
+
+                // gọi sự kiện này để thông báo tabcontroller là có sự kiện này xảy ra
+                $rootScope.$broadcast('maintab::receivemessage', 'public_chat_0');
+
+                playgroupmessage();
             });
         });
     }
@@ -44,6 +48,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         this.proxy.on('reciverprivatemessage', function (userid, message) {
             $rootScope.$apply(function () {
                 recevieMessageCallBack(userid, message);
+                playprivatemessage();
                 return userid;
             });
         });
@@ -67,8 +72,13 @@ app.service('hub_service', function ($http, $compile, $rootScope,
                 obj.id = user.id;
 
                 reciveGroupChatMessageCallBack(obj, groupid);
+
+                // gọi sự kiện này để thông báo tabcontroller là có sự kiện này xảy ra
+                $rootScope.$broadcast('maintab::receivemessage', groupid);
+                playgroupmessage();
             });
         });
+       
     }
     var sendGroupMessage = function (idgroup, message) {
         this.proxy.invoke('GroupChatSend', account_infor_service.getid(), idgroup, message);
@@ -224,7 +234,6 @@ app.service('groups_manage_service', function ($http,$rootScope, hub_service) {
         groups.push(group);
     }
     var removeGroup = function (id) {
-
         for (var i = 0; i < groups.length; i++) {
             if (groups[i].id == id) {
                 groups.splice(i, 1);
@@ -245,6 +254,7 @@ app.service('groups_manage_service', function ($http,$rootScope, hub_service) {
         addGroup(groupid, name);
         hub_service.createGroup(name, pass, groupid);
     }
+
     var joingroup = function (groupid, password) {
         
         if (haveGroup(groupid))
@@ -412,3 +422,16 @@ $(document).mousemove(function (e) {
     window.x = e.pageX;
     window.y = e.pageY;
 });
+
+var sound_groupmessage = document.createElement('audio');
+sound_groupmessage.setAttribute('src', '../../Content/sound/group.wma');
+function playgroupmessage() {
+    sound_groupmessage.play();
+}
+
+var sound_privatemessage = document.createElement('audio');
+sound_privatemessage.setAttribute('src', '../../Content/sound/private.wma');
+function playprivatemessage() {
+    sound_privatemessage.play();
+}
+

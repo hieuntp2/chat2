@@ -55,16 +55,22 @@ namespace dota2chathub.Controllers
                 steamid = "151312",
                 isonline = true
             });
+
             listreturn.Add(new FriendInChatBox()
             {
                 steamid = "testfriendid2",
-                isonline = true
-            });
-            listreturn.Add(new FriendInChatBox()
-            {
-                steamid = "testfriendid3",
-                isonline = true
-            });
+                isonline = false
+            });  
+            return Json(listreturn, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult getonlineusers(string steamid = null)
+        {
+            List<string> listreturn = new List<string>();
+            listreturn.Add("151312");
+            listreturn.Add("testfriendid2");
+            listreturn.Add("testfriendid3");            
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }
 #else
@@ -154,6 +160,11 @@ namespace dota2chathub.Controllers
             }
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }    
+
+         public ActionResult getonlineusers(string steamid = null)
+        {
+            return Json(StaticData.getListUserOnline(), JsonRequestBehavior.AllowGet);
+        }
 #endif
 
         public ActionResult findgroup(string name)
@@ -181,14 +192,14 @@ namespace dota2chathub.Controllers
 
         public ActionResult getUserInGroup(string groupid)
         {
-            if(string.IsNullOrWhiteSpace(groupid))
+            if (string.IsNullOrWhiteSpace(groupid))
             {
                 return null;
             }
 
             List<string> user = StaticData.getListUserInGroup(groupid);
-            if(user != null)
-                return Json(user, JsonRequestBehavior.AllowGet); 
+            if (user != null)
+                return Json(user, JsonRequestBehavior.AllowGet);
             else
                 return null;
         }

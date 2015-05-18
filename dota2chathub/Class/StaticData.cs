@@ -242,6 +242,11 @@ namespace dota2chathub
             string userid = db.AspNetUsers.SingleOrDefault(t => t.Id == aspnetuserid).UserName;
             return userid;
         }
+
+        public static List<string> getListUserOnline()
+        {
+            return users.Keys.ToList<string>();
+        }
     }
 
     public class ChatMessageObject

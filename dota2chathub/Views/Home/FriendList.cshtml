@@ -1,29 +1,34 @@
 ﻿<!--Friend List-->
-<div class="nav-tabs-custom">
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#Friends" data-toggle="tab">Friends</a>
-        </li>
-        <li>
-            <a href="#Online" data-toggle="tab">Online</a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane active" id="Friends">
-            <friends-box>
+<friends-box ng-init="init()">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#Friends" data-toggle="tab">Friends</a>
+            </li>
+            <li>
+                <a href="#Online" data-toggle="tab">Online</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="Friends">
                 {{$scope.message}}
-                <div id="friend-list-box-content" class="panel-collapse collapse in">
-                    <div class="box-body no-padding">
-                        <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;" ng-init="init()">
-                            <li ng-repeat="friend in friendlist" ng-switch="friend.isonline">
-                                <img ng-switch-when="true" ng-src="{{friend.avatar}}" alt="Online" class="online">
-                                <a ng-switch-when="true" class="users-list-name" style="color:green; cursor:pointer;" ng-click="createprivatechat(friend.id)">{{friend.name}}</a>
+                <div id="friend-list-box-content">
+                    <div class="chat chatboxbody">
+                        <div class="item" ng-repeat="friend in friendlist" ng-switch="friend.isonline" style=" margin-bottom: 12px;">
+                            <img ng-switch-when="true" ng-src="{{friend.avatar}}" alt="Online" class="online" />
+                            <p class="message" ng-switch-when="true" style="color:green; cursor:pointer;" ng-click="createprivatechat(friend.id)">
+                                <a>
+                                    {{friend.name}}
+                                </a>
+                            </p>
 
-
-                                <img ng-switch-when="false" ng-src="{{friend.avatar}}" alt="Offline" class="offline">
-                                <a ng-switch-when="false" class="users-list-name" ng-click="createprivatechat(friend.id)">{{friend.name}}</a>
-                            </li>
-                        </ul><!-- /.users-list -->
+                            <img ng-switch-when="false" ng-src="{{friend.avatar}}" alt="Offline" class="offline" />
+                            <p class="message" ng-switch-when="false" ng-click="createprivatechat(friend.id)">
+                                <a style="color: darkgray;">
+                                    {{friend.name}}
+                                </a>
+                            </p>
+                        </div>
                         <div class="overlay" ng-show="isloading">
                             <i class="fa fa-refresh fa-spin"></i>
                         </div>
@@ -32,10 +37,28 @@
                         <a ng-click="updateFriends()" class="uppercase">refresh</a>
                     </div><!-- /.box-footer -->
                 </div>
-            </friends-box>
-        </div><!-- /.tab-pane -->
-        <div class="tab-pane" id="Online">
+            </div>
 
-        </div><!-- /.tab-pane -->
-    </div><!-- /.tab-content -->
-</div>
+            <div class="tab-pane" id="Online">
+                <div id="friend-list-box-content">
+                    <div class="chat chatboxbody">
+                        <div class="item" ng-repeat="online in onlines" style=" margin-bottom: 12px;">
+                            <img ng-src="{{online.avatar}}" alt="Online" class="online" />
+                            <p class="message" style="color:green; cursor:pointer;" ng-click="createprivatechat(online.id)">
+                                <a>
+                                    {{online.name}}
+                                </a>
+                            </p>
+                        </div>
+                        <div class="overlay" ng-show="isloading">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer text-center">
+                        <a ng-click="updateFriends()" class="uppercase">refresh</a>
+                    </div><!-- /.box-footer -->
+                </div>
+            </div>
+        </div><!-- /.tab-content -->
+    </div>
+</friends-box>

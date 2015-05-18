@@ -1,5 +1,8 @@
 ﻿@model dota2chathub.Models.ExternalLoginListViewModel
 @using Microsoft.Owin.Security
+@{
+
+}
 
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
@@ -14,7 +17,7 @@
     }
     else
     {
-        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl }))
+        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl +"?v=2"}))
         {
             @Html.AntiForgeryToken()
             <div id="socialLoginList">
@@ -27,4 +30,5 @@
             </div>
         }
     }
+    
 }

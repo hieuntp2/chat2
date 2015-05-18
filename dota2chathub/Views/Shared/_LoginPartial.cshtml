@@ -41,10 +41,7 @@
                                 <div class="pull-right">
                                     @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
                                     {
-                                        @Html.AntiForgeryToken()
-                                        <script>
-                                            alert("connection stop");
-                                        </script>
+                                        @Html.AntiForgeryToken()                                       
                                         <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default btn-flat">Sign out</a>
                                     }
 

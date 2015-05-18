@@ -65,6 +65,8 @@ app.directive('publicChat', function ($rootScope) {
                 message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                 message.content = messageobject['message'];
 
+                
+
                 $scope.messages.push(message);
                 
                 scrollToBottomDiv("public_chat_box");               
@@ -186,6 +188,7 @@ app.directive('groupChat', function () {
             $scope.exit = function () {
                 groups_manage_service.removeGroup($scope.idgroup);
                 $("#" + $scope.idgroup).remove();
+                $rootScope.$broadcast('maintab::closetab', $scope.idgroup);
             }
 
             $scope.privatechatuser = function(userid)
@@ -439,14 +442,15 @@ app.directive('friendsBox', function () {
             $scope.message = "";
             $scope.countOnline = 0;
             $scope.isloading = true;
+            $scope.onlines = [];
+
             $scope.init = function () {
 
                 $scope.getfriendlist();
+                $scope.getonlinelist();
             }
 
-            $scope.createprivatechat = function (userid) {
-                //$scope.getmodule("../../privatechat/index?id=" + userid, "main_col_3_left");
-
+            $scope.createprivatechat = function (userid) {               
                 privatechat_manage_service.addprivatechat(userid);
             }
 
@@ -476,7 +480,28 @@ app.directive('friendsBox', function () {
                     alert("Lỗi khi lấy danh sách bạn bè ");
                 });
             }
+
+            $scope.getonlinelist = function () {
+                $scope.isloading = true;
+                $http.get("../../Service/getonlineusers").success(function (data) {
+                    if (data.length == 0) {
+                        $scope.onlines = [];
+                        $scope.message = "Danh sách bạn bè rỗng hoặc có lỗi xuất hiện.";
+                        return;
+                    }
+
+                    for (var i = 0; i < data.length; i++) {
+                        var user = user_manage_service.getuser(data[i]);                       
+                        $scope.onlines.push(user);
+                    }
+                    $scope.isloading = false;
+                }).error(function () {
+                    alert("Lỗi khi lấy danh sách bạn bè ");
+                });
+            }
+
             $scope.updateFriends = function () {
+                $scope.getonlinelist();
                 $scope.getfriendlist();
             }
 
