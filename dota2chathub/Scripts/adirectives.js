@@ -299,49 +299,7 @@ app.directive('invUserModal', function () {
     }
 });
 
-app.directive('findGroup', function () {
-    return {
-        restrict: 'A',
-        controller: function ($scope, $http, user_manage_service, groups_manage_service) {
-            $scope.groups = [];
-            $scope.isloading = false;
-            $scope.inputsearch = "";
-            $scope.findgroup = function () {
-                if ($scope.inputsearch.trim()) {
-                    $scope.isloading = true;
-                    $http.get("../../Service/findgroup?name=" + $scope.inputsearch).success(function (data) {
-                        $scope.isloading = false;
-                        if (data.length == 0) {
-                            $scope.groups = [];
-                            $scope.message = "Không tìm thấy nhóm";
-                            return;
-                        }
-                        $scope.message = "";
-                        $scope.inputsearch = "";
-                        for (var i = 0; i < data.length; i++) {
-                            var user = user_manage_service.getuser(data[i].hostid);
-                            data[i].host_name = user.name;
-                            data[i].host_avatar = user.avatar;
-                        }
-                        $scope.groups = data;
 
-                    }).error(function () {
-                        $scope.isloading = false;
-                        alert("Lỗi khi lấy module " + address);
-                    });
-                }
-            }
-
-            $scope.choosegroup = function (groupid) {
-                if (groupid) {
-                    var password = prompt("Please enter group password:", "");
-                    groups_manage_service.joingroup(groupid, password);
-                }
-            }
-        },
-        controllerAs: 'controller'
-    }
-});
 
 app.directive('privateChat', function () {
     return {
@@ -488,7 +446,7 @@ app.directive('friendsBox', function () {
                 $http.get("../../Service/getlistfriends").success(function (data) {
                     if (data.length == 0) {
                         $scope.friendlist = [];
-                        $scope.message = "Danh sách bạn bè rỗng hoặc có lỗi xuất hiện.";
+                        $scope.message = "0 user online.";
                         return;
                     }
                     var countonline = 0;
@@ -503,10 +461,10 @@ app.directive('friendsBox', function () {
                         $scope.friendlist.push(user);
                     }
 
-                    $scope.message = "Có " + countonline + "/" + data.length + " đang online";
+                    $scope.message = countonline + "/" + data.length + " users online";
                     $scope.isloading = false;
                 }).error(function () {
-                    alert("Lỗi khi lấy danh sách bạn bè ");
+                    alert("Something wrong when getting friend list ");
                 });
             }
 

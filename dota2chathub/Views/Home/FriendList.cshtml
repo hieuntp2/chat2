@@ -11,7 +11,6 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="Friends">
-                {{$scope.message}}
                 <div id="friend-list-box-content">
                     <div class="chat chatboxbody">
                         <div class="item" ng-repeat="friend in friendlist" ng-switch="friend.isonline" style=" margin-bottom: 12px;">
@@ -32,7 +31,9 @@
                         <div class="overlay" ng-show="isloading">
                             <i class="fa fa-refresh fa-spin"></i>
                         </div>
+                        <small style="font-style: italic;">{{message}}</small>
                     </div><!-- /.box-body -->
+
                     <div class="box-footer text-center">
                         <a ng-click="updateFriends()" class="uppercase">refresh</a>
                     </div><!-- /.box-footer -->

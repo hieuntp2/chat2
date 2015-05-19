@@ -1,0 +1,61 @@
+﻿<!-- ===================== Game =========================-->
+<!-- Create Game -->
+<div class="modal fade" id="createGameChatModal" ng-controller="creategamemodalcontroller as controller">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Create game
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input autocomplete="off" type="text"ng-model="name" class="form-control" placeholder="Name">
+                    <p style="color:red;">{{nameerror}}</p>
+                </div>
+                <div class="form-group">
+                    <input autocomplete="off" type="password" ng-model="password" class="form-control" placeholder="password">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="createGame()">Create</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- Find Game -->
+<div class="modal fade" id="findGamemodal" ng-controller="findgamecontroller as controller">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="input-group">
+                    <input autocomplete="off" ng-enter="findgroup()" type="text" id="_txt_creategroup_name" ng-model="inputsearch" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                        <button ng-click="findgroup()" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p style="color: red;">{{message}}</p>
+                <ul class="todo-list ui-sortable">
+                    <li ng-repeat="group in groups" style="cursor: pointer;" ng-click="choosegroup(group.id)">
+                        <span class="handle ui-sortable-handle">
+                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v"></i>
+                        </span>
+                        <div class="icheckbox_flat-blue" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="checkbox" value="" name="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
+                        <span class="text">{{group.name}}</span>
+                        <small class="label label-info">{{group.host_name}}</small>
+                    </li>
+                </ul>
+                <div class="overlay" ng-show="isloading">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.Find Game  -->
+<!-- ===================== /Game =========================-->
+
+<script src="~/scripts/acontroller/gamemodalcontroller.js"></script>

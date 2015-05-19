@@ -574,8 +574,9 @@ E:\6. My Project\net\chat2.git\trunk\dota2chathub\bin\Microsoft.Owin.Security.Go
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\bin\Microsoft.Owin.Security.Twitter.xml
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.csproj.App.config
-E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.csprojResolveAssemblyReference.cache
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.Migrations.Init.resources
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.csproj.GenerateResource.Cache
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.dll
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.pdb
+E:\6. My Project\net\chat2.git\trunk\dota2chathub\bin\Content\Templates\game.html
+E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.csprojResolveAssemblyReference.cache

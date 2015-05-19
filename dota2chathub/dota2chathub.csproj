@@ -180,6 +180,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Class\SystemLogs.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PrivateChatController.cs" />
@@ -310,6 +311,8 @@
       <LastGenOutput>DBModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\acontrollers.v2.js" />
+    <Content Include="Scripts\acontroller\groupmodalcontroller.js" />
+    <Content Include="Scripts\acontroller\gamemodalcontroller.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\acontrollers.js" />
@@ -809,7 +812,10 @@
     <Content Include="Scripts\plugins\timepicker\bootstrap-timepicker.min.js" />
     <Content Include="Scripts\aservices.js" />
     <Content Include="Scripts\soudmessage.js" />
-    <Content Include="Views\PublicChat\TemplateCollect.html" />
+    <Content Include="Content\Templates\TemplateCollect.html" />
+    <Content Include="Content\Templates\game.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -890,6 +896,10 @@
     <Content Include="Views\PublicChat\Index.v2.cshtml" />
     <Content Include="Views\GroupChat\Index.v2.cshtml" />
     <Content Include="Views\Shared\mini_control.cshtml" />
+    <Content Include="Views\Game\Index.cshtml" />
+    <Content Include="Views\Game\Index.v2.cshtml" />
+    <Content Include="Views\Shared\gamemodal.cshtml" />
+    <Content Include="Views\Shared\groupmodal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
