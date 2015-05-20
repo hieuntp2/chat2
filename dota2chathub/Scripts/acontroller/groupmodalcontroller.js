@@ -35,8 +35,8 @@
         }
     }]);
 
-app.controller('findGroupcontroller', ['$scope', '$http', 'user_manage_service', 'account_infor_service', 'groups_manage_service',
-    function ($scope, $http, user_manage_service, account_infor_service, groups_manage_service) {
+app.controller('findGroupcontroller', ['$scope', '$http', '$rootScope', 'user_manage_service', 'account_infor_service', 'groups_manage_service',
+    function ($scope, $http, $rootScope, user_manage_service, account_infor_service, groups_manage_service) {
 
         $scope.groups = [];
         $scope.isloading = false;
@@ -72,6 +72,12 @@ app.controller('findGroupcontroller', ['$scope', '$http', 'user_manage_service',
             if (groupid) {
                 var password = prompt("Please enter group password:", "");
                 groups_manage_service.joingroup(groupid, password);
+
+                $("#findGroupmodal").modal('hide');
             }
         }
+
+        $rootScope.$on('findGroupcontroller::joinGroup', function (event, data) {
+            groups_manage_service.joingroup(data.groupchatid, data.password);
+        });
     }]);

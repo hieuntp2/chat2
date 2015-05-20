@@ -217,7 +217,7 @@ app.service('user_manage_service', function ($http) {
 })
 
 // Lưu trữ và quản lý các nhóm chat đang tồn tại
-app.service('groups_manage_service', function ($http,$rootScope, hub_service) {
+app.service('groups_manage_service', function ($http, $rootScope, hub_service) {
     var groups = [];
     var addGroup = function (id, name) {
         if (haveGroup(id)) {
@@ -403,6 +403,79 @@ app.service('account_infor_service', function ($http) {
 
 })
 
+// Lưu trữ và quản lý các nhóm chat đang tồn tại
+app.service('games_manage_service', function ($http, $rootScope, hub_service) {
+    var games = [];
+    var addGame = function (id, name) {
+        if (haveGame(id)) {
+            return;
+        }
+
+        var game = {
+            id: id,
+            name: name
+        }
+
+        games.push(game);
+    }
+    var removeGame = function (id) {
+        for (var i = 0; i < games.length; i++) {
+            if (games[i].id == id) {
+                games.splice(i, 1);
+            }
+        }
+    }
+    var haveGame= function (id) {
+        for (var i = 0; i < games.length; i++) {
+            if (games[i].id == id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    var createGame= function (name, pass, gameid) {
+        addGame(gameid, name);
+    }
+
+    var joingame = function (gameid, password) {
+        if (haveGame(gameid)) {
+            alert("Group you find is already in your page!");
+            return;
+        }
+        else {
+            addGame(gameid, "");
+        }
+    }
+
+    //groupchat:ErrorPassword
+    $rootScope.$on('game_service:ErrorPassword', function (event, gameid) {
+        alert("Password is incorrect!");
+        removeGroup(gameid);
+    });
+
+    var addGroupIDtoGame = function(groupid)
+    {
+        alert(groupid);
+        for(var i = 0; i < games.length; i++)
+        {
+            if (!games[i].groupchatid) {
+                games[i].groupchatid = groupid;
+
+                $http.get('../../game/setgroupidtogame?gameid=' + games[i].id + '&&groupid=' + groupid);
+            }
+        }
+    }
+    return {
+        addGame: addGame,
+        removeGame: removeGame,
+        haveGame: haveGame,
+        createGame: createGame,
+        joingame: joingame,
+        addGroupIDtoGame: addGroupIDtoGame
+    }
+})
 ///////////////////////////////////////////
 ////////////////// ADDON //////////////////
 ///////////////////////////////////////////

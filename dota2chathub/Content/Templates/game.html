@@ -11,13 +11,9 @@
             <p>Pending</p>
             <small style="color:blue;">{{pendingmessage}}</small>
             <ul class="todo-list ui-sortable" ng-model="pendings">
-                <li ng-repeat="game in pendings" style="cursor:pointer;" ng-click="showGameInfor(game.id)">
+                <li ng-repeat="game in pendings" style="cursor:pointer;" ng-click="showStartGameModal(game.id)">
                     <span class="text">{{game.name}}</span>
-                    <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>
-                    <div class="tools">
-                        <i class="fa fa-edit"></i>
-                        <i class="fa fa-trash-o"></i>
-                    </div>
+                    <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>                   
                 </li>
             </ul>
 
@@ -26,29 +22,12 @@
                 Stated
             </p>
             <small style="color:blue;">{{startedmessage}}</small>
-            <ul class="todo-list ui-sortable" ng-model="starteds">                
-               
-                <li ng-repeat="game in starteds">
-                    <!-- drag handle -->
-                    <span class="handle ui-sortable-handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                    </span>
-                    <!-- checkbox -->
-                    <div class="icheckbox_flat-blue" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="checkbox" value="" name="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
-                    <!-- todo text -->
-                    <span class="text">Design a nice theme</span>
-                    <!-- Emphasis label -->
-                    <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
-                    <!-- General tools such as edit or delete-->
-                    <div class="tools">
-                        <i class="fa fa-edit"></i>
-                        <i class="fa fa-trash-o"></i>
-                    </div>
+            <ul class="todo-list ui-sortable" ng-model="starteds">
+                <li ng-repeat="game in starteds" style="cursor:pointer;" ng-click="showfinishgame(game.id)">
+                    <span class="text">{{game.name}}</span>
+                    <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>
                 </li>
-
             </ul>
-
         </div><!-- /.box-body -->
         <div class="box-footer clearfix no-border">            
             <button class="btn btn-default pull-right" ng-click="showmodalfindGame()"><i class="fa fa-search"></i> Find</button>

@@ -176,54 +176,123 @@ app.controller('maintabscontroller', ['$scope', '$timeout', function ($scope, $t
 
 }]);
 
-app.controller('pendinggamecontroller', ['$scope', '$rootScope', function ($scope, $rootScope) {
+app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_manage_service', 'games_manage_service',
+    function ($scope, $rootScope, $http, user_manage_service, games_manage_service) {
 
-    var ctrl = this;
-    // [{id, name, users[]}]
-    $scope.pendings = [];
-    $scope.starteds = [];
-    $scope.pendingmessage = "";
-    $scope.startedmessage = "";
-
-    $scope.init = function()
-    {
-        if ($scope.pendings.length == 0)
-        {
-            $scope.pendingmessage = "0 pending game!";
-        }
-
-        if($scope.starteds.length == 0)
-        {
-            $scope.startedmessage = "0 game started";
-        }
-    }
-
-    $scope.showmodalcreateGame = function () {
-        $('#createGameChatModal').modal('show');
-    }
-
-    $scope.showmodalfindGame = function () {
-        $('#findGamemodal').modal('show');
-    }
-    $scope.showGameInfor = function(id)
-    {
-        alert("game infor: " + id);
-    }
-    $rootScope.$on('penddinggame::joingame', function (event, data) {
-        $scope.addgame(data);
+        var ctrl = this;
+        // [{id, name, users[]}]
+        $scope.pendings = [];
+        $scope.starteds = [];
         $scope.pendingmessage = "";
-    });
+        $scope.startedmessage = "";
 
-    $scope.addgame = function(game)
-    {
-        var item = {};
-        item.id = game.id;
-        item.name = game.name;
-        item.pass = game.password;
-        item.hostid = game.hostid;
+        // Các biến dùng cho start game modal
+        $scope.id = "";
+        $scope.name = "";
+        $scope.users = [];
 
-        $scope.pendings.push(item);
-        $scope.message = $scope.pendings.length + " game";
-    }
-    
-}]);
+        $scope.init = function () {
+            if ($scope.pendings.length == 0) {
+                $scope.pendingmessage = "0 pending game!";
+            }
+
+            if ($scope.starteds.length == 0) {
+                $scope.startedmessage = "0 game started";
+            }
+        }
+        $scope.removependinggame = function(gameid)
+        {
+            for (var i = 0; i < $scope.pendings.length; i++) {
+                if($scope.pendings[i].id == gameid)
+                {
+                    $scope.pendings.splice(i, 1);
+                    return;
+                }
+            }
+        }
+        $scope.removestartedggame = function (gameid) {
+            for (var i = 0; i < $scope.starteds.length; i++) {
+                if ($scope.starteds[i].id == gameid) {
+                    $scope.starteds.splice(i, 1);
+                    return;
+                }
+            }
+        }
+
+        $scope.showmodalcreateGame = function () {
+            $('#createGameChatModal').modal('show');
+        }
+        $scope.showmodalfindGame = function () {
+            $('#findGamemodal').modal('show');
+        }
+        $scope.showStartGameModal = function (id) {
+            if (!id) {
+                return;
+            }
+            var name = "";
+            for (var i = 0; i < $scope.pendings.length; i++) {
+                if ($scope.pendings[i].id == id) {
+                    name = $scope.pendings[i].name;
+                    break;
+                }
+            }
+
+            $rootScope.$broadcast('startgamemodal::showgameinfor', id, name);
+        }
+        $scope.showfinishgame = function (id)
+        {
+            if (!id) {
+                return;
+            }
+            var name = "";
+            for (var i = 0; i < $scope.starteds.length; i++) {
+                if ($scope.starteds[i].id == id) {
+                    name = $scope.starteds[i].name;
+                    break;
+                }
+            }
+
+            $rootScope.$broadcast('finishgamemodal::showfinishgamemodal', id, name);            
+        }
+
+        $rootScope.$on('penddinggame::joingame', function (event, data) {
+            $scope.addgame(data);
+            $scope.pendingmessage = $scope.pendings.length + " pending game";
+        });
+        $rootScope.$on('pendinggame::startgame', function (event, gameid) {
+            for(var i = 0; i < $scope.pendings.length; i++)
+            {
+                if($scope.pendings[i].id == gameid)
+                {
+                    $scope.starteds.push($scope.pendings[i]);
+                    $scope.removependinggame(gameid);
+
+                    $scope.pendingmessage = $scope.pendings.length + " pending game";
+                    $scope.startedmessage = $scope.starteds.length + " started game";
+                }
+            }
+        });
+        $rootScope.$on('pendinggame::finishgame', function (event, gameid) {
+            $scope.removestartedggame(gameid);
+            $scope.startedmessage = $scope.starteds.length + " started game";
+        });
+        $rootScope.$on('pendinggame::leavegame', function (event, gameid) {
+            $scope.removependinggame(gameid);
+            $scope.pendingmessage = $scope.pendings.length + " pending game";
+        });
+
+        $scope.addgame = function (game) {
+            var item = {};
+            item.id = game.id;
+            item.name = game.name;
+            item.pass = game.password;
+            item.hostid = game.hostid;
+
+            $scope.pendings.push(item);
+            $scope.message = $scope.pendings.length + " game";
+
+            games_manage_service.addGame(item.id);
+        }
+
+    }]);
+

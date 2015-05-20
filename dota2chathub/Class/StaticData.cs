@@ -6,16 +6,16 @@ using System.Web;
 using dota2chathub.Models;
 namespace dota2chathub
 {
+
+    // Cần kiểm tra: các hàm của staticdata cần được tối ưu hóa performer,
+    // do đó, cần hạn chế kiểm tra dữ liệu rỗng, không tồn tại. Việc kiểm tra này cần được kiểm tra bên ngoài trước khi gọi vào
     public class StaticData
     {
         private static Dictionary<string, string> users = new Dictionary<string, string>();
         private static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
         private static Dictionary<string, GameMatch> games = new Dictionary<string, GameMatch>();
 
-        public static Dictionary<string, GroupChat> getAllGroups()
-        {
-            return groups;
-        }
+
 
         /// <summary>
         /// Thêm/ cập nhật connectionID người dùng vào danh sách người dùng đang online
@@ -51,7 +51,7 @@ namespace dota2chathub
                 users.Add(userid, connectionid);
             }
         }
-        
+
         /// <summary>
         /// Lấy connectionid của người dùng
         /// </summary>
@@ -73,6 +73,11 @@ namespace dota2chathub
         ///////////////////////////////////////
 
         #region GROUP CHAT
+        public static Dictionary<string, GroupChat> getAllGroups()
+        {
+            return groups;
+        }
+
         /// <summary>
         /// Check password for group
         /// </summary>
@@ -117,7 +122,7 @@ namespace dota2chathub
         /// <returns>Nếu có: trả về danh sách userid, nếu không thì trả về null</returns>
         public static List<string> getListUserInGroup(string groupid)
         {
-            if(haveGroup(groupid))
+            if (haveGroup(groupid))
             {
                 return groups[groupid].users;
             }
@@ -131,12 +136,9 @@ namespace dota2chathub
         /// <param name="idGroup"></param>
         public static async Task addUsertoGroup(string iduser, string idGroup)
         {
-            if (!string.IsNullOrWhiteSpace(iduser) && !string.IsNullOrWhiteSpace(idGroup))
+            if (groups.ContainsKey(idGroup))
             {
-                if (groups.ContainsKey(idGroup))
-                {
-                    groups[idGroup].addUser(iduser);
-                }
+                groups[idGroup].addUser(iduser);
             }
         }
 
@@ -265,28 +267,89 @@ namespace dota2chathub
             GameMatch game = new GameMatch(name);
             game.hostid = hostid;
             game.password = password;
+            game.addUser(hostid);
             StaticData.games.Add(game.id, game);
             return game.id;
         }
 
-        ///// <summary>
-        ///// Check password for group
-        ///// </summary>
-        ///// <param name="groupid"></param>
-        ///// <param name="password"></param>
-        ///// <returns></returns>
-        //public static bool checkPassword(string groupid, string password)
-        //{
-        //    if (groups.ContainsKey(groupid))
-        //    {
-        //        if (groups[groupid].password == password)
-        //        {
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
+        /// <summary>
+        /// Lấy danh sách người chơi trong game
+        /// </summary>
+        /// <param name="gameid"></param>
+        /// <returns></returns>
+        public static List<string> getUserInGame(string gameid)
+        {
+            if (games.ContainsKey(gameid))
+            {
+                return games[gameid].getlistusers();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
+        /// <summary>
+        /// Trả về số lượng người chơi trong game. Nếu game không tồn tại thì trả về -1
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static int getNumberUserInGame(string id)
+        {
+            if (games.ContainsKey(id))
+            {
+                return games[id].getNumberUser();
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public static Dictionary<string, GameMatch> getAllGameMatch()
+        {
+            return games;
+        }
+        /// <summary>
+        /// Check password for game
+        /// </summary>
+        /// <param name="groupid"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static bool checkGamePassword(string gameid, string password)
+        {
+            if (games.ContainsKey(gameid))
+            {
+                if (games[gameid].password == password)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Thêm người dùng vào game đã tồn tại
+        /// </summary>
+        /// <param name="iduser"></param>
+        /// <param name="idGroup"></param>
+        public static async Task addUsertoGame(string iduser, string gameid)
+        {
+            if (games.ContainsKey(gameid))
+            {
+                games[gameid].addUser(iduser);
+            }
+        }
+
+
+        public static GameMatch getGame(string gameid)
+        {
+            if (games.ContainsKey(gameid))
+            {
+                return games[gameid];
+            }
+            return null;
+        }
         ///// <summary>
         ///// Kiểm tra xem có tồn tại group hay không
         ///// </summary>
@@ -297,14 +360,7 @@ namespace dota2chathub
         //    return groups.ContainsKey(groupid);
         //}
 
-        //public static GroupChat getGroup(string groupid)
-        //{
-        //    if (groups.ContainsKey(groupid))
-        //    {
-        //        return groups[groupid];
-        //    }
-        //    return null;
-        //}
+       
 
         ///// <summary>
         ///// Lấy danh sách userid trong group xác định
@@ -319,23 +375,6 @@ namespace dota2chathub
         //    }
         //    return null;
         //}
-
-        ///// <summary>
-        ///// Thêm người dùng vào group đã tồn tại
-        ///// </summary>
-        ///// <param name="iduser"></param>
-        ///// <param name="idGroup"></param>
-        //public static async Task addUsertoGroup(string iduser, string idGroup)
-        //{
-        //    if (!string.IsNullOrWhiteSpace(iduser) && !string.IsNullOrWhiteSpace(idGroup))
-        //    {
-        //        if (groups.ContainsKey(idGroup))
-        //        {
-        //            groups[idGroup].addUser(iduser);
-        //        }
-        //    }
-        //}
-
         ///// <summary>
         ///// Xóa người dùng ra khỏi group
         ///// </summary>
@@ -447,6 +486,14 @@ namespace dota2chathub
         {
             return users.Keys.ToList<string>();
         }
+
+        public static void setGroupIDtoGame(string groupid, string gameid)
+        {
+            if(games.ContainsKey(gameid))
+            {
+                games[gameid].groupchatid = groupid;
+            }
+        }
     }
 
     public class ChatMessageObject
@@ -487,6 +534,10 @@ namespace dota2chathub
 
         public void addUser(string id)
         {
+            if (users.Count > 10)
+            {
+                return;
+            }
             if (users.Contains(id))
             {
                 return;
@@ -495,6 +546,11 @@ namespace dota2chathub
             {
                 users.Add(id);
             }
+        }
+
+        public int getNumberUser()
+        {
+            return users.Count();
         }
 
         public async Task removeUser(string userid)
@@ -512,6 +568,11 @@ namespace dota2chathub
             {
                 return false;
             }
+        }
+
+        public List<string> getlistusers()
+        {
+            return users;
         }
     }
 

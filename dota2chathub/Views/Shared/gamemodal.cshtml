@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <input autocomplete="off" type="text"ng-model="name" class="form-control" placeholder="Name">
+                    <input autocomplete="off" type="text" ng-model="name" class="form-control" placeholder="Name">
                     <p style="color:red;">{{nameerror}}</p>
                 </div>
                 <div class="form-group">
@@ -23,6 +23,7 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
 <!-- Find Game -->
 <div class="modal fade" id="findGamemodal" ng-controller="findgamecontroller as controller">
     <div class="modal-dialog">
@@ -38,14 +39,14 @@
             <div class="modal-body">
                 <p style="color: red;">{{message}}</p>
                 <ul class="todo-list ui-sortable">
-                    <li ng-repeat="group in groups" style="cursor: pointer;" ng-click="choosegroup(group.id)">
+                    <li ng-repeat="game in games" style="cursor: pointer;" ng-click="choosegroup(game.id, game.name)">
                         <span class="handle ui-sortable-handle">
                             <i class="fa fa-ellipsis-v"></i>
                             <i class="fa fa-ellipsis-v"></i>
                         </span>
                         <div class="icheckbox_flat-blue" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="checkbox" value="" name="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
-                        <span class="text">{{group.name}}</span>
-                        <small class="label label-info">{{group.host_name}}</small>
+                        <span class="text">{{game.name}}</span>
+                        <small class="label label-info">{{game.host_name}}</small>
                     </li>
                 </ul>
                 <div class="overlay" ng-show="isloading">
@@ -56,6 +57,58 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /.Find Game  -->
+
+<!-- Start Game -->
+<div class="modal fade" id="startGameModal" ng-controller="startgamemodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="input-group">
+                    <p>Game: {{name}}: {{id}}</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                Player in game:
+                <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;" ng-model="users">
+                    <li ng-repeat="user in users" class="ng-scope no-padding" style="width: 30px;">
+                        <img style="width: 30px; cursor: pointer;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" ng-click="startgame()">Start</button>
+                <button class="btn btn-warning" ng-click="leavegame()">Leave</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.Start Game  -->
+
+<!-- Finish Game -->
+<div class="modal fade" id="finishGameModal" ng-controller="finishgamemodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="input-group">
+                    <p>Game: {{name}}: {{id}}</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                Player in game:
+                <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;" ng-model="users">
+                    <li ng-repeat="user in users" class="ng-scope no-padding" style="width: 30px;">
+                        <img style="width: 30px; cursor: pointer;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" ng-click="wingame()">Win</button>
+                <button class="btn btn-warning" ng-click="lostgame()">Lost</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.Start Game  -->
 <!-- ===================== /Game =========================-->
 
 <script src="~/scripts/acontroller/gamemodalcontroller.js"></script>

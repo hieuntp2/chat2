@@ -24,30 +24,62 @@ namespace dota2chathub.Controllers
         }
 
         // GET: PublicChat
-        public async Task<ActionResult> joingroup(string groupid, string pass, string userid, string v = null)
+        public ActionResult getuseringame(string id)
         {
-            if (StaticData.checkPassword(groupid, pass))
+            if(string.IsNullOrWhiteSpace(id))
             {
-                GroupChat group = StaticData.getGroup(groupid);
-                ViewBag.groupname = group.name;
-                ViewBag.pass = pass;
-                ViewBag.id = groupid;
+                return null;
+            }
 
-                await StaticData.addUsertoGroup(userid, groupid);
+            return Json(StaticData.getUserInGame(id), JsonRequestBehavior.AllowGet);
+        }
 
-                if (v == null)
-                {
-                    return PartialView("Index");
-                }
-                else
-                {
-                    return PartialView("Index.v" + v);
-                }
+        // GET: PublicChat
+        public async Task<ActionResult> joingame(string gameid, string pass, string userid)
+        {
+            if (StaticData.checkGamePassword(gameid, pass))
+            {
+                GameMatch game = StaticData.getGame(gameid);                
+                await StaticData.addUsertoGame(userid, gameid);
+
+                return Json(game, JsonRequestBehavior.AllowGet);  
             }
             else
             {
                 return HttpNotFound();
             }
+        }
+
+        public ActionResult setgroupidtogame(string groupid, string gameid)
+        {
+            if(!string.IsNullOrWhiteSpace(groupid) && !string.IsNullOrWhiteSpace(gameid))
+            {
+                StaticData.setGroupIDtoGame(groupid, gameid);
+            }           
+            return null;
+        }
+
+        public ActionResult findgame(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
+            string[] words = name.Split(' ');
+            List<GameMatch> games = new List<GameMatch>();
+
+            games = (from item in StaticData.getAllGameMatch()
+                      where words.All(val => item.Value.name.Contains(val))
+                      select new GameMatch
+                      {
+                          hostid = item.Value.hostid,
+                          id = item.Value.id,
+                          name = item.Value.name
+                      }
+                          ).ToList();
+
+            return Json(games, JsonRequestBehavior.AllowGet);
         }
     }
 }

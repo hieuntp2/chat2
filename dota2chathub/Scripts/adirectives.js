@@ -115,7 +115,7 @@ app.directive('groupChat', function () {
     return {
         restrict: 'A',
         scope: true,
-        controller: function ($rootScope, $scope, $http, groups_manage_service, user_manage_service, account_infor_service) {
+        controller: function ($rootScope, $scope, $http, groups_manage_service, user_manage_service, account_infor_service, games_manage_service) {
             $scope.idgroup = "";
             $scope.name = "";
             $scope.messages = [];
@@ -138,7 +138,9 @@ app.directive('groupChat', function () {
                     $scope.idgroup = groupid;
                     groups_manage_service.addGroup($scope.idgroup, $scope.name);
 
-
+                    // Kiểm tra xem nếu có nhóm game nào chưa có groupid thì gán vào
+                    alert(groupid);
+                    games_manage_service.addGroupIDtoGame(groupid);
                 }
             }
 

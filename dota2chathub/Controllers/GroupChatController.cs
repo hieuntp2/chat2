@@ -10,13 +10,17 @@ namespace dota2chathub
     public class GroupChatController : Controller
     {
         // GET: PublicChat
-        public ActionResult Index(string groupname, string pass, string userid, string v=null)
+        public ActionResult Index(string groupname, string pass, string userid, string v=null, string gameid = null)
         {
             string id = StaticData.createGroup(groupname, userid, pass);
             ViewBag.groupname = groupname;
             ViewBag.pass = pass;
             ViewBag.id = id;
 
+            if(gameid != null)
+            {
+                StaticData.setGroupIDtoGame(id, gameid);
+            }
             if (v == null)
             {
                 return PartialView();
@@ -53,5 +57,5 @@ namespace dota2chathub
                 return HttpNotFound();
             }            
         }
-    }
+    }   
 }
