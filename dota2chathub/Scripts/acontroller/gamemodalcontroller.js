@@ -52,7 +52,7 @@
 
         $scope.addnewGroupChat = function (id) {
             // Sau khi tạo game thành công, thì tạo group chat với tên và password tương ứng
-            var address = '../../GroupChat/Index?groupname=' + $scope.name + '&&pass=' + $scope.password + '&&userid=' + account_infor_service.getid() + "&&v=2" + "&&gameid=" + id;
+            var address = '../../GroupChat/Index?groupname=' + $scope.name + '&&pass=' + $scope.password + '&&userid=' + account_infor_service.getid() + "&&gameid=" + id;
             $scope.getmodulesettotab(address);
             $scope.name = "";
             $scope.password = "";

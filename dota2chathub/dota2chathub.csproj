@@ -310,12 +310,11 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
       <LastGenOutput>DBModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\acontrollers.v2.js" />
+    <Content Include="Scripts\acontrollers.js" />
     <Content Include="Scripts\acontroller\groupmodalcontroller.js" />
     <Content Include="Scripts\acontroller\gamemodalcontroller.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\acontrollers.js" />
     <Content Include="Scripts\adirectives.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.js" />
@@ -892,12 +891,8 @@
     <Content Include="Views\PublicChat\Index.cshtml" />
     <Content Include="Views\Home\FriendList.cshtml" />
     <Content Include="Views\PrivateChat\Index.cshtml" />
-    <Content Include="Views\Home\Index.v2.cshtml" />
-    <Content Include="Views\PublicChat\Index.v2.cshtml" />
-    <Content Include="Views\GroupChat\Index.v2.cshtml" />
     <Content Include="Views\Shared\mini_control.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
-    <Content Include="Views\Game\Index.v2.cshtml" />
     <Content Include="Views\Shared\gamemodal.cshtml" />
     <Content Include="Views\Shared\groupmodal.cshtml" />
   </ItemGroup>

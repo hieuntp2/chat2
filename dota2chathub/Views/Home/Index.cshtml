@@ -1,4 +1,5 @@
-﻿@{
+﻿<!--Home Index-->
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -6,30 +7,39 @@
 <script src="~/scripts/acontrollers.js"></script>
 <script src="~/scripts/adirectives.js"></script>
 
-<div ng-app="main_app">
+<div id="indexcontext" ng-app="main_app" ng-controller="modulecontroller as controller" ng-init="controller.init('@ViewBag.userid')">
     <!-- Left col -->
-    <section class="col-lg-3 connectedSortable" id="main_col_3_left"></section><!-- /.Left col -->
+    <section class="col-lg-2 connectedSortable" id="main_col_3_left"></section>
+    <!-- /.Left col -->
     <!--Miiddle collums-->
-    <div id="indexcontext" ng-controller="modulecontroller as controller" ng-init="controller.init('@ViewBag.userid')">
-        <div class="col-lg-6 connectedSortable" id="main_col_6">
+    <div class="col-lg-8 connectedSortable" id="main_col_6">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs" ng-controller="maintabscontroller as tabscontroller" ng-model="tabscontroller.tabs" id="homelisttabs">
+                <li ng-repeat="tab in tabscontroller.tabs" id="{{'tab_header_panel' + tab.id}}">
+                    <a href="#{{tab.id}}" data-toggle="tab" ng-click="tabonclick(tab.id)">{{tab.name}}</a>
+                </li>
+            </ul>
+            <div class="tab-content" ng-model="controller.tabs" id="main_content_box">
+            </div><!-- /.tab-content -->
         </div>
-
-        <div class="btn-group" style="float:right; position:absolute; right:20px; bottom: 70px;">
-            <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalcreateGroup()">Create group</button>
-            <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalfindgroup()">Find group</button>
-        </div>    
-      
     </div>
-    <section class="col-lg-3 connectedSortable" id="main_col_3_right">
-    </section><!-- right col -->
+
+    <!-- Right col -->
+    <section class="col-lg-2 connectedSortable" id="main_col_3_left">
+        <div ng-include="'content/templates/game.html'"></div>
+    </section>
+    <!-- /.Right col -->
+    @Html.Partial("modal")
+    @Html.Partial("gamemodal")
+    @Html.Partial("groupmodal")
+    <div class="btn-group" style="float:right; position:absolute; right:20px; bottom: 70px;">
+        <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalcreateGroup()">Create group</button>
+        <button class="btn btn-primary" aria-expanded="false" ng-click="showmodalfindgroup()">Find group</button>
+    </div>
 
     <div class="overlay" ng-show="controller.isloading">
         <i class="fa fa-refresh fa-spin"></i>
     </div>
-
-    @Html.Partial("modal")
-    @Html.Partial("gamemodal")
 </div>
 
-
-
+<!-- Custom Tabs -->

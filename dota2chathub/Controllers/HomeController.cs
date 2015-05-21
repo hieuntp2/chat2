@@ -13,30 +13,16 @@ namespace dota2chathub.Controllers
     {
         ProjectDEntities db = new ProjectDEntities();
 
-        public ActionResult Index(string v = null)
+        public ActionResult Index()
         {
             ViewBag.userid = "151312";
 
-            if(v==null)
-            {
-                return View();
-            }
-            else
-            {
-                return View("Index.v"+v);
-            }            
+            return View();          
         }
 
-        public ActionResult FriendList(string v = null)
+        public ActionResult FriendList()
         {
-            if(v==null)
-            {
-                return PartialView();
-            }
-            else
-            {
-                return PartialView();
-            }            
+            return PartialView();          
         }
 
     }
@@ -47,20 +33,13 @@ namespace dota2chathub.Controllers
     {
         ProjectDEntities db = new ProjectDEntities();
 
-        public ActionResult Index(string v = null)
+        public ActionResult Index()
         {
             string id = User.Identity.GetUserId();
             string steamid = db.AspNetUsers.SingleOrDefault(t => t.Id == id).UserName;
             ViewBag.userid = steamid;
             ViewBag.userifor = db.UserInfoes.SingleOrDefault(t => t.userid == steamid);
-            if(v==null)
-            {
-                return View();
-            }
-            else
-            {
-                return View("Index.v"+v);
-            }  
+            return View();
         }
 
         public ActionResult FriendList()

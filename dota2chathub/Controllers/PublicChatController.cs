@@ -9,16 +9,9 @@ namespace dota2chathub
     public class PublicChatController : Controller
     {
         // GET: PublicChat
-        public ActionResult Index(string v = null)
+        public ActionResult Index()
         {
-            if(v==null)
-            {
-                return PartialView();
-            }
-            else
-            {
-                return PartialView("Index.v"+v);
-            }           
+            return PartialView();          
         }
     }
 }

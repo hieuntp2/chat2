@@ -16,7 +16,7 @@
                     $scope.nameerror = "Group name length should be below 254 characters";
                 }
                 else {
-                    var address = '../../GroupChat/Index?groupname=' + $scope.name + '&&pass=' + $scope.password + '&&userid=' + account_infor_service.getid() + "&&v=2";
+                    var address = '../../GroupChat/Index?groupname=' + $scope.name + '&&pass=' + $scope.password + '&&userid=' + account_infor_service.getid();
 
                     $scope.getmodulesettotab(address);
 

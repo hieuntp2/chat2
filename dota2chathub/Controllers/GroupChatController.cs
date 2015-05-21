@@ -10,29 +10,18 @@ namespace dota2chathub
     public class GroupChatController : Controller
     {
         // GET: PublicChat
-        public ActionResult Index(string groupname, string pass, string userid, string v=null, string gameid = null)
+        public ActionResult Index(string groupname, string pass, string userid, string gameid = null)
         {
             string id = StaticData.createGroup(groupname, userid, pass);
             ViewBag.groupname = groupname;
             ViewBag.pass = pass;
             ViewBag.id = id;
 
-            if(gameid != null)
-            {
-                StaticData.setGroupIDtoGame(id, gameid);
-            }
-            if (v == null)
-            {
-                return PartialView();
-            }
-            else
-            {
-                return PartialView("Index.v" + v);
-            }  
+            return PartialView();
         }
 
         // GET: PublicChat
-        public async Task<ActionResult> joingroup(string groupid, string pass, string userid, string v = null)
+        public async Task<ActionResult> joingroup(string groupid, string pass, string userid)
         {
             if (StaticData.checkPassword(groupid, pass))
             {
@@ -43,14 +32,7 @@ namespace dota2chathub
 
                 await StaticData.addUsertoGroup(userid, groupid);
 
-                if (v == null)
-                {
-                    return PartialView("Index");
-                }
-                else
-                {
-                    return PartialView("Index.v" + v);
-                } 
+                return PartialView("Index"); 
             }
             else
             {
