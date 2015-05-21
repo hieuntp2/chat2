@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Microsoft.AspNet.SignalR;
 using System;
+using System.Threading.Tasks;
 
 namespace dota2chathub.Controllers
 {
@@ -73,6 +74,7 @@ namespace dota2chathub.Controllers
             listreturn.Add("testfriendid3");            
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }
+
 #else
         public ActionResult getuserinfo(string id)
         {
@@ -159,13 +161,30 @@ namespace dota2chathub.Controllers
                 }
             }
             return Json(listreturn, JsonRequestBehavior.AllowGet);
-        }    
+        }
 
-         public ActionResult getonlineusers(string steamid = null)
+        public ActionResult getonlineusers(string steamid = null)
         {
             return Json(StaticData.getListUserOnline(), JsonRequestBehavior.AllowGet);
-        }
+        }        
 #endif
+        public async Task updateUserScore(bool result)
+        {
+            string userid = getCurrentSteamID();
+            UserInfo user = db.UserInfoes.SingleOrDefault(t => t.username == userid);
+
+            if (result)
+            {
+                user.Totalscore += 1;
+            }
+            else
+            {
+                user.Totalscore -= 1;
+            }
+
+            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            await db.SaveChangesAsync();
+        }
 
         public ActionResult findgroup(string name)
         {
@@ -222,6 +241,8 @@ namespace dota2chathub.Controllers
             string userid = User.Identity.GetUserId();
             return db.AspNetUsers.SingleOrDefault(t => t.Id == userid).UserName;
         }
+
+
     }
 
     public class FriendInChatBox

@@ -205,3 +205,4 @@ E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Release\dota2chathub.Migra
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Release\dota2chathub.csproj.GenerateResource.Cache
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Release\dota2chathub.dll
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Release\dota2chathub.pdb
+E:\6. My Project\net\chat2.git\trunk\dota2chathub\bin\Content\Templates\game.html

@@ -186,12 +186,18 @@ app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage
             $rootScope.$broadcast('pendinggame::finishgame', $scope.id);
             $('#finishGameModal').modal('hide');
             games_manage_service.removegame($scope.id);
+
+            // upload let qua den server
+            $http.get("../../service/updateUserScore?result=true");
         }
 
         $scope.lostgame = function () {
             $rootScope.$broadcast('pendinggame::finishgame', $scope.id);
             $('#finishGameModal').modal('hide');
             games_manage_service.removegame($scope.id);
+
+            // upload let qua den server
+            $http.get("../../service/updateUserScore?result=false");
         }
 
     }]);
