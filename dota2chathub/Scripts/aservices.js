@@ -455,6 +455,15 @@ app.service('games_manage_service', function ($http, $rootScope, hub_service) {
         removeGroup(gameid);
     });
 
+    var removegame = function(id)
+    {
+        for (var i = 0; i < games.length; i++) {
+            if (games[i].id == id) {
+                games.splice(i, 1);
+            }
+        }
+    }
+
     var addGroupIDtoGame = function(groupid)
     {
         alert(groupid);
@@ -473,7 +482,8 @@ app.service('games_manage_service', function ($http, $rootScope, hub_service) {
         haveGame: haveGame,
         createGame: createGame,
         joingame: joingame,
-        addGroupIDtoGame: addGroupIDtoGame
+        addGroupIDtoGame: addGroupIDtoGame,
+        removegame: removegame
     }
 })
 ///////////////////////////////////////////

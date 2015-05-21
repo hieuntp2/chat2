@@ -103,7 +103,7 @@ namespace dota2chathub.Module.PublicChat
         {
             // Khi người dùng disconect thì đồng thời loại bỏ user ra khỏi list quản lý
 #if DEBUG
-            //StaticData.removeOfflineUser("151312");
+            StaticData.removeOfflineUser("151312");
 #else
             StaticData.removeOfflineUserbyAspNetUser(Context.User.Identity.GetUserId());
 #endif

@@ -301,8 +301,6 @@ app.directive('invUserModal', function () {
     }
 });
 
-
-
 app.directive('privateChat', function () {
     return {
         restrict: 'A',

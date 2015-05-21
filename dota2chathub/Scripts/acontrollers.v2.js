@@ -279,6 +279,7 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
         $rootScope.$on('pendinggame::leavegame', function (event, gameid) {
             $scope.removependinggame(gameid);
             $scope.pendingmessage = $scope.pendings.length + " pending game";
+            games_manage_service.removegame(gameid);
         });
 
         $scope.addgame = function (game) {

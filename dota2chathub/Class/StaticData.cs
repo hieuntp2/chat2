@@ -15,8 +15,6 @@ namespace dota2chathub
         private static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
         private static Dictionary<string, GameMatch> games = new Dictionary<string, GameMatch>();
 
-
-
         /// <summary>
         /// Thêm/ cập nhật connectionID người dùng vào danh sách người dùng đang online
         /// </summary>
@@ -198,27 +196,6 @@ namespace dota2chathub
         }
 
         /// <summary>
-        /// Xóa người dùng khi offline bởi userid
-        /// </summary>
-        /// <param name="userid"></param>
-        /// <returns></returns>
-        public static async Task removeOfflineUser(string userid)
-        {
-            if (users.ContainsKey(userid))
-            {
-                users.Remove(userid);
-                foreach (var item in groups)
-                {
-                    if (item.Value.checkUser(userid))
-                    {
-                        item.Value.removeUser(userid);
-                        removeGroup(item.Key);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Xóa người dùng khi offline bởi AspNetUserID
         /// </summary>
         /// <param name="aspnetuserid">AspNetUser ID</param>
@@ -350,6 +327,35 @@ namespace dota2chathub
             }
             return null;
         }
+
+        /// <summary>
+        /// Xóa game nếu game đó có người chơi = 0;
+        /// </summary>
+        /// <param name="gameid"></param>
+        public static async Task removeGame(string gameid)
+        {
+            if (string.IsNullOrWhiteSpace(gameid))
+            {
+                return;
+            }
+
+            if (games.ContainsKey(gameid))
+            {
+                // Neu user in group == 0 thi moi cho phep xoa
+                if (games[gameid].users.Count() == 0)
+                {
+                    games.Remove(gameid);
+                }
+                else
+                {
+                    //Log
+                    return;
+                }
+            }
+
+            return;
+        }
+
         ///// <summary>
         ///// Kiểm tra xem có tồn tại group hay không
         ///// </summary>
@@ -359,9 +365,6 @@ namespace dota2chathub
         //{
         //    return groups.ContainsKey(groupid);
         //}
-
-       
-
         ///// <summary>
         ///// Lấy danh sách userid trong group xác định
         ///// </summary>
@@ -375,35 +378,6 @@ namespace dota2chathub
         //    }
         //    return null;
         //}
-        ///// <summary>
-        ///// Xóa người dùng ra khỏi group
-        ///// </summary>
-        ///// <param name="groupid"></param>
-        //public static async Task removeGroup(string groupid)
-        //{
-        //    if (string.IsNullOrWhiteSpace(groupid))
-        //    {
-        //        return;
-        //    }
-
-        //    if (groups.ContainsKey(groupid))
-        //    {
-        //        // Neu user in group == 0 thi moi cho phep xoa
-        //        if (groups[groupid].users.Count() == 0)
-        //        {
-        //            groups.Remove(groupid);
-        //        }
-        //        else
-        //        {
-        //            //Log
-        //            return;
-        //        }
-        //    }
-
-        //    return;
-        //}
-
-
         ///// <summary>
         ///// Kiếm tra người dùng có tồn tại trong group không
         ///// </summary>
@@ -474,6 +448,47 @@ namespace dota2chathub
         //}
 
         #endregion
+
+        /// <summary>
+        /// Xóa người dùng khi offline bởi userid
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public static async Task removeOfflineUser(string userid)
+        {
+            string groupid = "", gameid = "";
+            if (users.ContainsKey(userid))
+            {
+                users.Remove(userid);
+                foreach (var item in groups)
+                {
+                    if (item.Value.checkUser(userid))
+                    {
+                        item.Value.removeUser(userid);
+                       
+                        groupid = item.Key;
+                    }
+                }
+
+                foreach(var item in games)
+                {
+                    if(item.Value.checkUser(userid))
+                    {
+                        item.Value.removeUser(userid);
+                        gameid = item.Key;
+                        
+                    }
+                }
+            }
+            if(groupid != "")
+            {
+                removeGroup(groupid);
+            }
+            if(gameid != "")
+            {
+                removeGame(gameid);
+            }           
+        }
 
         private static string getUserIDbyAspNetUserID(string aspnetuserid)
         {

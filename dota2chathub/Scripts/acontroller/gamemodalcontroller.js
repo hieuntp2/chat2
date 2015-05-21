@@ -22,7 +22,7 @@
                         $scope.addnewGroupChat(data.id);
 
                     }).error(function () {
-                        alert("Lỗi khi lấy module " + address);
+                        alert("Wrong password!");
                     });
                     $("#createGameChatModal").modal('hide');
                 }
@@ -37,7 +37,7 @@
                 $rootScope.$broadcast('penddinggame::joingame', data);
                 $rootScope.$broadcast('findGroupcontroller::joinGroup', data);
             }).error(function () {
-                alert("Lỗi khi lấy module " + address);
+                alert("Wrong password!");
             });
         });
 
@@ -149,8 +149,8 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
 
     }]);
 
-app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_service',
-    function ($scope, $rootScope, $http, user_manage_service) {
+app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_service','games_manage_service',
+    function ($scope, $rootScope, $http, user_manage_service, games_manage_service) {
 
         // Các biến dùng cho start game modal
         $scope.id = "";
@@ -185,11 +185,13 @@ app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage
         $scope.wingame = function () {
             $rootScope.$broadcast('pendinggame::finishgame', $scope.id);
             $('#finishGameModal').modal('hide');
+            games_manage_service.removegame($scope.id);
         }
 
         $scope.lostgame = function () {
             $rootScope.$broadcast('pendinggame::finishgame', $scope.id);
             $('#finishGameModal').modal('hide');
+            games_manage_service.removegame($scope.id);
         }
 
     }]);
