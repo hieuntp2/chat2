@@ -851,7 +851,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\dist\emotion\" />
-    <Folder Include="Scripts\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

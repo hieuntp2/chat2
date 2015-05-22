@@ -7,7 +7,7 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
         ctrll.isloading = true;
 
         this.getmodulesettotab = function (address) {
-            $http.get(address).success(function (data) { 
+            $http.get(address).success(function (data) {
                 var el = $compile(data)($scope);
                 $("#main_content_box").append(el);
             }).error(function () {
@@ -26,7 +26,7 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
                 alert("Lỗi khi lấy module " + address);
                 return "error";
             });
-        }             
+        }
 
         this.init = function (userid) {
             hub_service.initialize();
@@ -35,12 +35,12 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
             ctrll.getmodule('../../Home/FriendList', 'main_col_3_left');
             account_infor_service.setid(userid);
             this.isloading = false;
-        }        
-       
-        
+        }
+
+
         $scope.$on('module:joingroup', function (event, groupid, password) {
             var address = '../../GroupChat/joingroup?groupid=' + groupid + '&&pass=' + password + '&&userid=' + account_infor_service.getid();
-            
+
             $http.get(address).success(function (data) {
                 var el = $compile(data)($scope);
                 $("#main_content_box").append(el);
@@ -99,29 +99,24 @@ app.controller('maintabscontroller', ['$scope', '$timeout', function ($scope, $t
     $scope.$on('maintab::closetab', function (event, id) {
         id = "group_chat_tab_content_" + id;
         $("#" + id).remove();
-        for (var i = 0; i < ctrl.tabs.length; i++)
-        {
-            if(ctrl.tabs[i].id == id)
-            {
+        for (var i = 0; i < ctrl.tabs.length; i++) {
+            if (ctrl.tabs[i].id == id) {
                 ctrl.tabs.splice(i, 1);
             }
         }
-       
+
     });
 
     // Khi nhân được sự kiện nhận message, thì tìm kiếm tab id
     // sau đó kiểm tra, nếu tab đó ko ở trạng thái active,
     // thì gọi set nó là ko active, để hiển thị đổi màu cho tab.
     $scope.$on('maintab::receivemessage', function (event, id) {
-        for(var i = 0; i < ctrl.tabs.length; i++)
-        {
-            if(ctrl.tabs[i].id == id)
-            {
+        for (var i = 0; i < ctrl.tabs.length; i++) {
+            if (ctrl.tabs[i].id == id) {
                 // nếu tab ko active thì mới set có message mới
-                if (ctrl.tabs[i].isactive == 0)
-                {
+                if (ctrl.tabs[i].isactive == 0) {
                     ctrl.tabs[i].havenewmessage = 1;
-                }                
+                }
             }
         }
     });
@@ -129,22 +124,18 @@ app.controller('maintabscontroller', ['$scope', '$timeout', function ($scope, $t
     // Kiểm tra xem, những tab nào đang trong trạng thái là nhận được message mới
     // thì bắt đầu đổi màu cho tab.
     $scope.runcheckNewMessage = function () {
-        for (var i = 0; i < ctrl.tabs.length; i++)
-        {
-            if (ctrl.tabs[i].havenewmessage != 0)
-            {
-                if (ctrl.tabs[i].havenewmessage == 1)
-                {
+        for (var i = 0; i < ctrl.tabs.length; i++) {
+            if (ctrl.tabs[i].havenewmessage != 0) {
+                if (ctrl.tabs[i].havenewmessage == 1) {
                     ctrl.tabs[i].havenewmessage = 2;
                     // change css here
                     $("#tab_header_panel" + ctrl.tabs[i].id).addClass('tabnewmessagealert');
                 }
-                else
-                {
+                else {
                     ctrl.tabs[i].havenewmessage = 1;
                     // change css here
                     $("#tab_header_panel" + ctrl.tabs[i].id).removeClass('tabnewmessagealert');
-                }                
+                }
             }
         }
     }
@@ -158,12 +149,9 @@ app.controller('maintabscontroller', ['$scope', '$timeout', function ($scope, $t
 
     // Khi tab được click, thì set tab đó là active, đồng thời set các tab còn lại là ko active
     // để thuận tiện cho việc kiểm tra nhận message mới
-    $scope.tabonclick = function (tabid)
-    {
-        for(var i = 0; i < ctrl.tabs.length; i++)
-        {
-            if(ctrl.tabs[i].id == tabid)
-            {
+    $scope.tabonclick = function (tabid) {
+        for (var i = 0; i < ctrl.tabs.length; i++) {
+            if (ctrl.tabs[i].id == tabid) {
                 ctrl.tabs[i].havenewmessage = 0;
                 ctrl.tabs[i].isactive = 1;
             }
@@ -200,11 +188,9 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
                 $scope.startedmessage = "0 game started";
             }
         }
-        $scope.removependinggame = function(gameid)
-        {
+        $scope.removependinggame = function (gameid) {
             for (var i = 0; i < $scope.pendings.length; i++) {
-                if($scope.pendings[i].id == gameid)
-                {
+                if ($scope.pendings[i].id == gameid) {
                     $scope.pendings.splice(i, 1);
                     return;
                 }
@@ -239,8 +225,7 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
 
             $rootScope.$broadcast('startgamemodal::showgameinfor', id, name);
         }
-        $scope.showfinishgame = function (id)
-        {
+        $scope.showfinishgame = function (id) {
             if (!id) {
                 return;
             }
@@ -252,7 +237,7 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
                 }
             }
 
-            $rootScope.$broadcast('finishgamemodal::showfinishgamemodal', id, name);            
+            $rootScope.$broadcast('finishgamemodal::showfinishgamemodal', id, name);
         }
 
         $rootScope.$on('penddinggame::joingame', function (event, data) {
@@ -260,10 +245,8 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
             $scope.pendingmessage = $scope.pendings.length + " pending game";
         });
         $rootScope.$on('pendinggame::startgame', function (event, gameid) {
-            for(var i = 0; i < $scope.pendings.length; i++)
-            {
-                if($scope.pendings[i].id == gameid)
-                {
+            for (var i = 0; i < $scope.pendings.length; i++) {
+                if ($scope.pendings[i].id == gameid) {
                     $scope.starteds.push($scope.pendings[i]);
                     $scope.removependinggame(gameid);
 
@@ -293,6 +276,30 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
             $scope.message = $scope.pendings.length + " game";
 
             games_manage_service.addGame(item.id);
+        }
+
+    }]);
+
+
+app.controller('topplayercontroller', ['$scope', '$scope', '$http', 'user_manage_service',
+    function ($scope, $scope, $http, user_manage_service) {
+
+        $scope.tops = [];
+        $scope.isloading = true;
+
+        $scope.init = function () {
+
+            $http.get("../../service/gettopuser").success(function (data) {
+                 
+                for (var i = 0; i < data.length; i++) {
+                    var user = user_manage_service.getuser(data[i]);
+                    $scope.tops.push(user);
+                    $scope.isloading = false;
+                }
+            }).error(function () {
+                alert('Error when get top player!');
+                $scope.isloading = false;
+            });
         }
 
     }]);

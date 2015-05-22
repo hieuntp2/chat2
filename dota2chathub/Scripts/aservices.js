@@ -115,7 +115,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 })
 
 // Cấu trúc user:
-// user {id, name, avatar}
+// user {id, name, avatar, score, rank}
 // Quan ly ds nguoi dung để tránh việc trao đổi thông tin nhiều lần
 app.service('user_manage_service', function ($http) {
     var listuser = [];
@@ -134,10 +134,17 @@ app.service('user_manage_service', function ($http) {
 
         }).error(function () {
             alert("Không tồn tại userid = " + userid);
+            return user;
+        });
+
+        $http.get("../../service/getuserrank?userid=" + userid).success(function (data) {
+            user.rank = data;
+        }).error(function () {
         });
 
         return user;
     }
+
     this.adduser = function (userid, username, linkavatar) {
         // neu ton tai userid thi thoat ra
         for (var i = 0; i < listuser.length; i++) {

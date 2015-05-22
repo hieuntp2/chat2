@@ -19,6 +19,7 @@
                                 <a>
                                     {{friend.name}}
                                 </a>
+                                <small>score: {{friend.score}}</small>
                             </p>
 
                             <img ng-switch-when="false" ng-src="{{friend.avatar}}" alt="Offline" class="offline" />
@@ -26,13 +27,15 @@
                                 <a style="color: darkgray;">
                                     {{friend.name}}
                                 </a>
+                                <small>score: {{friend.score}}</small>
                             </p>
                         </div>
                         <div class="overlay" ng-show="isloading">
                             <i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <small style="font-style: italic;">{{message}}</small>
-                    </div><!-- /.box-body -->
+                    </div>
+                    <!-- /.box-body -->
 
                     <div class="box-footer text-center">
                         <a ng-click="updateFriends()" class="uppercase">refresh</a>
@@ -43,12 +46,13 @@
             <div class="tab-pane" id="Online">
                 <div id="friend-list-box-content">
                     <div class="chat chatboxbody">
-                        <div class="item" ng-repeat="online in onlines" style=" margin-bottom: 12px;">
+                        <div class="item" ng-repeat="online in onlines| orderBy:'score'" style=" margin-bottom: 12px;">
                             <img ng-src="{{online.avatar}}" alt="Online" class="online" />
                             <p class="message" style="color:green; cursor:pointer;" ng-click="createprivatechat(online.id)">
                                 <a>
                                     {{online.name}}
                                 </a>
+                                <small>score: {{online.score}}</small>
                             </p>
                         </div>
                         <div class="overlay" ng-show="isloading">
@@ -60,6 +64,7 @@
                     </div><!-- /.box-footer -->
                 </div>
             </div>
-        </div><!-- /.tab-content -->
+        </div>
+        <!-- /.tab-content -->
     </div>
 </friends-box>

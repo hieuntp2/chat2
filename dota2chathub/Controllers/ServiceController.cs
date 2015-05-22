@@ -27,7 +27,8 @@ namespace dota2chathub.Controllers
                 linkavatar = "../../Content/account_default.png",
                 steamid = "151312",
                 userid = id,
-                username = "testfriendid1"
+                username = "testfriendid1",
+                Totalscore = (new Random()).Next()
             };
 
             return Json(user, JsonRequestBehavior.AllowGet);
@@ -75,6 +76,29 @@ namespace dota2chathub.Controllers
             return Json(listreturn, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult gettopuser()
+        {
+            List<string> user = new List<string>();
+            user.Add("151312");
+            user.Add("testfriendid2");
+            user.Add("testfriendid3");
+            return Json(user, JsonRequestBehavior.AllowGet);         
+        }
+
+        public int getuserrank(string userid)
+        {
+           switch(userid)
+           {
+               case "151312":
+                   return 1;
+               case "testfriendid2":
+                   return 2;
+               case "testfriendid3":
+                   return 3;
+               default:
+                   return 4;
+           }
+        }
 #else
         public ActionResult getuserinfo(string id)
         {
@@ -126,7 +150,7 @@ namespace dota2chathub.Controllers
 
             // Get user From Db
             var client = new WebClient();
-            var results = client.DownloadString("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=3C627B068B6CD1170B25D133C6ECED2C&steamid=" + steamid + "&relationship=friend");
+            var results = client.DownloadString("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key="+ StaticData.Keys +"&steamid=" + steamid + "&relationship=friend");
             JObject result = (JObject)JsonConvert.DeserializeObject(results);
 
             // or
@@ -166,7 +190,18 @@ namespace dota2chathub.Controllers
         public ActionResult getonlineusers(string steamid = null)
         {
             return Json(StaticData.getListUserOnline(), JsonRequestBehavior.AllowGet);
-        }        
+        }
+
+        public List<string> gettopuser()
+        {
+            List<string> user = db.UserInfoes.OrderBy(t => t.Totalscore).Take(10).Select(t=>t.userid).ToList();
+            return user;
+        }
+
+        public int getuserrank(string userid)
+        {
+            return db.UserInfoes.OrderBy(t => t.Totalscore).ToList().FindIndex(t => t.userid == userid);
+        }
 #endif
         public async Task updateUserScore(bool result)
         {
@@ -242,7 +277,7 @@ namespace dota2chathub.Controllers
             return db.AspNetUsers.SingleOrDefault(t => t.Id == userid).UserName;
         }
 
-
+        
     }
 
     public class FriendInChatBox

@@ -443,9 +443,11 @@ app.directive('friendsBox', function () {
 
             $scope.getfriendlist = function () {
                 $scope.isloading = true;
+                $scope.friendlist = [];
+                $scope.onlines = [];
+
                 $http.get("../../Service/getlistfriends").success(function (data) {
                     if (data.length == 0) {
-                        $scope.friendlist = [];
                         $scope.message = "0 user online.";
                         return;
                     }

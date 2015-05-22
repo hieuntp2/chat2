@@ -65,7 +65,7 @@ namespace dota2chathub
             //    ClientSecret = ""
             //});
 
-            app.UseSteamAuthentication("3C627B068B6CD1170B25D133C6ECED2C");
+            app.UseSteamAuthentication(StaticData.Keys);
         }
     }
 }

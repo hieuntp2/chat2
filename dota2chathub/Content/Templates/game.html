@@ -1,37 +1,68 @@
 ﻿<script src="../dist/js/pages/dashboard.js"></script>
 <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-<div class="panel box box-primary" ng-controller="pendinggamecontroller as controller">
-    <div class="box-header with-border">
-        <a data-toggle="collapse" data-parent="#accordion" href="#pendingGamebody">
-            Game
-        </a>
-    </div>
-    <div id="pendingGamebody" class="panel-collapse collapse in" ng-init="init()">
-        <div class="box-body">
-            <p>Pending</p>
-            <small style="color:blue;">{{pendingmessage}}</small>
-            <ul class="todo-list ui-sortable" ng-model="pendings">
-                <li ng-repeat="game in pendings" style="cursor:pointer;" ng-click="showStartGameModal(game.id)">
-                    <span class="text">{{game.name}}</span>
-                    <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>                   
-                </li>
-            </ul>
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#gamepanel" data-toggle="tab">Game</a>
+        </li>
+        <li>
+            <a href="#topplayerpanel" data-toggle="tab">Top Player</a>
+        </li>
+    </ul>
 
-            <hr />
-            <p>
-                Stated
-            </p>
-            <small style="color:blue;">{{startedmessage}}</small>
-            <ul class="todo-list ui-sortable" ng-model="starteds">
-                <li ng-repeat="game in starteds" style="cursor:pointer;" ng-click="showfinishgame(game.id)">
-                    <span class="text">{{game.name}}</span>
-                    <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>
-                </li>
-            </ul>
-        </div><!-- /.box-body -->
-        <div class="box-footer clearfix no-border">            
-            <button class="btn btn-default pull-right" ng-click="showmodalfindGame()"><i class="fa fa-search"></i> Find</button>
-            <button class="btn btn-default pull-right" ng-click="showmodalcreateGame()"><i class="fa fa-plus"></i> Create</button>
+    <div class="tab-content">
+        <div class="tab-pane active" id="gamepanel">
+            <div ng-controller="pendinggamecontroller as controller">
+                <div id="pendingGamebody" class="panel-collapse collapse in" ng-init="init()">
+                    <div class="box-body">
+                        <p>Pending</p>
+                        <small style="color:blue;">{{pendingmessage}}</small>
+                        <ul class="todo-list ui-sortable" ng-model="pendings">
+                            <li ng-repeat="game in pendings" style="cursor:pointer;" ng-click="showStartGameModal(game.id)">
+                                <span class="text">{{game.name}}</span>
+                                <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>
+                            </li>
+                        </ul>
+
+                        <hr />
+                        <p>
+                            Stated
+                        </p>
+                        <small style="color:blue;">{{startedmessage}}</small>
+                        <ul class="todo-list ui-sortable" ng-model="starteds">
+                            <li ng-repeat="game in starteds" style="cursor:pointer;" ng-click="showfinishgame(game.id)">
+                                <span class="text">{{game.name}}</span>
+                                <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>
+                            </li>
+                        </ul>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer clearfix no-border">
+                        <button class="btn btn-default pull-right" ng-click="showmodalfindGame()"><i class="fa fa-search"></i> Find</button>
+                        <button class="btn btn-default pull-right" ng-click="showmodalcreateGame()"><i class="fa fa-plus"></i> Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="topplayerpanel">
+            <div class="chat chatboxbody" ng-init="init()" ng-controller="topplayercontroller">
+                <div class="item" ng-repeat="user in tops | orderBy: 'score'">
+                    <img ng-src="{{user.avatar}}" alt="Online" class="online" />
+                    <p class="message" style="color:green; cursor:pointer;" ng-click="createprivatechat(user.id)">
+                        <a>
+                            {{user.name}} 
+                        </a>
+                        <small style="color:red;">score: {{user.score}}</small>
+                    </p>
+                </div>
+            </div>
+            <div class="overlay" ng-show="isloading">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.box-body -->
+
+            <div class="box-footer text-center">
+                <a ng-click="updateFriends()" class="uppercase">refresh</a>
+            </div><!-- /.box-footer -->
         </div>
     </div>
 </div>

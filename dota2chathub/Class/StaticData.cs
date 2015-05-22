@@ -4,6 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using dota2chathub.Models;
+using Newtonsoft.Json.Linq;
+using System.Net;
+using Newtonsoft.Json;
+
 namespace dota2chathub
 {
 
@@ -14,6 +18,9 @@ namespace dota2chathub
         private static Dictionary<string, string> users = new Dictionary<string, string>();
         private static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
         private static Dictionary<string, GameMatch> games = new Dictionary<string, GameMatch>();
+
+        // Steam Key
+        public static string Keys = "3C627B068B6CD1170B25D133C6ECED2C";
 
         /// <summary>
         /// Thêm/ cập nhật connectionID người dùng vào danh sách người dùng đang online
@@ -465,29 +472,29 @@ namespace dota2chathub
                     if (item.Value.checkUser(userid))
                     {
                         item.Value.removeUser(userid);
-                       
+
                         groupid = item.Key;
                     }
                 }
 
-                foreach(var item in games)
+                foreach (var item in games)
                 {
-                    if(item.Value.checkUser(userid))
+                    if (item.Value.checkUser(userid))
                     {
                         item.Value.removeUser(userid);
                         gameid = item.Key;
-                        
+
                     }
                 }
             }
-            if(groupid != "")
+            if (groupid != "")
             {
                 removeGroup(groupid);
             }
-            if(gameid != "")
+            if (gameid != "")
             {
                 removeGame(gameid);
-            }           
+            }
         }
 
         private static string getUserIDbyAspNetUserID(string aspnetuserid)
@@ -504,7 +511,7 @@ namespace dota2chathub
 
         public static void setGroupIDtoGame(string groupid, string gameid)
         {
-            if(games.ContainsKey(gameid))
+            if (games.ContainsKey(gameid))
             {
                 games[gameid].groupchatid = groupid;
             }
@@ -532,7 +539,20 @@ namespace dota2chathub
         public string password { get; set; }
         public string groupchatid { get; set; }
 
+        /// <summary>
+        /// State = 0: pending; = 1: playing; =2: ending
+        /// </summary>
+        private int state;
+        /// <summary>
+        /// =1: radian win; 
+        /// </summary>
+        public bool result { get; set; }
+
         public List<string> users;
+
+        // tương ứng với ds user người thứ [i] sẽ thuộc team [i]. 
+        // Nếu = 1: radian
+        public List<bool> team;
 
         public GameMatch(string groupname)
         {
@@ -544,7 +564,8 @@ namespace dota2chathub
 
         public GameMatch()
         {
-            // TODO: Complete member initialization
+            state = 0;
+            result = false;
         }
 
         public void addUser(string id)
@@ -588,6 +609,62 @@ namespace dota2chathub
         public List<string> getlistusers()
         {
             return users;
+        }
+
+        /// <summary>
+        /// Lấy kết quả khi trận đấu đã kết thúc
+        /// </summary>
+        public void getMatchResult()
+        {
+
+        }
+
+        private void findmatch()
+        {
+            var client = new WebClient();
+            string steamquery = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?key="+ StaticData.Keys +"&steamids=" + hostid;
+            var content = client.DownloadString(steamquery);
+            JObject result = (JObject)JsonConvert.DeserializeObject(content);
+
+
+        }
+
+        private void getmatchdetail()
+        {
+
+        }
+
+        public bool? getPlayerResult(string userid)
+        {
+            if (state == 2)
+            {
+                for(int i = 0; i < users.Count; i++)
+                {
+                    if(users[i] == userid)
+                    {
+                        return team[i] & result ;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public void finishGame()
+        {
+            this.state = 2;
+            findmatch();
+            getmatchdetail();
+        }
+
+        public bool isRadiaWin()
+        {
+            return result;
+        }
+
+        public int getState()
+        {
+            return this.state;
         }
     }
 
