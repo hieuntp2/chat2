@@ -109,8 +109,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         receiveGroupID: receiveGroupID,
         reciveGroupChatMessage: reciveGroupChatMessage,
         sendGroupMessage: sendGroupMessage,
-        joingroup: joingroup
-
+        joingroup: joingroup,
     };
 })
 

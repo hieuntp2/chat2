@@ -81,5 +81,33 @@ namespace dota2chathub.Controllers
 
             return Json(games, JsonRequestBehavior.AllowGet);
         }
+
+        public async Task<ActionResult> finishgame(string id)
+        {
+#if DEBUG
+            id = "123";
+#endif
+            GameMatch game = null;
+            await StaticData.FinishGame(id);
+            
+            // Nếu game đã xử lý xong kết quả
+            if(StaticData.getGameState(id) == 3)
+            {
+                game = StaticData.getGame(id);
+            }
+            return Json(game, JsonRequestBehavior.AllowGet);
+        }
+
+        public string startgame(string id)
+        {
+#if DEBUG
+            id = "123";
+#endif            
+            if (StaticData.getGameState(id) == 0)
+            {
+                StaticData.startgame(id);
+            }
+            return "OK";
+        }
     }
 }

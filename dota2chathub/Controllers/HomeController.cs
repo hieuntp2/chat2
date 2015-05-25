@@ -16,7 +16,7 @@ namespace dota2chathub.Controllers
         public ActionResult Index()
         {
             ViewBag.userid = "151312";
-
+            //StaticData.FinishGame("123");
             return View();          
         }
 

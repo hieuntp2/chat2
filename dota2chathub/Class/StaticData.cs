@@ -326,6 +326,11 @@ namespace dota2chathub
         }
 
 
+        public static void addGame(GameMatch game)
+        {
+            games.Add(game.id, game);
+        }
+
         public static GameMatch getGame(string gameid)
         {
             if (games.ContainsKey(gameid))
@@ -454,6 +459,18 @@ namespace dota2chathub
         //    }
         //}
 
+        public static async Task FinishGame(string gameid)
+        {
+            if(games.ContainsKey(gameid))
+            {
+                // Nếu game đã bắt đầu chơi, thì mới xử lý kết quả
+                if(games[gameid].getState() == 1)
+                {
+                    games[gameid].finishGame();
+                }                
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -516,6 +533,20 @@ namespace dota2chathub
                 games[gameid].groupchatid = groupid;
             }
         }
+
+        public static int getGameState(string id)
+        {
+            if(games.ContainsKey(id))
+            {
+                return games[id].getState();
+            }
+            return -1;
+        }
+
+        internal static void startgame(string id)
+        {
+            games[id].startgame();
+        }
     }
 
     public class ChatMessageObject
@@ -540,7 +571,7 @@ namespace dota2chathub
         public string groupchatid { get; set; }
 
         /// <summary>
-        /// State = 0: pending; = 1: playing; =2: ending
+        /// State = 0: pending; = 1: playing; =2: processing; =3: finish and get result
         /// </summary>
         private int state;
         /// <summary>
@@ -548,7 +579,7 @@ namespace dota2chathub
         /// </summary>
         public bool result { get; set; }
 
-        public List<string> users;
+        public List<string> users = new List<string>();
 
         // tương ứng với ds user người thứ [i] sẽ thuộc team [i]. 
         // Nếu = 1: radian
@@ -619,17 +650,86 @@ namespace dota2chathub
 
         }
 
-        private void findmatch()
+        public void finishGame()
+        {
+            // Đang xử lý kết quả
+            this.state = 2;
+            JObject game = findmatch();
+            if(game != null)
+            {
+                // Xử lý kết quả. Sau khi xử lý thì đặt trạng thái đã hoàn thành để lấy kết quả
+                getmatchdetail(game);
+                state = 3;
+            }       
+            else
+            {
+                // nếu không có kết quả, thì trả về trạng thái đang chơi
+                this.state = 1;
+            }
+        }
+
+        private JObject findmatch()
         {
             var client = new WebClient();
-            string steamquery = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?key="+ StaticData.Keys +"&steamids=" + hostid;
+            string steamquery = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?key=" + StaticData.Keys + "&steamids=" + hostid;
             var content = client.DownloadString(steamquery);
             JObject result = (JObject)JsonConvert.DeserializeObject(content);
 
+            foreach (JObject match in result["result"]["matches"])
+            {
+                if (checkmatch(match))
+                {
+                    return match;
+                }
+            }
 
+            return null;
         }
 
-        private void getmatchdetail()
+        private bool checkmatch(JObject game)
+        {
+            List<string> checklist = new  List<string>(); 
+            foreach (JObject item in game["players"])
+            {
+                string accountid = "";
+                try
+                {
+                    accountid = item["account_id"].ToString();
+                }
+                catch
+                {
+                    continue;
+                }
+                
+                if(!checklist.Contains(accountid))
+                {
+                    checklist.Add(accountid);                  
+                }                          
+            }
+
+            if(checklist.Count != users.Count)
+            {
+                 return false;
+            }
+            else
+            {
+                for(int i = 0; i < checklist.Count; i++)
+                {
+                    if (!checklist.Contains(users[i]))
+                    {
+                        return false;
+                    }
+                    if (!users.Contains(checklist[i]))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private void getmatchdetail(JObject game)
         {
 
         }
@@ -638,23 +738,16 @@ namespace dota2chathub
         {
             if (state == 2)
             {
-                for(int i = 0; i < users.Count; i++)
+                for (int i = 0; i < users.Count; i++)
                 {
-                    if(users[i] == userid)
+                    if (users[i] == userid)
                     {
-                        return team[i] & result ;
+                        return team[i] & result;
                     }
                 }
             }
 
             return null;
-        }
-
-        public void finishGame()
-        {
-            this.state = 2;
-            findmatch();
-            getmatchdetail();
         }
 
         public bool isRadiaWin()
@@ -665,6 +758,11 @@ namespace dota2chathub
         public int getState()
         {
             return this.state;
+        }
+
+        internal void startgame()
+        {
+            state = 1;
         }
     }
 

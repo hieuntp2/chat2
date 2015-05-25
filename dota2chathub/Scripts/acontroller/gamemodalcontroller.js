@@ -140,6 +140,13 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
         $scope.startgame = function () {
             $rootScope.$broadcast('pendinggame::startgame', $scope.id);
             $('#startGameModal').modal('hide');
+
+            
+            var address = "../../game/startgame?id=" + $scope.id;
+            $http.get(address).success(function (data) {                
+            }).error(function () {
+                alert("GameID is null");
+            });
         }
 
         $scope.leavegame = function () {
@@ -167,19 +174,23 @@ app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage
             $scope.name = name;
 
             // Lấy danh sách người chơi trong game
-            var address = "../../game/getuseringame?id=" + id;
+            var address = "../../game/finishgame?id=" + id;
             $http.get(address).success(function (data) {
-
-                for (var i = 0; i < data.length; i++) {
-                    var user = user_manage_service.getuser(data[i]);
-                    $scope.users.push(user);
+                if (data == "")
+                {
+                    alert("game is processing result! please comeback a bit!");
+                    return;
                 }
-                $('#finishGameModal').modal('show');
+                else {
+                    for (var i = 0; i < data.length; i++) {
+                        var user = user_manage_service.getuser(data[i]);
+                        $scope.users.push(user);
+                    }
+                    $('#finishGameModal').modal('show');
+                }               
             }).error(function () {
                 alert("GameID is null");
             });
-
-            $('#finishGameModal').modal('show');
         });
 
         $scope.wingame = function () {
