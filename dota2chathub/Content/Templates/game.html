@@ -15,8 +15,7 @@
             <div ng-controller="pendinggamecontroller as controller">
                 <div id="pendingGamebody" class="panel-collapse collapse in" ng-init="init()">
                     <div class="box-body">
-                        <p>Pending</p>
-                        <small style="color:blue;">{{pendingmessage}}</small>
+                        <p>{{pendingmessage}}</p>
                         <ul class="todo-list ui-sortable" ng-model="pendings">
                             <li ng-repeat="game in pendings" style="cursor:pointer;" ng-click="showStartGameModal(game.id)">
                                 <span class="text">{{game.name}}</span>
@@ -26,9 +25,8 @@
 
                         <hr />
                         <p>
-                            Stated
+                            {{startedmessage}}
                         </p>
-                        <small style="color:blue;">{{startedmessage}}</small>
                         <ul class="todo-list ui-sortable" ng-model="starteds">
                             <li ng-repeat="game in starteds" style="cursor:pointer;" ng-click="showfinishgame(game.id)">
                                 <span class="text">{{game.name}}</span>

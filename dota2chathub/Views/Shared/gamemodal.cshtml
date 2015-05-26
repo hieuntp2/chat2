@@ -23,7 +23,6 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-
 <!-- Find Game -->
 <div class="modal fade" id="findGamemodal" ng-controller="findgamecontroller as controller">
     <div class="modal-dialog">
@@ -57,7 +56,6 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /.Find Game  -->
-
 <!-- Start Game -->
 <div class="modal fade" id="startGameModal" ng-controller="startgamemodal">
     <div class="modal-dialog">
@@ -68,13 +66,38 @@
                 </div>
             </div>
             <div class="modal-body">
-                Player in game:
-                <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;" ng-model="users">
-                    <li ng-repeat="user in users" class="ng-scope no-padding" style="width: 30px;">
-                        <img style="width: 30px; cursor: pointer;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
-                    </li>
-                </ul>
+                <div class="row">
+                    <!-- Radian Team -->
+                    <div class="col-lg-6">
+                        <section class="box box-solid box-success" id="raidan_team_box">
+                            <div class="box-header" style=" color: #000; background: #FFFFFF; background-color: #FFFFFF;">
+                                <p>Radian Team</p>
+                            </div>
+
+                            <!-- quick email widget -->
+                            <div class="connectedSortable ui-sortable box-body">
+                                <div class="box box-solid box-info no-padding" ng-repeat="user in users" id="{{'team_player_'+user.id}}" style="padding: 0px; padding-bottom: 1px;">
+                                    <div class="box-header ui-sortable-handle" style="cursor: move; padding: 0px; ">
+                                        <img style="width: 30px; cursor: pointer;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
+                                        <h3 class="box-title">{{user.name}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </section><!-- /.Left col -->
+                    </div>
+
+                    <!-- Dire Team -->
+                    <div class="col-lg-6">
+                        <section class="box box-solid box-danger">
+                            <div class="box-header" style=" color: #000; background: #FFFFFF; background-color: #FFFFFF;">
+                                <p>Dire Team</p>
+                            </div>
+                            <div class="connectedSortable ui-sortable box-body"></div>
+                        </section>
+                    </div>
+                </div>
             </div>
+           
             <div class="modal-footer">
                 <button class="btn btn-success" ng-click="startgame()">Start</button>
                 <button class="btn btn-warning" ng-click="leavegame()">Leave</button>
@@ -83,7 +106,6 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- /.Start Game  -->
-
 <!-- Finish Game -->
 <div class="modal fade" id="finishGameModal" ng-controller="finishgamemodal">
     <div class="modal-dialog">
@@ -98,12 +120,14 @@
                 <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;" ng-model="users">
                     <li ng-repeat="user in users" class="ng-scope no-padding" style="width: 30px;">
                         <img style="width: 30px; cursor: pointer;" alt="{{user.name}}" class="online ng-scope" ng-src="{{user.avatar}}" ng-click="privatechatuser(user.id)">
+                        <small>{{user.hero}}</small>
                     </li>
                 </ul>
+                <p>{{result}}</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success" ng-click="wingame()">Win</button>
-                <button class="btn btn-warning" ng-click="lostgame()">Lost</button>
+                <button class="btn btn-success" ng-click="confirm()">Confirm</button>
+                <button class="btn btn-warning" ng-click="deny()">Deny</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -112,3 +136,4 @@
 <!-- ===================== /Game =========================-->
 
 <script src="~/scripts/acontroller/gamemodalcontroller.js"></script>
+
