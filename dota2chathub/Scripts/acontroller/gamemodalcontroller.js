@@ -1,5 +1,5 @@
-﻿app.controller('creategamemodalcontroller', ['$scope', '$http', '$compile', '$rootScope', 'account_infor_service', 'games_manage_service',
-    function ($scope, $http, $compile, $rootScope, account_infor_service, games_manage_service) {
+﻿app.controller('creategamemodalcontroller', ['$scope', '$http', '$compile', '$rootScope', 'account_infor_service', 'games_manage_service','my_alert_service',
+    function ($scope, $http, $compile, $rootScope, account_infor_service, games_manage_service, my_alert_service) {
 
         $scope.name = "";
         $scope.password = "";
@@ -18,11 +18,14 @@
                     var address = '../../game/Index?name=' + $scope.name + '&&pass=' + $scope.password + '&&userid=' + account_infor_service.getid();
 
                     $http.get(address).success(function (data) {
+                        my_alert_service.show_my_alert(data.id);
                         $rootScope.$broadcast('penddinggame::joingame', data);
                         $scope.addnewGroupChat(data.id);
 
+                       
+
                     }).error(function () {
-                        alert("Wrong password!");
+                        my_alert_service.show_my_alert("Wrong password!");
                     });
                     $("#createGameChatModal").modal('hide');
                 }
@@ -37,7 +40,7 @@
                 $rootScope.$broadcast('penddinggame::joingame', data);
                 $rootScope.$broadcast('findGroupcontroller::joinGroup', data);
             }).error(function () {
-                alert("Wrong password!");
+                my_alert_service.show_my_alert("Wrong password!");
             });
         });
 
@@ -46,7 +49,7 @@
                 var el = $compile(data)($scope);
                 $("#main_content_box").append(el);
             }).error(function () {
-                alert("Lỗi khi lấy module " + address);
+                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
             });
         }
 
@@ -59,8 +62,8 @@
         }
     }]);
 
-app.controller('findgamecontroller', ['$scope', '$http', '$rootScope', 'user_manage_service', 'account_infor_service', 'games_manage_service',
-    function ($scope, $http, $rootScope, user_manage_service, account_infor_service, games_manage_service) {
+app.controller('findgamecontroller', ['$scope', '$http', '$rootScope', 'user_manage_service', 'account_infor_service', 'games_manage_service','my_alert_service',
+    function ($scope, $http, $rootScope, user_manage_service, account_infor_service, games_manage_service, my_alert_service) {
 
         $scope.games = [];
         $scope.isloading = false;
@@ -70,7 +73,8 @@ app.controller('findgamecontroller', ['$scope', '$http', '$rootScope', 'user_man
         $scope.findgroup = function () {
             if ($scope.inputsearch.trim()) {
                 $scope.isloading = true;
-                $http.get("../../game/findgame?name=" + $scope.inputsearch).success(function (data) {
+                var address = "../../game/findgame?name=" + $scope.inputsearch;
+                $http.get(address).success(function (data) {
                     $scope.isloading = false;
                     if (data.length == 0) {
                         $scope.games = [];
@@ -88,7 +92,7 @@ app.controller('findgamecontroller', ['$scope', '$http', '$rootScope', 'user_man
 
                 }).error(function () {
                     $scope.isloading = false;
-                    alert("Lỗi khi lấy module " + address);
+                    my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
                 });
             }
         }
@@ -96,7 +100,7 @@ app.controller('findgamecontroller', ['$scope', '$http', '$rootScope', 'user_man
         $scope.choosegroup = function (gameid, name) {
             if (gameid) {
                 if (games_manage_service.haveGame(gameid)) {
-                    alert("You already have this game!");
+                    my_alert_service.show_my_alert("You already have this game!");
                     return;
                 }
                 var password = prompt("Please enter group password:", "");
@@ -106,8 +110,8 @@ app.controller('findgamecontroller', ['$scope', '$http', '$rootScope', 'user_man
         }
     }]);
 
-app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_service',
-    function ($scope, $rootScope, $http, user_manage_service) {
+app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_service','my_alert_service',
+    function ($scope, $rootScope, $http, user_manage_service, my_alert_service) {
 
         // Các biến dùng cho start game modal
         $scope.id = "";
@@ -133,7 +137,7 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
                 }
                 $('#startGameModal').modal('show');
             }).error(function () {
-                alert("GameID is null");
+                my_alert_service.show_my_alert("GameID is null");
             });
         });
 
@@ -149,17 +153,17 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
             var address = "../../game/startgame?id=" + $scope.id;
             $http.get(address).success(function (data) {                
             }).error(function () {
-                alert("GameID is null");
+                my_alert_service.show_my_alert("GameID is null");
             });
 
             // detected which user below in team
             //for (var i = 0; i < $scope.users.length; i++) {
             //    var id_user = "#team_player_" + $scope.users[i].id;
             //    if ($("#raidan_team_box").has(id_user).length) {
-            //        //alert($scope.users[i].id + " radian");
+            //        //my_alert_service.show_my_alert($scope.users[i].id + " radian");
             //    }
             //    else {
-            //        //alert($scope.users[i].id + " dire");
+            //        //my_alert_service.show_my_alert($scope.users[i].id + " dire");
             //    }
             //}
         }
@@ -171,8 +175,8 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
 
     }]);
 
-app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_service', 'games_manage_service',
-    function ($scope, $rootScope, $http, user_manage_service, games_manage_service) {
+app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_service', 'games_manage_service','my_alert_service',
+    function ($scope, $rootScope, $http, user_manage_service, games_manage_service, my_alert_service) {
 
         // Các biến dùng cho start game modal
         $scope.id = "";
@@ -192,7 +196,7 @@ app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage
             var address = "../../game/finishgame?id=" + id;
             $http.get(address).success(function (data) {
                 if (!data) {
-                    alert("game is processing result! please comeback a bit!");
+                    my_alert_service.show_my_alert("game is processing result! please comeback a bit!");
                     return;
                 }
                 else {
@@ -213,7 +217,7 @@ app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage
                     $('#finishGameModal').modal('show');
                 }
             }).error(function () {
-                alert("GameID is null");
+                my_alert_service.show_my_alert("GameID is null");
             });
         });
 

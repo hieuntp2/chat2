@@ -116,7 +116,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 // Cấu trúc user:
 // user {id, name, avatar, score, rank}
 // Quan ly ds nguoi dung để tránh việc trao đổi thông tin nhiều lần
-app.service('user_manage_service', function ($http) {
+app.service('user_manage_service', function ($http, my_alert_service) {
     var listuser = [];
 
     this.getuserinfofromserver = function (userid) {
@@ -132,7 +132,8 @@ app.service('user_manage_service', function ($http) {
             user.birthday = data.birthday;
 
         }).error(function () {
-            alert("Không tồn tại userid = " + userid);
+            my_alert_service
+            my_alert_service.show_my_alert("Không tồn tại userid = " + userid);
             return user;
         });
 
@@ -263,7 +264,7 @@ app.service('groups_manage_service', function ($http, $rootScope, hub_service) {
         
         if (haveGroup(groupid))
         {
-            alert("Group you find is already in your page!");
+            my_alert_service.show_my_alert("Group you find is already in your page!");
             return;
         }
         else {
@@ -289,7 +290,7 @@ app.service('groups_manage_service', function ($http, $rootScope, hub_service) {
 
     //groupchat:ErrorPassword
     $rootScope.$on('groupchat:ErrorPassword', function (event, groupid) {
-        alert("Password is incorrect!");
+        my_alert_service.show_my_alert("Password is incorrect!");
         removeGroup(groupid);
     });
     return {
@@ -312,7 +313,7 @@ app.service('privatechat_manage_service', function ($http, $rootScope, hub_servi
     }
     var addprivatechat = function (userid, message) {
         if (haveprivatechat(userid)) {
-            alert("already have " + userid);
+            my_alert_service.show_my_alert("already have " + userid);
             return;
         }
 
@@ -447,7 +448,7 @@ app.service('games_manage_service', function ($http, $rootScope, hub_service) {
 
     var joingame = function (gameid, password) {
         if (haveGame(gameid)) {
-            alert("Group you find is already in your page!");
+            my_alert_service.show_my_alert("Group you find is already in your page!");
             return;
         }
         else {
@@ -457,7 +458,7 @@ app.service('games_manage_service', function ($http, $rootScope, hub_service) {
 
     //groupchat:ErrorPassword
     $rootScope.$on('game_service:ErrorPassword', function (event, gameid) {
-        alert("Password is incorrect!");
+        my_alert_service.show_my_alert("Password is incorrect!");
         removeGroup(gameid);
     });
 
@@ -472,7 +473,7 @@ app.service('games_manage_service', function ($http, $rootScope, hub_service) {
 
     var addGroupIDtoGame = function(groupid)
     {
-        alert(groupid);
+        my_alert_service.show_my_alert(groupid);
         for(var i = 0; i < games.length; i++)
         {
             if (!games[i].groupchatid) {
@@ -492,6 +493,7 @@ app.service('games_manage_service', function ($http, $rootScope, hub_service) {
         removegame: removegame
     }
 })
+
 ///////////////////////////////////////////
 ////////////////// ADDON //////////////////
 ///////////////////////////////////////////

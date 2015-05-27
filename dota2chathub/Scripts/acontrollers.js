@@ -1,6 +1,6 @@
 ﻿
-app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile', '$timeout', 'hub_service', 'account_infor_service',
-    function ($scope, $rootScope, $http, $compile, $timeout, hub_service, account_infor_service) {
+app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile', '$timeout', 'hub_service', 'account_infor_service', 'my_alert_service',
+function ($scope, $rootScope, $http, $compile, $timeout, hub_service, account_infor_service,my_alert_service) {
         var ctrll = this;
         this.modules = [];
 
@@ -11,7 +11,7 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
                 var el = $compile(data)($scope);
                 $("#main_content_box").append(el);
             }).error(function () {
-                alert("Lỗi khi lấy module " + address);
+                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
             });
         }
 
@@ -23,7 +23,7 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
                 return "success";
 
             }).error(function () {
-                alert("Lỗi khi lấy module " + address);
+                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
                 return "error";
             });
         }
@@ -67,7 +67,7 @@ app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile',
                 $rootScope.$broadcast('reciverprivatemessage', userid, message);
 
             }).error(function () {
-                alert("Lỗi khi lấy module " + address);
+                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
                 return "error";
             });
 
@@ -297,7 +297,7 @@ app.controller('topplayercontroller', ['$scope', '$scope', '$http', 'user_manage
                     $scope.isloading = false;
                 }
             }).error(function () {
-                alert('Error when get top player!');
+                my_alert_service.show_my_alert('Error when get top player!');
                 $scope.isloading = false;
             });
         }

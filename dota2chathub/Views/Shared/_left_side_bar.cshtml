@@ -1,0 +1,62 @@
+﻿<aside class="main-sidebar" ng-controller="left_side_bar_controller as controller">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <li class="header">Main</li>
+
+            <li ng-click="showmodalcreateGame()" style="cursor: pointer;">
+                <a>
+                    <i class="fa fa-gamepad"></i> <span>Create Game</span>
+                </a>
+            </li>
+            <li ng-click="showmodalcreateGroup()" style="cursor: pointer;">
+                <a>
+                    <i class="fa fa-users"></i> <span>Create Group</span>
+                </a>
+            </li>
+
+            <li class="header">Search</li>
+            <li>
+                <form action="#" method="get" class="sidebar-form">
+                    <div class="input-group">
+                        <input type="text" ng-model="searchinput" name="q" class="form-control" placeholder="Search..." autocomplete="off" ng-enter="search()" />
+                        <span class="input-group-btn">
+                            <button type='submit' name='seach' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </form>
+
+                <div>
+
+                </div>
+            </li>
+
+            <li class="header">Setting</li>
+            <li style="cursor: pointer;">
+                <a>
+                    <i class="fa fa-cog"></i> <span>Setting</span>
+                </a>
+            </li>
+        </ul>
+        <!-- Sidebar toggle button-->
+        <div id="_left_side_bar_show_button" style="margin-left: 230px; z-index: 10; position: fixed; bottom: 70px; position: fixed; border-radius: 5px 5px 5px 5px; padding: 10px 15px; font-size: 16px; z-index: 99999; cursor: pointer; color: rgb(60, 141, 188); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 1px 3px; background: rgb(255, 255, 255); }
+* { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; ">
+            <a data-toggle="offcanvas" role="button" style="  color: #0085C3;">
+                <i class="fa fa-gear"></i>
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+        </div>
+        <!-- search form -->
+        <!-- /.search form -->
+    </section>
+    <!-- /.sidebar -->
+</aside>
+
+
+
+
+<script src="~/scripts/acontroller/left_side_bar_controller.js"></script>

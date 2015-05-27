@@ -184,6 +184,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PrivateChatController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -313,6 +314,7 @@
     <Content Include="Scripts\acontrollers.js" />
     <Content Include="Scripts\acontroller\groupmodalcontroller.js" />
     <Content Include="Scripts\acontroller\gamemodalcontroller.js" />
+    <Content Include="Scripts\acontroller\left_side_bar_controller.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\adirectives.js" />
@@ -800,6 +802,7 @@
     <Content Include="Scripts\plugins\morris\morris.css" />
     <Content Include="Scripts\plugins\morris\morris.js" />
     <Content Include="Scripts\plugins\morris\morris.min.js" />
+    <Content Include="Scripts\my_alert_services.js" />
     <Content Include="Scripts\plugins\pace\pace.js" />
     <Content Include="Scripts\plugins\slimScroll\jquery.slimscroll.js" />
     <Content Include="Scripts\plugins\slimScroll\jquery.slimscroll.min.js" />
@@ -851,6 +854,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\dist\emotion\" />
+    <Folder Include="Views\Search\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -894,6 +898,8 @@
     <Content Include="Views\Game\Index.cshtml" />
     <Content Include="Views\Shared\gamemodal.cshtml" />
     <Content Include="Views\Shared\groupmodal.cshtml" />
+    <Content Include="Views\Shared\my_alert_modal.cshtml" />
+    <Content Include="Views\Shared\_left_side_bar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

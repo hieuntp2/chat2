@@ -15,7 +15,7 @@ namespace dota2chathub
 
     // Cần kiểm tra: các hàm của staticdata cần được tối ưu hóa performer,
     // do đó, cần hạn chế kiểm tra dữ liệu rỗng, không tồn tại. Việc kiểm tra này cần được kiểm tra bên ngoài trước khi gọi vào
-    internal class StaticData
+    public class StaticData
     {
         private static Dictionary<string, string> users = new Dictionary<string, string>();
         private static Dictionary<string, GroupChat> groups = new Dictionary<string, GroupChat>();
@@ -545,13 +545,13 @@ namespace dota2chathub
             return -1;
         }
 
-        internal static void startgame(string id)
+        public static void startgame(string id)
         {
             games[id].startgame();
         }
     }
 
-    internal class ChatMessageObject
+    public class ChatMessageObject
     {
         public string name { get; set; }
         public string linkavatar { get; set; }
@@ -564,13 +564,13 @@ namespace dota2chathub
         public string idGroup { get; set; }
     }
 
-    internal class GameMatch
+    public class GameMatch
     {
-        internal string id { set; get; }
-        internal string name { get; set; }
-        internal string hostid { get; set; }
-        internal string password { get; set; }
-        internal string groupchatid { get; set; }
+        public string id { set; get; }
+        public string name { get; set; }
+        public string hostid { get; set; }
+        public string password { get; set; }
+        public string groupchatid { get; set; }
 
         private int count_confirm = 0;
 
@@ -587,28 +587,28 @@ namespace dota2chathub
         /// <summary>
         /// =1: radian win; 
         /// </summary>
-        internal bool isRadirawin { get; set; }
+        public bool isRadirawin { get; set; }
 
-        internal Dictionary<string, UserInGame> users = new Dictionary<string, UserInGame>();
+        public Dictionary<string, UserInGame> users = new Dictionary<string, UserInGame>();
 
         //// tương ứng với ds user người thứ [i] sẽ thuộc team [i]. 
         //// Nếu = 1: radian
-        //internal List<bool> team;
+        //public List<bool> team;
 
-        internal GameMatch(string groupname)
+        public GameMatch(string groupname)
         {
             Guid generateid = Guid.NewGuid();
             id = generateid.ToString();
             name = groupname;
         }
 
-        internal GameMatch()
+        public GameMatch()
         {
             state = 0;
             isRadirawin = false;
         }
 
-        internal void addUser(string id)
+        public void addUser(string id)
         {
             if (users.Count > 10)
             {
@@ -626,17 +626,17 @@ namespace dota2chathub
             }
         }
 
-        internal int getNumberUser()
+        public int getNumberUser()
         {
             return users.Count();
         }
 
-        internal async Task removeUser(string userid)
+        public async Task removeUser(string userid)
         {
             users.Remove(userid);
         }
 
-        internal bool checkUser(string userid)
+        public bool checkUser(string userid)
         {
             if (users.ContainsKey(userid))
             {
@@ -648,12 +648,12 @@ namespace dota2chathub
             }
         }
 
-        internal List<string> getlistusers()
+        public List<string> getlistusers()
         {
             return users.Select(t => t.Key).ToList();
         }
 
-        internal void finishGame()
+        public void finishGame()
         {
             // Đang xử lý kết quả
             this.state = 2;
@@ -728,11 +728,12 @@ namespace dota2chathub
             {
                 for (int i = 0; i < checklist.Count; i++)
                 {
-                    if (!checklist.Contains(users[i]))
+                    string[] useringame = users.Select(t => t.Key).ToArray();
+                    if (!checklist.Contains(useringame[i]))
                     {
                         return false;
                     }
-                    if (!users.Contains(checklist[i]))
+                    if (!users.ContainsKey(checklist[i]))
                     {
                         return false;
                     }
@@ -746,7 +747,7 @@ namespace dota2chathub
         /// Phân tích dữ liệu kết quả của trận đấu
         /// </summary>
         /// <param name="game"></param>
-        internal void getMatchResult(JObject game)
+        public void getMatchResult(JObject game)
         {
             var client = new WebClient();
             string steamquery = "https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?match_id=" + game["match_id"] + "&key=" + StaticData.Keys;
@@ -781,7 +782,7 @@ namespace dota2chathub
             isRadirawin = Convert.ToBoolean(result["result"]["radiant_win"]);
         }
 
-        internal bool? getPlayerResult(string userid)
+        public bool? getPlayerResult(string userid)
         {
             if (state == 2)
             {
@@ -791,17 +792,17 @@ namespace dota2chathub
             return null;
         }
 
-        internal bool isRadiaWin()
+        public bool isRadiaWin()
         {
             return isRadirawin;
         }
 
-        internal int getState()
+        public int getState()
         {
             return this.state;
         }
 
-        internal void startgame()
+        public void startgame()
         {
             state = 1;
         }
@@ -810,7 +811,7 @@ namespace dota2chathub
         /// User confirm game result
         /// </summary>
         /// <param name="userid"></param>
-        internal void gameConfirm(string userid)
+        public void gameConfirm(string userid)
         {
             if (users[userid].isconfirm == -1)
             {
@@ -822,7 +823,7 @@ namespace dota2chathub
         /// User deny game result
         /// </summary>
         /// <param name="userid"></param>
-        internal void gamedeny(string userid)
+        public void gamedeny(string userid)
         {
             if (users[userid].isconfirm == -1)
             {
@@ -833,7 +834,7 @@ namespace dota2chathub
         /// <summary>
         /// Only user when 5 deny and 5 confirm
         /// </summary>
-        internal void resetConfirm()
+        public void resetConfirm()
         {
             foreach(UserInGame player in users.Values)
             {
@@ -847,7 +848,7 @@ namespace dota2chathub
         /// <returns>
         /// 1: confirmed. 0: deny. 2: reset; -1: game is not get full confirm.
         /// </returns>
-        internal int checkConfirm()
+        public int checkConfirm()
         {
             int confirms = 0;
             int denys = 0;
@@ -933,7 +934,7 @@ namespace dota2chathub
         }
     }
 
-    internal class GroupChat
+    public class GroupChat
     {
         public string id { set; get; }
         public string name { get; set; }
@@ -985,25 +986,25 @@ namespace dota2chathub
         }
     }
 
-    internal class UserInGame
+    public class UserInGame
     {
-        internal string steamID;
+        public string steamID;
 
         /// <summary>
         /// = true: Radian team; Fail: Dire team
         /// </summary>
-        internal bool team;
+        public bool team;
 
         /// <summary>
         /// Hero user played
         /// </summary>
-        internal int id_hero;
+        public int id_hero;
 
         /// <summary>
         /// User Confirm.
         /// -1: not confirm. 0: deny. 1: confirm
         /// </summary>
-        internal int isconfirm = -1;
+        public int isconfirm = -1;
     }
 }
 

@@ -25,14 +25,9 @@ namespace dota2chathub
             game.addUser("testfriendid2");
             game.addUser("testfriendid3");
             game.addUser("testfriendid1");
-            //game.addUser("119437241");
-            //game.addUser("156209444");
-            //game.addUser("195465703");
-            //game.addUser("4294967295");
-            //game.addUser("152565161");
-            //game.addUser("138385940");
 
             game.hostid = "151312";
+           // game.name = "aaaa";
 
             StaticData.addGame(game);
 
