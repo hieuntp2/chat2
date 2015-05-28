@@ -115,7 +115,7 @@ app.directive('groupChat', function () {
     return {
         restrict: 'A',
         scope: true,
-        controller: function ($rootScope, $scope, $http, groups_manage_service, user_manage_service, account_infor_service, games_manage_service) {
+        controller: function ($rootScope, $scope, $http, groups_manage_service, user_manage_service, account_infor_service, games_manage_service, my_alert_service) {
             $scope.idgroup = "";
             $scope.name = "";
             $scope.messages = [];
@@ -139,7 +139,6 @@ app.directive('groupChat', function () {
                     groups_manage_service.addGroup($scope.idgroup, $scope.name);
 
                     // Kiểm tra xem nếu có nhóm game nào chưa có groupid thì gán vào
-                    alert(groupid);
                     games_manage_service.addGroupIDtoGame(groupid);
                 }
             }
@@ -208,7 +207,7 @@ app.directive('groupChat', function () {
                         $scope.users.push(user);
                     }
                 }).error(function () {
-                    alert("Không tồn tại userid = " + userid);
+                    my_alert_service.show_my_alert("Không tồn tại userid = " + userid);
                 });
             }
             $scope.getlistuser = function () {
@@ -223,11 +222,6 @@ app.directive('groupChat', function () {
                 $rootScope.$broadcast('maintab::closetab', $scope.idgroup);
             }
 
-            $scope.privatechatuser = function(userid)
-            {
-                alert(userid);
-            }
-
             // set the function will be excuted when server send a message to client
             groups_manage_service.receiveGroupID($scope.receiveGroupIDclient);
             groups_manage_service.reciveGroupChatMessage($scope.addmessage);
@@ -239,7 +233,7 @@ app.directive('groupChat', function () {
 app.directive('invUserModal', function () {
     return {
         restrict: 'A',
-        controller: function ($scope, $http, user_manage_service) {
+        controller: function ($scope, $http, user_manage_service, my_alert_service) {
             $scope.showheadtable = false;
             $scope.listuser = [];
             $scope.groupusers = [];
@@ -266,7 +260,7 @@ app.directive('invUserModal', function () {
 
                     }).error(function () {
                         $scope.isloading = false;
-                        alert("Lỗi khi lấy module " + address);
+                        my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
                     });
                 }
             }
@@ -390,7 +384,7 @@ app.directive('privateChat', function () {
 app.directive('modalUserInfor', function () {
     return {
         restrict: 'A',
-        controller: function ($scope, $http, user_manage_service) {
+        controller: function ($scope, $http, user_manage_service, my_alert_service) {
             $scope.name = "";
             $scope.joinday = "";
             $scope.score = 0;
@@ -401,7 +395,7 @@ app.directive('modalUserInfor', function () {
                         $scope.isloading = false;
                         if (data.length == 0) {
                             $scope.listuser = [];
-                            $scope.message = "Không tìm thấy người dùng phù hợp đang online";
+                            $scope.message = "User not found!";
                             return;
                         }
 
@@ -413,7 +407,7 @@ app.directive('modalUserInfor', function () {
                         }
 
                     }).error(function () {
-                        alert("Lỗi khi lấy module " + address);
+                        my_alert_service.show_my_alert("Something wrong when get: " + address);
                     });
                 }
             }
@@ -424,7 +418,7 @@ app.directive('modalUserInfor', function () {
 app.directive('friendsBox', function () {
     return {
         restrict: 'E',
-        controller: function ($scope, $http, $compile, user_manage_service, privatechat_manage_service) {
+        controller: function ($scope, $http, $compile, user_manage_service, privatechat_manage_service, my_alert_service) {
             $scope.friendlist = [];
             $scope.message = "";
             $scope.countOnline = 0;
@@ -466,7 +460,7 @@ app.directive('friendsBox', function () {
                     $scope.message = countonline + "/" + data.length + " users online";
                     $scope.isloading = false;
                 }).error(function () {
-                    alert("Something wrong when getting friend list ");
+                    my_alert_service.show_my_alert("Something wrong when getting friend list ");
                 });
             }
 
@@ -485,7 +479,7 @@ app.directive('friendsBox', function () {
                     }
                     $scope.isloading = false;
                 }).error(function () {
-                    alert("Lỗi khi lấy danh sách bạn bè ");
+                    my_alert_service.show_my_alert("Something wrong when getting friend list!");
                 });
             }
 
@@ -499,7 +493,7 @@ app.directive('friendsBox', function () {
                     var el = $compile(data)($scope);
                     $("#" + id_div + "").append(el);
                 }).error(function () {
-                    alert("Lỗi khi lấy module " + address);
+                    my_alert_service.show_my_alert("Something wrong when getting: " + address);
                 });
             }
         },

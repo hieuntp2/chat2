@@ -27,8 +27,24 @@
                     </div>
                 </form>
 
-                <div>
+                <div class="box-body">
+                    <ul class="todo-list" style="overflow-y: auto;">
+                        <li ng-repeat="result in results" ng-switch="result.type" ng-click="clickresult(result)"
+                            style="cursor: pointer; padding: 5px 5px 5px 5px;">
 
+                            <!-- case: user -->
+                            <small ng-switch-when="1" class="label label-success"><i class="fa fa-user"></i> </small>
+                            <span class="text" ng-switch-when="1">[User] </span>
+                            <!-- case: group -->
+                            <small ng-switch-when="2" class="label label-info"><i class="fa fa-users"></i></small>
+                            <span class="text" ng-switch-when="2">[Group]</span>
+                            <!-- case: game -->
+                            <small ng-switch-when="3" class="label label-danger"><i class="fa fa-gamepad"></i></small>
+                            <span class="text" ng-switch-when="3">[Game]</span>
+
+                            <span class="text">{{result.name}}</span>
+                        </li>
+                    </ul>
                 </div>
             </li>
 
@@ -40,9 +56,9 @@
             </li>
         </ul>
         <!-- Sidebar toggle button-->
-        <div id="_left_side_bar_show_button" style="margin-left: 230px; z-index: 10; position: fixed; bottom: 70px; position: fixed; border-radius: 5px 5px 5px 5px; padding: 10px 15px; font-size: 16px; z-index: 99999; cursor: pointer; color: rgb(60, 141, 188); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 1px 3px; background: rgb(255, 255, 255); }
+        <div data-toggle="offcanvas" role="button" id="_left_side_bar_show_button" style="margin-left: 230px; z-index: 10; position: fixed; bottom: 70px; position: fixed; border-radius: 5px 5px 5px 5px; padding: 10px 15px; font-size: 16px; z-index: 99999; cursor: pointer; color: rgb(60, 141, 188); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 1px 3px; background: rgb(255, 255, 255); }
 * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; ">
-            <a data-toggle="offcanvas" role="button" style="  color: #0085C3;">
+            <a style="color: #0085C3;">
                 <i class="fa fa-gear"></i>
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
@@ -55,8 +71,5 @@
     </section>
     <!-- /.sidebar -->
 </aside>
-
-
-
 
 <script src="~/scripts/acontroller/left_side_bar_controller.js"></script>

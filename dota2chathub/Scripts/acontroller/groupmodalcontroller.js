@@ -1,5 +1,5 @@
-﻿app.controller('creategroupmodalcontroller', ['$scope', '$http', '$compile', '$rootScope', 'account_infor_service',
-    function ($scope, $http, $compile, $rootScope, account_infor_service) {
+﻿app.controller('creategroupmodalcontroller', ['$scope', '$http', '$compile', '$rootScope', 'account_infor_service', 'my_alert_service',
+    function ($scope, $http, $compile, $rootScope, account_infor_service, my_alert_service) {
 
         $scope.name = "";
         $scope.password = "";
@@ -30,13 +30,13 @@
                 var el = $compile(data)($scope);
                 $("#main_content_box").append(el);
             }).error(function () {
-                alert("Lỗi khi lấy module " + address);
+                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
             });
         }
     }]);
 
-app.controller('findGroupcontroller', ['$scope', '$http', '$rootScope', 'user_manage_service', 'account_infor_service', 'groups_manage_service',
-    function ($scope, $http, $rootScope, user_manage_service, account_infor_service, groups_manage_service) {
+app.controller('findGroupcontroller', ['$scope', '$http', '$rootScope', 'user_manage_service', 'account_infor_service', 'groups_manage_service', 'my_alert_service',
+    function ($scope, $http, $rootScope, user_manage_service, account_infor_service, groups_manage_service, my_alert_service) {
 
         $scope.groups = [];
         $scope.isloading = false;
@@ -63,7 +63,7 @@ app.controller('findGroupcontroller', ['$scope', '$http', '$rootScope', 'user_ma
 
                 }).error(function () {
                     $scope.isloading = false;
-                    alert("Lỗi khi lấy module " + address);
+                    my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
                 });
             }
         }

@@ -431,7 +431,7 @@ temporary rendered events).
 --------------------------------------------------------------------------------------------------*/
 
 .fc-scroller { /* this class goes on elements for guaranteed vertical scrollbars */
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 }
 

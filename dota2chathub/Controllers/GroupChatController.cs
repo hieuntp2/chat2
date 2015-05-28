@@ -17,6 +17,11 @@ namespace dota2chathub
             ViewBag.pass = pass;
             ViewBag.id = id;
 
+            if(gameid != null)
+            {
+                StaticData.setGroupIDtoGame(id, gameid);
+            }
+
             return PartialView();
         }
 

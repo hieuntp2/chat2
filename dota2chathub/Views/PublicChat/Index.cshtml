@@ -2,7 +2,7 @@
 <div class="tab-pane active" id="public_chat_0">
     <public-chat>
         <div id="publicchatbox-content" class="panel-collapse panel-collapse collapse in" ng-init="int()">
-            <div class="box-body chat chatboxbody" id="{{'public_chat_box'}}" style="max-height:350px; overflow-y: scroll;">
+            <div class="box-body chat chatboxbody" id="{{'public_chat_box'}}" style="max-height:350px; overflow-y: auto;">
                 <!-- chat item -->
                 <div class="item" ng-repeat="message in messages">
                     <img ng-src="{{message.avatar}}" alt="user image" class="online" ng-mouseenter="viewUserInfor(message.userid)" ng-mouseleave="offUserInfor()" />

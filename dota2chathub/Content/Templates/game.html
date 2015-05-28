@@ -34,10 +34,12 @@
                             </li>
                         </ul>
                     </div><!-- /.box-body -->
+                    <!-- No need
                     <div class="box-footer clearfix no-border">
                         <button class="btn btn-default pull-right" ng-click="showmodalfindGame()"><i class="fa fa-search"></i> Find</button>
                         <button class="btn btn-default pull-right" ng-click="showmodalcreateGame()"><i class="fa fa-plus"></i> Create</button>
                     </div>
+                           -->
                 </div>
             </div>
         </div>
@@ -47,7 +49,7 @@
                     <img ng-src="{{user.avatar}}" alt="Online" class="online" />
                     <p class="message" style="color:green; cursor:pointer;" ng-click="createprivatechat(user.id)">
                         <a>
-                            {{user.name}} 
+                            {{user.name}}
                         </a>
                         <small style="color:red;">score: {{user.score}}</small>
                     </p>

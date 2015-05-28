@@ -17,7 +17,7 @@
 </div>
 <!-- /.modal -->
 
-<div id="_my_servince_box_content" ng-controller="my_alert_controller as controller" style="width: 300px; max-height: 300px; overflow-y: scroll; background: transparent; position: absolute; bottom: 100px; right: 10px; z-index:10; ">
+<div id="_my_servince_box_content" ng-controller="my_alert_controller as controller" style="width: 300px; max-height: 300px; overflow-y: auto; background: transparent; position: absolute; bottom: 100px; right: 10px; z-index:10; ">
     <div class="alert alert-warning alert-dismissable" ng-repeat="alert in alerts" ng-style="{opacity : alert.opacity}" ng-mouseenter="onnoticed(alert.id)">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <i class="icon fa fa-warning"></i> {{alert.message}}

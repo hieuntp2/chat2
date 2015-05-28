@@ -224,7 +224,7 @@ app.service('user_manage_service', function ($http, my_alert_service) {
 })
 
 // Lưu trữ và quản lý các nhóm chat đang tồn tại
-app.service('groups_manage_service', function ($http, $rootScope, hub_service) {
+app.service('groups_manage_service', function ($http, $rootScope, hub_service, my_alert_service) {
     var groups = [];
     var addGroup = function (id, name) {
         if (haveGroup(id)) {

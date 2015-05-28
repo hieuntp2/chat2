@@ -19,21 +19,25 @@ namespace dota2chathub
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 #if DEBUG
+            // This is for testing, debug only
             GameMatch game = new GameMatch();
             game.id = "123";
             game.addUser("151312");
             game.addUser("testfriendid2");
             game.addUser("testfriendid3");
             game.addUser("testfriendid1");
-
             game.hostid = "151312";
-           // game.name = "aaaa";
+            game.name = "aaaa";
+            game.password = "123";
+
+            StaticData.createGroup("test group 1: aaa", "151312", "123");
+
 
             StaticData.addGame(game);
 
-            
+
 #endif
-            
+
         }
     }
 }
