@@ -82,4 +82,8 @@
         $scope.joinprivate = function (item) {
             privatechat_manage_service.addprivatechat(item.id);
         }
+
+        $scope.showReportBug = function () {            
+            $("#_report_bug_modal").modal('show');
+        }
     }]);

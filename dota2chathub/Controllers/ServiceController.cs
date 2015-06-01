@@ -100,6 +100,7 @@ namespace dota2chathub.Controllers
            }
         }
 #else
+        ///////////////////////////
         public ActionResult getuserinfo(string id)
         {
             UserInfo user = null;
@@ -277,6 +278,22 @@ namespace dota2chathub.Controllers
             return db.AspNetUsers.SingleOrDefault(t => t.Id == userid).UserName;
         }
 
+        [HttpPost]
+        public async Task<ActionResult> reportBug(string title, string message)
+        {
+            await WriteLog(title + ", " + message);
+            return null;
+        }
+
+        public async Task WriteLog(string message)
+        {
+            SystemLog log = new SystemLog();
+            log.Time = DateTime.Now;
+            log.Message = message;
+
+            db.SystemLogs.Add(log);
+            await db.SaveChangesAsync();
+        }
         
     }
 

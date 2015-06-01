@@ -1,79 +1,79 @@
 ﻿
 app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile', '$timeout', 'hub_service', 'account_infor_service', 'my_alert_service',
-function ($scope, $rootScope, $http, $compile, $timeout, hub_service, account_infor_service,my_alert_service) {
-        var ctrll = this;
-        this.modules = [];
+function ($scope, $rootScope, $http, $compile, $timeout, hub_service, account_infor_service, my_alert_service) {
+    var ctrll = this;
+    this.modules = [];
 
-        ctrll.isloading = true;
+    ctrll.isloading = true;
 
-        this.getmodulesettotab = function (address) {
-            $http.get(address).success(function (data) {
-                var el = $compile(data)($scope);
-                $("#main_content_box").append(el);
-            }).error(function () {
-                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
-            });
-        }
+    this.getmodulesettotab = function (address) {
+        $http.get(address).success(function (data) {
+            var el = $compile(data)($scope);
+            $("#main_content_box").append(el);
+        }).error(function () {
+            my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
+        });
+    }
 
-        this.getmodule = function (address, id_div) {
-            $http.get(address).success(function (data) {
+    this.getmodule = function (address, id_div) {
+        $http.get(address).success(function (data) {
 
-                var el = $compile(data)($scope);
-                $("#" + id_div + "").append(el);
-                return "success";
+            var el = $compile(data)($scope);
+            $("#" + id_div + "").append(el);
+            return "success";
 
-            }).error(function () {
-                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
-                return "error";
-            });
-        }
+        }).error(function () {
+            my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
+            return "error";
+        });
+    }
 
-        this.init = function (userid) {
-            hub_service.initialize();
+    this.init = function (userid) {
+        hub_service.initialize();
 
-            ctrll.getmodulesettotab('../../PublicChat/Index?v=2');
-            ctrll.getmodule('../../Home/FriendList', 'main_col_3_left');
-            account_infor_service.setid(userid);
-            this.isloading = false;
-        }
+        ctrll.getmodulesettotab('../../PublicChat/Index?v=2');
+        ctrll.getmodule('../../Home/FriendList', 'main_col_3_left');
+        account_infor_service.setid(userid);
+        this.isloading = false;
+    }
 
 
-        $scope.$on('module:joingroup', function (event, groupid, password) {
-            var address = '../../GroupChat/joingroup?groupid=' + groupid + '&&pass=' + password + '&&userid=' + account_infor_service.getid();
+    $scope.$on('module:joingroup', function (event, groupid, password) {
+        var address = '../../GroupChat/joingroup?groupid=' + groupid + '&&pass=' + password + '&&userid=' + account_infor_service.getid();
 
-            $http.get(address).success(function (data) {
-                var el = $compile(data)($scope);
-                $("#main_content_box").append(el);
-            }).error(function () {
-                $rootScope.$broadcast('groupchat:ErrorPassword', groupid);
-            });
+        $http.get(address).success(function (data) {
+            var el = $compile(data)($scope);
+            $("#main_content_box").append(el);
+        }).error(function () {
+            $rootScope.$broadcast('groupchat:ErrorPassword', groupid);
+        });
+    });
+
+    // Group Chat
+    $scope.showmodalcreateGroup = function () {
+        $('#createGroupChatModal').modal('show');
+    }
+    $scope.showmodalfindgroup = function () {
+        $('#findgroupmodal').modal('show');
+    }
+
+    // Đăng ký lắng nghe sự kiện tạo PRIVATE chat
+    $scope.$on('module:createprivatechat', function (event, userid, message) {
+        var address = '../../privatechat/Index?id=' + userid;
+        $http.get(address).success(function (data) {
+            var el = $compile(data)($scope);
+            $("#main_col_3_left").append(el);
+
+            $rootScope.$broadcast('reciverprivatemessage', userid, message);
+
+        }).error(function () {
+            my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
+            return "error";
         });
 
-        // Group Chat
-        $scope.showmodalcreateGroup = function () {
-            $('#createGroupChatModal').modal('show');
-        }
-        $scope.showmodalfindgroup = function () {
-            $('#findgroupmodal').modal('show');
-        }
+    });
 
-        // Đăng ký lắng nghe sự kiện tạo PRIVATE chat
-        $scope.$on('module:createprivatechat', function (event, userid, message) {
-            var address = '../../privatechat/Index?id=' + userid;
-            $http.get(address).success(function (data) {
-                var el = $compile(data)($scope);
-                $("#main_col_3_left").append(el);
-
-                $rootScope.$broadcast('reciverprivatemessage', userid, message);
-
-            }).error(function () {
-                my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
-                return "error";
-            });
-
-        });
-
-    }]);
+}]);
 
 //
 // tab.havenewmessage = 0: ko co message moi
@@ -290,7 +290,7 @@ app.controller('topplayercontroller', ['$scope', '$scope', '$http', 'user_manage
         $scope.init = function () {
 
             $http.get("../../service/gettopuser").success(function (data) {
-                 
+
                 for (var i = 0; i < data.length; i++) {
                     var user = user_manage_service.getuser(data[i]);
                     $scope.tops.push(user);
@@ -303,4 +303,53 @@ app.controller('topplayercontroller', ['$scope', '$scope', '$http', 'user_manage
         }
 
     }]);
+
+app.controller('reportbugcontroller', ['$scope', '$scope', '$http', 'user_manage_service', 'my_alert_service',
+    function ($scope, $scope, $http, user_manage_service, my_alert_service) {
+        $scope.title = "";
+        $scope.message = "";
+        $scope.alert_title = "";
+        $scope.alert_message = "";
+
+        $scope.sendbug = function () {
+            
+            if(!$scope.title)
+            {
+                $scope.alert_title = "Tittle should be some text."; 3
+                return;
+            }
+
+            if (!$scope.message) {
+                $scope.alert_message = "Message should be some text.";
+                return;
+            }
+            // set title 
+            if ($("#_radio_bug").is(':checked')) {
+                $scope.title = "[BUG] " + $scope.title;
+            }
+            else{
+                $scope.title = "[SUG] " + $scope.title;
+            }
+
+            // send post
+            $http.post('../../service/reportBug', { title: $scope.title, message: $scope.message }).
+              success(function (data, status, headers, config) {
+                  my_alert_service.show_my_info("Send message successfully. Thank you for your feed back!");
+              }).
+              error(function (data, status, headers, config) {
+                  my_alert_service.show_my_alert("Send message failed. We sorry this in-convinion. Please try again later.");
+              });
+
+            // reset value
+            $("#_report_bug_modal").modal('hide');
+
+            $scope.title = "";
+            $scope.message = "";
+            $scope.alert_title = "";
+            $scope.alert_message = "";
+        }
+
+    }]);
+
+
 

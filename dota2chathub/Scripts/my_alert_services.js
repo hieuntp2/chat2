@@ -11,10 +11,15 @@ app.service('my_alert_service', function ($rootScope) {
     var show_my_password = function (message) {
         return "";
     }
+
+    var show_my_info = function (message) {
+        $rootScope.$broadcast('my_alert_controller::addInfor', message);
+    }
     return {
         show_my_alert: show_my_alert,
         show_my_prompt: show_my_prompt,
-        show_my_password: show_my_password
+        show_my_password: show_my_password,
+        show_my_info: show_my_info
     }
 })
 
