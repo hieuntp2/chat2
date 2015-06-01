@@ -192,10 +192,10 @@ namespace dota2chathub.Controllers
             return Json(StaticData.getListUserOnline(), JsonRequestBehavior.AllowGet);
         }
 
-        public List<string> gettopuser()
+        public ActionResult gettopuser()
         {
             List<string> user = db.UserInfoes.OrderBy(t => t.Totalscore).Take(10).Select(t=>t.userid).ToList();
-            return user;
+            return Json(user, JsonRequestBehavior.AllowGet); ;
         }
 
         public int getuserrank(string userid)

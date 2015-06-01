@@ -71,6 +71,14 @@
     <Property Name="version" Type="int" />
     <Property Name="definition" Type="varbinary(max)" />
   </EntityType>
+  <EntityType Name="SystemLog">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Time" Type="datetime" />
+    <Property Name="Message" Type="ntext" />
+  </EntityType>
   <EntityType Name="UserInfo">
     <Key>
       <PropertyRef Name="userid" />
@@ -150,6 +158,7 @@
     <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SystemLog" EntityType="Self.SystemLog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
       <End Role="AspNetUsers" EntitySet="AspNetUsers" />

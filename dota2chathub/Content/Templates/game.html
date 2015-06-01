@@ -1,5 +1,6 @@
-﻿<script src="../dist/js/pages/dashboard.js"></script>
-<!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+﻿<!-- 
+<script src="../dist/js/pages/dashboard.js"></script>
+we are adding the .panel class so bootstrap.js collapse plugin detects it -->
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
         <li class="active">
@@ -50,7 +51,7 @@
                     <p class="message" style="color:green; cursor:pointer;" ng-click="createprivatechat(user.id)">
                         <a>
                             {{user.name}}
-                        </a>
+                        </a> <br/>
                         <small style="color:red;">score: {{user.score}}</small>
                     </p>
                 </div>
