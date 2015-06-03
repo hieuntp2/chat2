@@ -1,4 +1,4 @@
-﻿var app = angular.module("main_app", ['ngRoute']);
+﻿var app = angular.module("main_app", []);
 app.service('hub_service', function ($http, $compile, $rootScope,
     user_manage_service, account_infor_service) {
     var proxy = null;
@@ -494,6 +494,49 @@ app.service('games_manage_service', function ($http, $rootScope, hub_service) {
     }
 })
 
+// Lưu trữ và quản lý các mini_game đang tồn tại
+app.service('mini_games_manage_service', function ($http, $rootScope, hub_service) {
+    var games = [];
+    var count_id = 0;
+    var addGame = function (name) {
+        if (haveGame(name)) {
+            return;
+        }
+
+        var game = {
+            name: name,
+            id: count_id
+        }
+
+        games.push(game);
+        count_id += 1;
+        return (count_id - 1);
+    }
+
+    var removeGame = function (id) {
+        for (var i = 0; i < games.length; i++) {
+            if (games[i].id == id) {
+                games.splice(i, 1);
+
+                $('#_mini_game_' + id).remove();
+            }
+        }
+    }
+    var haveGame = function (name) {
+        for (var i = 0; i < games.length; i++) {
+            if (games[i].name == name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    return {
+        addGame: addGame,
+        removeGame: removeGame,
+        haveGame: haveGame,
+    }
+})
 ///////////////////////////////////////////
 ////////////////// ADDON //////////////////
 ///////////////////////////////////////////

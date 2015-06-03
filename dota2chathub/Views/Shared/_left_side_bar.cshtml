@@ -46,20 +46,34 @@
                         </li>
                     </ul>
                 </div>
+            </li>     
+            
+            <li class="treeview" style="cursor: pointer;" ng-init="initgame()">
+                <a href="#">
+                    <i class="fa fa-gamepad"></i> <span>Mini game</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li ng-repeat="game in minigame" ng-click="loadgame(game.hreft)" style="cursor: pointer;"><a href=""><i class="fa fa-gamepad"></i>{{game.name}}</a></li>
+
+                </ul>
+            </li>      
+
+            <li class="treeview" style="cursor: pointer;">
+                <a href="#">
+                    <i class="fa fa-cog"></i> <span>Tool</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li style="cursor: pointer;"><a href=""><i class="fa fa-cog"></i>Setting</a></li>
+                    <li style="cursor: pointer;" ng-click="showconvertsteam32tosteam64()"><a href=""><i class="fa fa-arrows-h"></i>SteamID32 to SteamID64</a></li>
+                    <li style="cursor: pointer;" ng-click="showReportBug()">
+                        <a>
+                            <i class="fa fa-bug"></i> <span>Report bug/ Suggesion</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
-            <li class="header">Setting</li>
-            <li style="cursor: pointer;">
-                <a>
-                    <i class="fa fa-cog"></i> <span>Setting</span>
-                </a>
-            </li>
-
-            <li style="cursor: pointer;" ng-click="showReportBug()">
-                <a>
-                    <i class="fa fa-cog"></i> <span>Report bug/ Suggesion</span>
-                </a>
-            </li>
+          
         </ul>
         <!-- Sidebar toggle button-->
         <div data-toggle="offcanvas" role="button" id="_left_side_bar_show_button" style="margin-left: 230px; z-index: 10; position: fixed; bottom: 70px; position: fixed; border-radius: 5px 5px 5px 5px; padding: 10px 15px; font-size: 16px; z-index: 99999; cursor: pointer; color: rgb(60, 141, 188); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 1px 3px; background: rgb(255, 255, 255); }

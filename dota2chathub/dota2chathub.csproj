@@ -183,6 +183,7 @@
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\minigameController.cs" />
     <Compile Include="Controllers\PrivateChatController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
@@ -302,6 +303,19 @@
     <Content Include="Content\dist\mycss.css" />
     <Content Include="Content\sound\group.wma" />
     <Content Include="Content\sound\private.wma" />
+    <Content Include="emoticons\face-angel.png" />
+    <Content Include="emoticons\face-crying.png" />
+    <Content Include="emoticons\face-devilish.png" />
+    <Content Include="emoticons\face-glasses.png" />
+    <Content Include="emoticons\face-grin.png" />
+    <Content Include="emoticons\face-kiss.png" />
+    <Content Include="emoticons\face-monkey.png" />
+    <Content Include="emoticons\face-plain.png" />
+    <Content Include="emoticons\face-sad.png" />
+    <Content Include="emoticons\face-smile-big.png" />
+    <Content Include="emoticons\face-smile.png" />
+    <Content Include="emoticons\face-surprise.png" />
+    <Content Include="emoticons\face-wink.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Models\DBModel.Context.tt">
@@ -321,6 +335,7 @@
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\adirectives.js" />
+    <Content Include="Scripts\jquery.emoticons.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.min.js" />
@@ -796,6 +811,7 @@
     <Content Include="Scripts\plugins\ionslider\ion.rangeSlider.skinNice.css" />
     <Content Include="Scripts\plugins\jQueryUI\jquery-ui-1.10.3.js" />
     <Content Include="Scripts\plugins\jQueryUI\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\plugins\jQueryUI\jquery-ui.min1.12.2.js" />
     <Content Include="Scripts\plugins\jQuery\jquery-2.1.3.js" />
     <Content Include="Scripts\plugins\jQuery\jQuery-2.1.3.min.js" />
     <Content Include="Scripts\plugins\jvectormap\jquery-jvectormap-1.2.2.css" />
@@ -878,6 +894,8 @@
     <Content Include="Models\DBModel.edmx.diagram">
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Content>
+    <Content Include="emoticons\COPYING" />
+    <Content Include="emoticons\README" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\plugins\ckeditor\CHANGES.md" />
     <Content Include="Scripts\plugins\ckeditor\LICENSE.md" />
@@ -904,6 +922,7 @@
     <Content Include="Views\Shared\my_alert_modal.cshtml" />
     <Content Include="Views\Shared\_left_side_bar.cshtml" />
     <Content Include="Views\Shared\_report_Bug_modal.cshtml" />
+    <Content Include="Views\minigame\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

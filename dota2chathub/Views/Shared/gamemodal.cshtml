@@ -135,5 +135,25 @@
 <!-- /.Start Game  -->
 <!-- ===================== /Game =========================-->
 
+<!-- Custom Modal -->
+<div class="modal fade" id="convertsteam32_to_steam64modal" ng-controller="tool_convert_steam32_to_steam_64_controller as controller">
+    <div class="modal-dialog">
+        <div class="modal-content" id="_custom_modal_content">
+            <div class="modal-body" id="_customModal_body">
+                
+                <div class="form-group">
+                    <label>Input SteamID 32</label>
+                    <input type="text" class="form-control" placeholder="SteamID 32" ng-model="steam32" ng-enter="convert()">
+                    <p style="color:red;">{{message}}</p>
+                </div>
+                <hr />
+                <label>SteamID 64: </label>
+                <p style="color: blue;">Return: {{steam64}}</p>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<!-- /.modal -->
+
 <script src="~/scripts/acontroller/gamemodalcontroller.js"></script>
 

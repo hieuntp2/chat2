@@ -501,6 +501,31 @@ app.directive('friendsBox', function () {
     }
 });
 
+app.directive('minigamedirective', function () {
+    return {
+        restrict: 'A',
+        controller: function ($scope, $http, $compile, my_alert_service, mini_games_manage_service) {
+            
+            $scope.href = "";
+            $scope.id = "";
+            $scope.init = function (href) {
+                if (href)
+                {
+                    $scope.href = href;
+                    $scope.id = mini_games_manage_service.addGame(href);
+                }                
+            }
+
+            $scope.remove = function()
+            {
+               mini_games_manage_service.removeGame($scope.id);
+            }
+        },
+        controllerAs: 'controller'
+    }
+});
+
+
 function scrollToBottomDiv(id_div) {
     $('#' + id_div).stop().animate({
         scrollTop: $("#" + id_div)[0].scrollHeight
