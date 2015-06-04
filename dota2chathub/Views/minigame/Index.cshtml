@@ -2,19 +2,17 @@
 
 <div class="box box-info" minigamedirective ng-init="init('@ViewBag.gameaddress')" id="{{'_mini_game_'+ id}}">
     <div class="box-header" style="cursor: move;">
-        <div class="pull-right box-tools">
-            <div class="btn-group">
-                <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bars"></i></button>
-                <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a ng-click="remove()">Exit</a></li>
-                </ul>
+        <h5>Mini Game (hint: the more game, the more lag...)</h5>
+        <div class="pull-right box-tools">          
+            <div class="btn-group">   
+                <input type="text" name="table_search" class="form-control input-sm pull-right" style="width: 150px;" placeholder="height" ng-model="height">            
+                <input type="text" name="table_search" class="form-control input-sm pull-right" style="width: 150px;" placeholder="width" ng-model="width">                
+                <button class="btn btn-primary" data-widget="remove" ng-click="remove()"><i class="fa fa-times"></i></button>
             </div>
         </div>
     </div>
-
-
-    <div class="box-body">
-        <embed src="@ViewBag.gameaddress" type="application/x-shockwave-flash" />
+    <div class="box-body" style="max-height:600px; max-width:600px;">
+        <embed src="@ViewBag.gameaddress" type="application/x-shockwave-flash" ng-style="{width : width, height: height}"/>
+        <p>Game from website: http://www.kongregate.com/games_for_your_site</p>    
     </div>
 </div>
-<!--/minigame-->

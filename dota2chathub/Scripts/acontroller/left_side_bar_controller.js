@@ -112,9 +112,24 @@
 
         $scope.initgame = function ()
         {
+            $scope.addgame("Learn to Fly 2","http://external.kongregate-games.com/gamez/0011/5608/live/embeddable_115608.swf");
+
+            $scope.addgame("The King's League: Odyssey", "http://external.kongregate-games.com/gamez/0017/1311/live/embeddable_171311.swf");
+            $scope.addgame("Epic Battle Fantasy 3", "http://external.kongregate-games.com/gamez/0009/0613/live/embeddable_90613.swf");
+            $scope.addgame("Epic War 3 ", "http://external.kongregate-games.com/gamez/0004/8201/live/embeddable_48201.swf");
+            $scope.addgame("Platform Racing 2", "http://external.kongregate-games.com/gamez/0001/0110/live/embeddable_10110.swf");
+            $scope.addgame("CycloManiacs 2", "http://external.kongregate-games.com/gamez/0012/1218/live/embeddable_121218.swf");
+            $scope.addgame("Continuity", "http://external.kongregate-games.com/gamez/0007/3515/live/embeddable_73515.swf");
+            $scope.addgame("Elona Shooter", "http://external.kongregate-games.com/gamez/0006/1112/live/embeddable_61112.swf");
+            $scope.addgame("Protector III ", "http://external.kongregate-games.com/gamez/0004/4833/live/embeddable_44833.swf");
+ 
+        }
+
+        $scope.addgame = function(name, href)
+        {
             var game = {};
-            game.name = "Run 3";
-            game.hreft = "http://external.kongregate-games.com/gamez/0019/2194/live/embeddable_192194.swf";
+            game.name = name;
+            game.hreft = href;
             $scope.minigame.push(game);
         }
     }]);

@@ -7,6 +7,9 @@ using System;
 using System.Threading.Tasks;
 using System.Text;
 using System.Collections;
+using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace dota2chathub.Controllers
 {

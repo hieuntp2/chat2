@@ -508,6 +508,8 @@ app.directive('minigamedirective', function () {
             
             $scope.href = "";
             $scope.id = "";
+            $scope.width = "700px";
+            $scope.height = "450px";
             $scope.init = function (href) {
                 if (href)
                 {
