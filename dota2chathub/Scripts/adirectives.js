@@ -42,6 +42,10 @@ app.directive('publicChat', function ($rootScope) {
         controller: function ($scope, $http, hub_service, user_manage_service, account_infor_service) {
             $scope.messages = [{ name: 'Server', avatar: '', content: 'This is the public chat room!' }];
 
+            $scope.int = function () {
+                // Broadcast de service quản lý các tab thêm tab mới vào
+                $rootScope.$broadcast('maintab::addtab', "public_chat_0", "public chat 0");
+            }
             $scope.sendmessage = function () {
 
                 if ($("#txt_public_chat_input").val())
@@ -96,11 +100,9 @@ app.directive('publicChat', function ($rootScope) {
             $scope.offUserInfor = function () {
                 user_manage_service.offUserInfor();
             }
-
-            $scope.int = function()
-            {
-                // Broadcast de service quản lý các tab thêm tab mới vào
-                $rootScope.$broadcast('maintab::addtab', "public_chat_0", "public chat 0");
+        
+            $scope.showemotions = function () {
+                $rootScope.$broadcast('emotionpanelcontroller::showpanel', 'txt_public_chat_input');
             }
 
             // set the function will be excuted when server send a message to client
@@ -144,11 +146,13 @@ app.directive('groupChat', function () {
             }
 
             $scope.sendmessage = function () {
+                $scope.inputMessage = $("#_groupchat_input_" + $scope.idgroup).val();
                 if ($scope.inputMessage.trim()) {
                     $scope.selfaddmessage($scope.inputMessage);
                     groups_manage_service.sendGroupMessage($scope.idgroup, $scope.inputMessage);
                     $scope.inputMessage = "";
                 }
+                $("#_groupchat_input_" + $scope.idgroup).val("");
             }
             $scope.addmessage = function (messageobject, groupid) {
                 if (groupid.trim() === $scope.idgroup.trim()) {
@@ -220,6 +224,9 @@ app.directive('groupChat', function () {
                 groups_manage_service.removeGroup($scope.idgroup);
                 $("#" + $scope.idgroup).remove();
                 $rootScope.$broadcast('maintab::closetab', $scope.idgroup);
+            }
+            $scope.showemotions = function () {
+                $rootScope.$broadcast('emotionpanelcontroller::showpanel', '_groupchat_input_'+$scope.idgroup);
             }
 
             // set the function will be excuted when server send a message to client
@@ -309,7 +316,7 @@ app.directive('privateChat', function () {
             $scope.messages = [];
             $scope.inputMessage = "";
 
-
+            
             $scope.init = function (id) {
                 $scope.id = id;
                 var user = user_manage_service.getuser(id);
@@ -317,12 +324,14 @@ app.directive('privateChat', function () {
             }
 
             $scope.sendmessage = function () {
+                $scope.inputMessage = $("#_privatechat_input_" + $scope.id).val();
                 if ($scope.inputMessage.trim()) {
                     privatechat_manage_service.sendmessage($scope.id, $scope.inputMessage);
 
                     $scope.addselfmessage($scope.inputMessage);
                     $scope.inputMessage = "";
                 }
+                $("#_privatechat_input_" + $scope.id).val("");
             }
 
             $scope.addmessage = function (userid, message) {
@@ -374,6 +383,9 @@ app.directive('privateChat', function () {
                 $scope.addmessage(userid, mesage);
             });
 
+            $scope.showemotions = function () {
+                $rootScope.$broadcast('emotionpanelcontroller::showpanel', "_privatechat_input_" + $scope.id);
+            }
            // privatechat_manage_service.receivemessage($scope.addmessage);
         },
         controllerAs: 'controller'
@@ -411,6 +423,7 @@ app.directive('modalUserInfor', function () {
                     });
                 }
             }
+           
         },
         controllerAs: 'controller'
     }
@@ -528,8 +541,10 @@ app.directive('minigamedirective', function () {
 });
 
 
-function scrollToBottomDiv(id_div) {
+function scrollToBottomDiv(id_div) {    
     $('#' + id_div).stop().animate({
         scrollTop: $("#" + id_div)[0].scrollHeight
     }, 800);
 }
+//$('.message_content').emoticonize({});
+

@@ -301,21 +301,10 @@
     <Content Include="Content\dist\js\pages\dashboard.js" />
     <Content Include="Content\dist\js\pages\dashboard2.js" />
     <Content Include="Content\dist\mycss.css" />
+    <Content Include="Content\emotion\jquery.cssemoticons.css" />
+    <Content Include="Content\emotion\jquery.cssemoticons.min.js" />
     <Content Include="Content\sound\group.wma" />
     <Content Include="Content\sound\private.wma" />
-    <Content Include="emoticons\face-angel.png" />
-    <Content Include="emoticons\face-crying.png" />
-    <Content Include="emoticons\face-devilish.png" />
-    <Content Include="emoticons\face-glasses.png" />
-    <Content Include="emoticons\face-grin.png" />
-    <Content Include="emoticons\face-kiss.png" />
-    <Content Include="emoticons\face-monkey.png" />
-    <Content Include="emoticons\face-plain.png" />
-    <Content Include="emoticons\face-sad.png" />
-    <Content Include="emoticons\face-smile-big.png" />
-    <Content Include="emoticons\face-smile.png" />
-    <Content Include="emoticons\face-surprise.png" />
-    <Content Include="emoticons\face-wink.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Models\DBModel.Context.tt">
@@ -339,6 +328,7 @@
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.js" />
     <Content Include="Scripts\jquery.signalr-2.2.0.min.js" />
+    <Content Include="Scripts\my_validation.js" />
     <Content Include="Scripts\plugins\bootstrap-slider\bootstrap-slider.js" />
     <Content Include="Scripts\plugins\bootstrap-slider\slider.css" />
     <Content Include="Scripts\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.min.js" />
@@ -871,10 +861,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\dist\emotion\" />
-    <Folder Include="Views\Search\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -894,8 +881,6 @@
     <Content Include="Models\DBModel.edmx.diagram">
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Content>
-    <Content Include="emoticons\COPYING" />
-    <Content Include="emoticons\README" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\plugins\ckeditor\CHANGES.md" />
     <Content Include="Scripts\plugins\ckeditor\LICENSE.md" />
@@ -923,6 +908,7 @@
     <Content Include="Views\Shared\_left_side_bar.cshtml" />
     <Content Include="Views\Shared\_report_Bug_modal.cshtml" />
     <Content Include="Views\minigame\Index.cshtml" />
+    <Content Include="Views\Shared\_emotionpanel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

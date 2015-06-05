@@ -144,6 +144,10 @@ app.controller('maintabscontroller', ['$scope', '$timeout', function ($scope, $t
     $scope.onTimeout = function () {
         mytimeout = $timeout($scope.onTimeout, 1000);
         $scope.runcheckNewMessage();
+
+        // gọi hàm này để chuyển ký tự thành emotion
+        $('.message_content').emoticonize({});
+        $('.message_content').removeClass()
     }
     var mytimeout = $timeout($scope.onTimeout, 1000);
 
@@ -352,4 +356,46 @@ app.controller('reportbugcontroller', ['$scope', '$scope', '$http', 'user_manage
     }]);
 
 
+app.controller('emotionpanelcontroller', ['$scope', '$scope','$rootScope',
+    function ($scope, $scope, $rootScope) {
+        $scope.text = ":-) :-) :) :o) :c) :^) :-D :-( :-9 ;-) :-P :-p :-Þ :-b :-O :-/ :-X :-# :'( B-) 8-) :-\ ;*( :-* :] :> =] =) 8) :} :D 8D XD xD =D :( :< :[ :{ =( ;) ;] ;D :P :p =P =p :b :Þ :O 8O :/ =/ :S :# :X B) O:) <3 ;( >:) >;) >:( O_o O_O o_o 0_o T_T ^_^ ?";
+        $scope.listemotion = [];
+        $scope.display = false;
+        $scope.id = "";
+        $scope.init = function () {
+            var chars = "";
+            $scope.listemotion = [];
+            for (var i = 0; i < $scope.text.length; i++) {
+                if ($scope.text.charAt(i) != ' ') {
+                    chars += $scope.text[i];
+                }
+                else {
+                    var emo = {};
+                    emo.text = chars;
+                    $scope.listemotion.push(emo);
+                    chars = "";
+                }
+            }
+        }
 
+        $rootScope.$on('emotionpanelcontroller::showpanel', function (event, id) {
+            $scope.id = id;
+            $("._emotionpanel_body_item").emoticonize({});
+            $("#_emotionpanelbox").css({ top: y - 200, left: x - 200 });
+            $scope.display = true;
+        });
+
+        $scope.inserttodiv = function (text) {
+            if ($scope.id)
+            {
+                text = " " + text + " ";
+                $("#" + $scope.id).val($("#" + $scope.id).val() + text).focus();
+                $scope.display = false;
+            }
+        }
+        $scope.init();
+        $scope.moveout = function () {
+            $scope.display = false;
+        }
+
+    }]);

@@ -34,7 +34,7 @@
                             <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>{{message.time}}</small>
                             {{message.name}}
                         </a>
-                        {{message.content}}
+                        <span class="message_content">{{message.content}}</span>                        
                     </p>
                 </div>
                 <!-- /.item -->
@@ -42,9 +42,9 @@
             </div><!-- /.chat -->
             <div class="box-footer">
                 <div class="input-group">
-                    <input class="form-control" placeholder="Type message..." ng-enter="sendmessage();  focusInput=true" ng-model="inputMessage" focus-me="focusInput" />
+                    <input class="form-control" placeholder="Type message..." ng-enter="sendmessage()" id="{{'_groupchat_input_' + idgroup}}" />
                     <div class="input-group-btn">
-                        <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="sendmessage()"><i class="fa fa-plus"></i></button>
+                        <button class="btn btn-success" id="bt_public_chat_box_send" ng-click="showemotions()"><i class="fa fa-smile-o"></i></button>
                     </div>
                 </div>
             </div>

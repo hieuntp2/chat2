@@ -1,0 +1,7 @@
+﻿<div style="position: absolute; z-index: 100; width: 250px; height: 200px;" class="box box-info no-padding" ng-controller="emotionpanelcontroller as controller" ng-show="display" id="_emotionpanelbox" ng-mouseleave="moveout()" ng-disabled="display">
+    <div class="box-body" id="_emotionpanel_body">
+        <span ng-repeat="emotion in listemotion" class="_emotionpanel_body_item" style="padding-right: 5px;padding-top: 5px; cursor: pointer;" ng-click="inserttodiv(emotion.text)">
+            {{emotion.text}}
+        </span>
+    </div>
+</div>
