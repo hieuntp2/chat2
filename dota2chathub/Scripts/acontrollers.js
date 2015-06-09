@@ -383,6 +383,7 @@ app.controller('emotionpanelcontroller', ['$scope', '$scope','$rootScope',
             $("._emotionpanel_body_item").emoticonize({});
             $("#_emotionpanelbox").css({ top: y - 200, left: x - 200 });
             $scope.display = true;
+            $("._emotionpanel_body_item").removeClass("_emotionpanel_body_item");
         });
 
         $scope.inserttodiv = function (text) {

@@ -302,50 +302,18 @@ namespace dota2chathub.Controllers
         /// <returns></returns> 
         public string convertAccountIDtoSteamID(string account_id)
         {
-            // convert account_id to Int64
-            Int64 x = Convert.ToInt64(account_id);
-            string s = Convert.ToString(x, 2); //Convert to binary in a string
+            StringBuilder id = new StringBuilder();
 
-            StringBuilder result = new StringBuilder();
-            result.Append("1000100000000000000000001");
-
-            int dem_so_luong = 57 - 25 - s.Length;
-
-            // add 0 to result to get enough 57 character
-            for (int i = 0; i < dem_so_luong; i++)
+            if (account_id.Length == 17)
             {
-                result.Append("0");
+                id.Append(Int64.Parse(account_id) - 76561197960265728);
             }
-
-            // append the convert number to end result
-            result.Append(s);
-
-            BitArray bitarry = new BitArray(result.Length);
-
-
-            for (int i = 0; i < result.Length; i++)
+            else
             {
-                int index = result.Length - i - 1;
-                if (result[index] == '0')
-                {
-                    bitarry[i] = false;
-                }
-                else
-                {
-                    bitarry[i] = true;
-                }
+                id.Append((Int64.Parse(account_id) + 76561197960265728).ToString());
             }
-
-            return GetIntFromBitArray(bitarry).ToString();
+            return id.ToString();
         }
-
-        private static long GetIntFromBitArray(BitArray bitArray)
-        {
-            var array = new byte[8];
-            bitArray.CopyTo(array, 0);
-            return BitConverter.ToInt64(array, 0);
-        }
-
     }
 
     public class FriendInChatBox
