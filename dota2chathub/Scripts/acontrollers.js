@@ -1,5 +1,4 @@
-﻿
-app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile', '$timeout', 'hub_service', 'account_infor_service', 'my_alert_service',
+﻿app.controller('modulecontroller', ['$scope', '$rootScope', '$http', '$compile', '$timeout', 'hub_service', 'account_infor_service', 'my_alert_service',
 function ($scope, $rootScope, $http, $compile, $timeout, hub_service, account_infor_service, my_alert_service) {
     var ctrll = this;
     this.modules = [];
