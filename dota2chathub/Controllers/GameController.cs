@@ -20,13 +20,13 @@ namespace dota2chathub.Controllers
                 hostid = userid
             };
 
-            return Json(game, JsonRequestBehavior.AllowGet); 
+            return Json(game, JsonRequestBehavior.AllowGet);
         }
 
         // GET: PublicChat
         public ActionResult getuseringame(string id)
         {
-            if(string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return null;
             }
@@ -34,15 +34,25 @@ namespace dota2chathub.Controllers
             return Json(StaticData.getUserInGame(id), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult get_fullinfo_useringame(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+
+            return Json(StaticData.getFullInfoUserInGame(id), JsonRequestBehavior.AllowGet);
+        }
+
         // GET: PublicChat
         public async Task<ActionResult> joingame(string gameid, string pass, string userid)
         {
             if (StaticData.checkGamePassword(gameid, pass))
             {
-                GameMatch game = StaticData.getGame(gameid);                
+                GameMatch game = StaticData.getGame(gameid);
                 await StaticData.addUsertoGame(userid, gameid);
 
-                return Json(game, JsonRequestBehavior.AllowGet);  
+                return Json(game, JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -52,10 +62,10 @@ namespace dota2chathub.Controllers
 
         public ActionResult setgroupidtogame(string groupid, string gameid)
         {
-            if(!string.IsNullOrWhiteSpace(groupid) && !string.IsNullOrWhiteSpace(gameid))
+            if (!string.IsNullOrWhiteSpace(groupid) && !string.IsNullOrWhiteSpace(gameid))
             {
                 StaticData.setGroupIDtoGame(groupid, gameid);
-            }           
+            }
             return null;
         }
 
@@ -70,13 +80,13 @@ namespace dota2chathub.Controllers
             List<GameMatch> games = new List<GameMatch>();
 
             games = (from item in StaticData.getAllGameMatch()
-                      where words.All(val => item.Value.name.Contains(val))
-                      select new GameMatch
-                      {
-                          hostid = item.Value.hostid,
-                          id = item.Value.id,
-                          name = item.Value.name
-                      }
+                     where words.All(val => item.Value.name.Contains(val))
+                     select new GameMatch
+                     {
+                         hostid = item.Value.hostid,
+                         id = item.Value.id,
+                         name = item.Value.name
+                     }
                           ).ToList();
 
             return Json(games, JsonRequestBehavior.AllowGet);
@@ -89,9 +99,9 @@ namespace dota2chathub.Controllers
 #endif
             GameMatch game = null;
             await StaticData.FinishGame(id);
-            
+
             // Nếu game đã xử lý xong kết quả
-            if(StaticData.getGameState(id) == 3)
+            if (StaticData.getGameState(id) == 3)
             {
                 game = StaticData.getGame(id);
             }
@@ -102,12 +112,27 @@ namespace dota2chathub.Controllers
         {
 #if DEBUG
             id = "123";
-#endif            
+#endif
             if (StaticData.getGameState(id) == 0)
             {
                 StaticData.startgame(id);
             }
             return "OK";
+        }
+
+        public void changeteam(string gameid, string userid, bool team)
+        {
+            StaticData.changeteam(gameid, userid, team);
+        }
+
+        public void submitresult(string gameid, string userid, bool result)
+        {
+            StaticData.submitresult(gameid, userid, result);
+        }
+
+        public GameMatch getgameinfo(string gameid)
+        {
+            return StaticData.getGame(gameid);
         }
     }
 }

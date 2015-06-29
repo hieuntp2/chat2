@@ -276,6 +276,24 @@ namespace dota2chathub
         }
 
         /// <summary>
+        /// Lấy danh sách người chơi trong game
+        /// </summary>
+        /// <param name="gameid"></param>
+        /// <returns></returns>
+        public static List<UserInGame> getFullInfoUserInGame(string gameid)
+        {
+            if (games.ContainsKey(gameid))
+            {
+                return games[gameid].getlistusersingame();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        /// <summary>
         /// Trả về số lượng người chơi trong game. Nếu game không tồn tại thì trả về -1
         /// </summary>
         /// <param name="id"></param>
@@ -549,6 +567,22 @@ namespace dota2chathub
         {
             games[id].startgame();
         }
+
+        public static void changeteam(string gameid, string userid, bool team)
+        {
+            if (games.ContainsKey(gameid))
+            {
+                games[gameid].changeteam(userid, team);
+            }
+        }
+
+        public static void submitresult(string gameid, string userid, bool result)
+        {
+            if (games.ContainsKey(gameid))
+            {
+                games[gameid].submitresult(userid, result);
+            }
+        }
     }
 
     public class ChatMessageObject
@@ -571,7 +605,7 @@ namespace dota2chathub
         public string hostid { get; set; }
         public string password { get; set; }
         public string groupchatid { get; set; }
-
+        public int count_submit_result = 0;
         private int count_confirm = 0;
 
         /// <summary>
@@ -626,6 +660,22 @@ namespace dota2chathub
             }
         }
 
+        public void addUser(UserInGame newuser)
+        {
+            if (users.Count > 10)
+            {
+                return;
+            }
+            if (users.ContainsKey(newuser.steamID))
+            {
+                return;
+            }
+            else
+            {
+                users.Add(newuser.steamID, newuser);
+            }
+        }
+
         public int getNumberUser()
         {
             return users.Count();
@@ -652,6 +702,12 @@ namespace dota2chathub
         {
             return users.Select(t => t.Key).ToList();
         }
+
+        public List<UserInGame> getlistusersingame()
+        {
+            return users.Select(t => t.Value).ToList();
+        }
+
 
         public void finishGame()
         {
@@ -816,7 +872,7 @@ namespace dota2chathub
             if (users[userid].isconfirm == -1)
             {
                 users[userid].isconfirm = 1;
-            }            
+            }
         }
 
         /// <summary>
@@ -828,7 +884,7 @@ namespace dota2chathub
             if (users[userid].isconfirm == -1)
             {
                 users[userid].isconfirm = 0;
-            } 
+            }
         }
 
         /// <summary>
@@ -836,7 +892,7 @@ namespace dota2chathub
         /// </summary>
         public void resetConfirm()
         {
-            foreach(UserInGame player in users.Values)
+            foreach (UserInGame player in users.Values)
             {
                 player.isconfirm = -1;
             }
@@ -852,30 +908,30 @@ namespace dota2chathub
         {
             int confirms = 0;
             int denys = 0;
-            foreach(UserInGame player in users.Values)
+            foreach (UserInGame player in users.Values)
             {
-                if(player.isconfirm == 1)
+                if (player.isconfirm == 1)
                 {
                     confirms += 1;
-                    if(confirms >= 5)
+                    if (confirms >= 5)
                     {
                         state = 4;
                         return 1;
                     }
                 }
 
-                if(player.isconfirm == 0)
+                if (player.isconfirm == 0)
                 {
                     denys += 1;
                     if (denys >= 6)
                     {
                         state = 5;
                         return 0;
-                    }                        
+                    }
                 }
             }
 
-            if(confirms == 5 && denys == 5)
+            if (confirms == 5 && denys == 5)
             {
                 return 2;
             }
@@ -931,6 +987,75 @@ namespace dota2chathub
             var array = new byte[8];
             bitArray.CopyTo(array, 0);
             return BitConverter.ToInt64(array, 0);
+        }
+
+        public void changeteam(string userid, bool team)
+        {
+            if (users.ContainsKey(userid))
+            {
+                users[userid].team = team;
+            }
+        }
+
+        public void submitresult(string userid, bool result)
+        {
+            if (users.ContainsKey(userid))
+            {
+                users[userid].result = result;
+
+                if(users[userid].issendresult == false)
+                {
+                    users[userid].issendresult = true;
+                    count_submit_result += 1;
+
+                    if(count_submit_result >= 6)
+                    {
+                        checkgamesubmitresult();
+                    }
+                }               
+            }
+        }
+
+        /// <summary>
+        /// Nếu game có số lượng confirm > 6 và có cùng kết quả thì dừng lại. Nếu ==5 thì reset lại kết quả và yêu cầu nhập lại
+        /// </summary>
+        public void checkgamesubmitresult()
+        {
+            int count_radia_win = 0;
+            int count_radian_lost = 0;
+            
+            foreach (var user in users)
+            {
+                if(user.Value.issendresult)
+                {
+                    if (user.Value.result & user.Value.team)
+                    {
+                        count_radia_win += 1;
+                    }
+                    else
+                    {
+                        count_radian_lost += 1;
+                    }
+                }                
+            }
+
+            if (count_radia_win >= 6 || count_radian_lost >= 6)
+            {
+                this.state = 4;
+                if (count_radia_win >= 6)
+                {
+                    isRadirawin = true;
+                }
+                if (count_radian_lost >= 6)
+                {
+                    isRadirawin = false;
+                }
+            }
+
+            if (count_radia_win == 5 && count_radian_lost == 5)
+            {
+                this.state = 5;
+            }
         }
     }
 
@@ -988,6 +1113,10 @@ namespace dota2chathub
 
     public class UserInGame
     {
+        public UserInGame()
+        {
+            issendresult = false;
+        }
         public string steamID;
 
         /// <summary>
@@ -1005,6 +1134,10 @@ namespace dota2chathub
         /// -1: not confirm. 0: deny. 1: confirm
         /// </summary>
         public int isconfirm = -1;
+
+        public bool result { get; set; }
+
+        public bool issendresult { get; set; }
     }
 }
 
