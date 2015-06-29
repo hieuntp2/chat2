@@ -126,7 +126,7 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
             $scope.users = [];
             $scope.id = id;
             $scope.name = name;
-
+            alert(id);
             // Lấy danh sách người chơi trong game
             //var address = "../../game/getuseringame?id=" + id;
             var address = "../../game/getuseringame?id=" + 123;
@@ -173,6 +173,13 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
             $('#startGameModal').modal('hide');
         }
 
+        $scope.joinradian = function () {
+
+        }
+
+        $scope.joindire = function () {
+
+        }
     }]);
 
 app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_service', 'games_manage_service','my_alert_service',
