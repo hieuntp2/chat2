@@ -245,7 +245,7 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
 
         $rootScope.$on('penddinggame::joingame', function (event, data) {
             $scope.addgame(data);
-            $scope.pendingmessage = $scope.pendings.length + " pending game";
+            $scope.pendingmessage = "";
         });
         $rootScope.$on('pendinggame::startgame', function (event, gameid) {
             for (var i = 0; i < $scope.pendings.length; i++) {
@@ -253,18 +253,20 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
                     $scope.starteds.push($scope.pendings[i]);
                     $scope.removependinggame(gameid);
 
-                    $scope.pendingmessage = $scope.pendings.length + " pending game";
-                    $scope.startedmessage = $scope.starteds.length + " started game";
+                    $scope.pendingmessage = "";
+                    $scope.startedmessage = "";
                 }
             }
         });
         $rootScope.$on('pendinggame::finishgame', function (event, gameid) {
             $scope.removestartedggame(gameid);
-            $scope.startedmessage = $scope.starteds.length + " started game";
+            $scope.pendingmessage = "";
+            $scope.startedmessage = "";
         });
         $rootScope.$on('pendinggame::leavegame', function (event, gameid) {
             $scope.removependinggame(gameid);
-            $scope.pendingmessage = $scope.pendings.length + " pending game";
+            $scope.pendingmessage = "";
+            $scope.startedmessage = "";
             games_manage_service.removegame(gameid);
         });
 
@@ -276,7 +278,8 @@ app.controller('pendinggamecontroller', ['$scope', '$rootScope', '$http', 'user_
             item.hostid = game.hostid;
 
             $scope.pendings.push(item);
-            $scope.message = $scope.pendings.length + " game";
+            $scope.pendingmessage = "";
+            $scope.startedmessage = "";
 
             games_manage_service.addGame(item.id);
         }

@@ -128,8 +128,8 @@
                 <p>Result submit:</p>
                 <span>Radian win vote: </span> <span style="color:green;">{{count_radiawin}}</span> / <span style="color: blue;">{{count_result}}</span>
                 <br />
-                <strong>Game Result: {{game_result_message}}</strong><br />
-                <strong>Game state: </strong>
+                <strong style="color:red;">Game Result: {{result}}</strong><br />
+                <strong style="color:blue;">Game state: {{game_state}}</strong>
                 <hr />
                 Player in game:
                 <ul class="users-list clearfix" style="max-height:350px; overflow-y: auto;" ng-model="users">
@@ -143,7 +143,6 @@
                         <small>{{user.hero}}</small>
                     </li>
                 </ul>
-                <p>{{result}}</p>
             </div>
 
             <div class="modal-footer" ng-show="isDisplayVote">

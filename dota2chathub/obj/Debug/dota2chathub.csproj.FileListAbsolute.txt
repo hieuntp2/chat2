@@ -510,4 +510,3 @@ E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.Migrati
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.csproj.GenerateResource.Cache
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.dll
 E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.pdb
-E:\6. My Project\net\chat2.git\trunk\dota2chathub\obj\Debug\dota2chathub.csprojResolveAssemblyReference.cache

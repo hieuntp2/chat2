@@ -184,32 +184,62 @@ app.controller('startgamemodal', ['$scope', '$rootScope', '$http', 'user_manage_
         }
 
         $scope.joinradian = function () {
+
+            // Kiếm tra nếu như người chơi đang ở team radian thì ko join nữa
+            for (var i = 0; i < $scope.radian_users.length; i++)
+            {
+                if($scope.radian_users[i].id ==  account_infor_service.getid())
+                {
+                    return;
+                }
+            }
+
             var address = "../../game/changeteam?gameid=" + $scope.id + "&&userid=" + account_infor_service.getid() + "&&team=true";
 
             $http.get(address).success(function (data) {
-                //for(var i = 0; i < $scope.radian_users.length; i++)
-                //{
-                //    if($scope.radian_users[i].steamID == account_infor_service.getid())
-                //    {
+                $scope.radian_users = [];
+                $scope.dire_users = [];
+                for (var i = 0; i < data.length; i++) {
+                    var user = user_manage_service.getuser(data[i].steamID);
+                    user.team = data[i].team;
 
-                //    }
-                //}
+                    if (user.team) {
+                        $scope.radian_users.push(user);
+                    }
+                    else {
+                        $scope.dire_users.push(user);
+                    }
+                }
             }).error(function () {
                 my_alert_service.show_my_alert("GameID is null");
             });
         }
 
         $scope.joindire = function () {
+
+            // Kiếm tra nếu như người chơi đang ở team dire thì ko join nữa
+            for (var i = 0; i < $scope.dire_users.length; i++) {
+                if ($scope.dire_users[i].id == account_infor_service.getid()) {
+                    return;
+                }
+            }
+
             var address = "../../game/changeteam?gameid=" + $scope.id + "&&userid=" + account_infor_service.getid() + "&&team=false";
 
             $http.get(address).success(function (data) {
-                //for(var i = 0; i < $scope.radian_users.length; i++)
-                //{
-                //    if($scope.radian_users[i].steamID == account_infor_service.getid())
-                //    {
+                $scope.radian_users = [];
+                $scope.dire_users = [];
+                for (var i = 0; i < data.length; i++) {
+                    var user = user_manage_service.getuser(data[i].steamID);
+                    user.team = data[i].team;
 
-                //    }
-                //}
+                    if (user.team) {
+                        $scope.radian_users.push(user);
+                    }
+                    else {
+                        $scope.dire_users.push(user);
+                    }
+                }
             }).error(function () {
                 my_alert_service.show_my_alert("GameID is null");
             });
@@ -223,7 +253,7 @@ app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage
         $scope.id = "";
         $scope.name = "";
         $scope.users = [];
-        $scope.result = "";
+        $scope.result = "Game need asleast 6 vote in same result to finish!";
         $scope.radian_users = [];
         $scope.dire_users = [];
 
@@ -231,6 +261,7 @@ app.controller('finishgamemodal', ['$scope', '$rootScope', '$http', 'user_manage
         $scope.count_radiawin = 0;
         $scope.count_radialost = 0;
         $scope.isDisplayVote = true;
+        $scope.game_state = "Game started."
 
         $rootScope.$on('finishgamemodal::showfinishgamemodal', function (event, id, name) {
             if (!id) {

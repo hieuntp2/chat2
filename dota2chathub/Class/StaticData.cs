@@ -9,6 +9,8 @@ using System.Net;
 using Newtonsoft.Json;
 using System.Text;
 using System.Collections;
+using Microsoft.AspNet.SignalR;
+using dota2chathub.Module.PublicChat;
 
 namespace dota2chathub
 {
@@ -568,7 +570,7 @@ namespace dota2chathub
             games[id].startgame();
         }
 
-        public static void changeteam(string gameid, string userid, bool team)
+        public static async Task changeteam(string gameid, string userid, bool team)
         {
             if (games.ContainsKey(gameid))
             {
@@ -657,6 +659,8 @@ namespace dota2chathub
                 UserInGame player = new UserInGame();
                 player.steamID = id;
                 users.Add(id, player);
+
+                Serversendgroupmessage(id + " has join game!");
             }
         }
 
@@ -673,6 +677,7 @@ namespace dota2chathub
             else
             {
                 users.Add(newuser.steamID, newuser);
+                Serversendgroupmessage(newuser.steamID + " has join game!");
             }
         }
 
@@ -994,6 +999,8 @@ namespace dota2chathub
             if (users.ContainsKey(userid))
             {
                 users[userid].team = team;
+
+                Serversendgroupmessage(userid + " has changed team");
             }
         }
 
@@ -1003,16 +1010,16 @@ namespace dota2chathub
             {
                 users[userid].result = result;
 
-                if(users[userid].issendresult == false)
+                if (users[userid].issendresult == false)
                 {
                     users[userid].issendresult = true;
                     count_submit_result += 1;
 
-                    if(count_submit_result >= 6)
+                    if (count_submit_result >= 6)
                     {
                         checkgamesubmitresult();
                     }
-                }               
+                }
             }
         }
 
@@ -1023,10 +1030,10 @@ namespace dota2chathub
         {
             int count_radia_win = 0;
             int count_radian_lost = 0;
-            
+
             foreach (var user in users)
             {
-                if(user.Value.issendresult)
+                if (user.Value.issendresult)
                 {
                     if (user.Value.result & user.Value.team)
                     {
@@ -1036,7 +1043,7 @@ namespace dota2chathub
                     {
                         count_radian_lost += 1;
                     }
-                }                
+                }
             }
 
             if (count_radia_win >= 6 || count_radian_lost >= 6)
@@ -1055,6 +1062,20 @@ namespace dota2chathub
             if (count_radia_win == 5 && count_radian_lost == 5)
             {
                 this.state = 5;
+            }
+        }
+
+        public void Serversendgroupmessage(string message)
+        {
+            if (this.groupchatid != null)
+            {
+                var hubContext = GlobalHost.ConnectionManager.GetHubContext<ServerHub>();
+                ChatMessageObject mess = new ChatMessageObject()
+                {
+                    userid = "0",
+                    message = "<<--" + message + "-->>"
+                };
+                hubContext.Clients.Group(this.groupchatid).reciveGroupChatMessage(Newtonsoft.Json.JsonConvert.SerializeObject(mess), this.groupchatid);
             }
         }
     }

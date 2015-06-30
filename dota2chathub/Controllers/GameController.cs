@@ -1,4 +1,6 @@
-﻿using System;
+﻿using dota2chathub.Module.PublicChat;
+using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +36,7 @@ namespace dota2chathub.Controllers
             return Json(StaticData.getUserInGame(id), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult get_fullinfo_useringame(string id)
+        public async Task<ActionResult> get_fullinfo_useringame(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -120,9 +122,12 @@ namespace dota2chathub.Controllers
             return "OK";
         }
 
-        public void changeteam(string gameid, string userid, bool team)
+        public async Task<ActionResult> changeteam(string gameid, string userid, bool team)
         {
-            StaticData.changeteam(gameid, userid, team);
+            await StaticData.changeteam(gameid, userid, team);
+           
+
+            return Json(StaticData.getFullInfoUserInGame(gameid), JsonRequestBehavior.AllowGet);
         }
 
         public void submitresult(string gameid, string userid, bool result)

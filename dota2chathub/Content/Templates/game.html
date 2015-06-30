@@ -18,20 +18,21 @@ we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                     <div class="box-body">
                         <p>{{pendingmessage}}</p>
                         <ul class="todo-list ui-sortable" ng-model="pendings">
-                            <li ng-repeat="game in pendings" style="cursor:pointer;" ng-click="showStartGameModal(game.id)">
-                                <span class="text">{{game.name}}</span>
-                                <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>
+                            <li ng-repeat="game in pendings" style="cursor: pointer; border-left: 2px solid #00C76B; " ng-click="showStartGameModal(game.id)">
+                                                         
+                                <span style="color:green;">Pending: </span>
+                                <span class="text">{{game.name}}</span>      
                             </li>
                         </ul>
 
-                        <hr />
                         <p>
                             {{startedmessage}}
                         </p>
                         <ul class="todo-list ui-sortable" ng-model="starteds">
-                            <li ng-repeat="game in starteds" style="cursor:pointer;" ng-click="showfinishgame(game.id)">
+                            <li ng-repeat="game in starteds" style="cursor: pointer; border-left: 2px solid #DD4B39;" ng-click="showfinishgame(game.id)">
+                               
+                                <span style="color:red;">Started: </span>
                                 <span class="text">{{game.name}}</span>
-                                <small class="label label-success"><i class="fa fa-clock-o"></i>{{game.hostname}}</small>
                             </li>
                         </ul>
                     </div><!-- /.box-body -->

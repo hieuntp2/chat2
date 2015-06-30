@@ -26,16 +26,28 @@
 
         <div id="{{ 'group_chat_box_body_' + idgroup }}" class="panel-collapse collapse in">
             <div class="box-body chat chatboxbody" id="{{ 'group_chat_box_content_' + idgroup }}" style="max-height:350px; overflow-y: auto;">
+
+
                 <!-- chat item -->
-                <div class="item" ng-repeat="message in messages">
-                    <img ng-src="{{message.avatar}}" alt="user image" class="online" />
-                    <p class="message">
+                <div class="item" ng-repeat="message in messages" ng-switch="message.class">
+
+                    <img ng-src="{{message.avatar}}" alt="user image" class="online" ng-switch-when="user" />
+                    <p class="message" ng-switch-when="user">
                         <a href="#" class="name">
                             <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>{{message.time}}</small>
                             {{message.name}}
                         </a>
-                        <span class="message_content">{{message.content}}</span>                        
+                        <span class="message_content">{{message.content}}</span>
                     </p>
+
+                    <p class="message" style="color: red; height: 35px; display: initial;" ng-switch-when="server">
+
+                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>{{message.time}}</small>
+                        Message:
+
+                        <span class="message_content">{{message.content}}</span>
+                    </p>
+
                 </div>
                 <!-- /.item -->
 

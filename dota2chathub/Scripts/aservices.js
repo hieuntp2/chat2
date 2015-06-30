@@ -60,7 +60,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
         //Attaching a callback to handle acceptGreet client call
         this.proxy.on('reciveGroupChatMessage', function (message, groupid) {
             $rootScope.$apply(function () {
-               
+              
                 var obj = $.parseJSON(message);
                 var user = user_manage_service.getuser(obj.userid);
 
@@ -68,7 +68,6 @@ app.service('hub_service', function ($http, $compile, $rootScope,
                 obj.name = user.name;
                 obj.avatar = user.avatar;
                 obj.id = user.id;
-
                 reciveGroupChatMessageCallBack(obj, groupid);
 
                 // gọi sự kiện này để thông báo tabcontroller là có sự kiện này xảy ra
@@ -117,7 +116,7 @@ app.service('hub_service', function ($http, $compile, $rootScope,
 // user {id, name, avatar, score, rank}
 // Quan ly ds nguoi dung để tránh việc trao đổi thông tin nhiều lần
 app.service('user_manage_service', function ($http, my_alert_service) {
-    var listuser = [];
+    var listuser = [{id: 0, name: "Server", avatar:""}];
 
     this.getuserinfofromserver = function (userid) {
         var user = {};

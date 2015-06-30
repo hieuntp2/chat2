@@ -48,14 +48,13 @@ app.directive('publicChat', function ($rootScope) {
             }
             $scope.sendmessage = function () {
 
-                if ($("#txt_public_chat_input").val())
-                {
+                if ($("#txt_public_chat_input").val()) {
                     $scope.selfaddmessage($("#txt_public_chat_input").val());
                     // call a service to send a message to server
                     hub_service.sendRequest($("#txt_public_chat_input").val());
                     $("#txt_public_chat_input").val('');
                     $("#txt_public_chat_input").focus();
-                }               
+                }
             }
 
             $scope.addmessage = function (messageobject) {
@@ -66,14 +65,13 @@ app.directive('publicChat', function ($rootScope) {
                 message.name = messageobject['name'];
                 message.avatar = messageobject['avatar'];
                 message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-                message.content = messageobject['message'];                
+                message.content = messageobject['message'];
 
-                $scope.messages.push(message);                
-                scrollToBottomDiv("public_chat_box");               
+                $scope.messages.push(message);
+                scrollToBottomDiv("public_chat_box");
             }
 
-            $scope.selfaddmessage = function(content)
-            {
+            $scope.selfaddmessage = function (content) {
                 var dt = new Date();
                 var message = {};
 
@@ -100,7 +98,7 @@ app.directive('publicChat', function ($rootScope) {
             $scope.offUserInfor = function () {
                 user_manage_service.offUserInfor();
             }
-        
+
             $scope.showemotions = function () {
                 $rootScope.$broadcast('emotionpanelcontroller::showpanel', 'txt_public_chat_input');
             }
@@ -133,7 +131,7 @@ app.directive('groupChat', function () {
                 $scope.addusertogroup(account_infor_service.getid());
 
                 // Broadcast de service quản lý các tab thêm tab mới vào
-                $rootScope.$broadcast('maintab::addtab', "group_chat_tab_content_"+groupid, name);
+                $rootScope.$broadcast('maintab::addtab', "group_chat_tab_content_" + groupid, name);
             }
             $scope.receiveGroupIDclient = function (groupid) {
                 if (!$scope.idgroup.trim()) {
@@ -164,6 +162,14 @@ app.directive('groupChat', function () {
                     message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                     message.content = messageobject['message'];
 
+                    if (messageobject['id'] == 0) {
+                        message.class = "server";
+                    }
+                    else {
+                        message.class = "user";
+                    }
+
+
                     $scope.messages.push(message);
 
                     scrollToBottomDiv("group_chat_box_content_" + $scope.idgroup);
@@ -182,16 +188,16 @@ app.directive('groupChat', function () {
                 message.time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                 message.content = content;
 
+
+                message.class = "user";
+
                 $scope.messages.push(message);
-                scrollToBottomDiv("public_chat_box");
+                scrollToBottomDiv("group_chat_box_content_" + $scope.idgroup);
             }
 
-            $scope.addusertogroup = function(userid)
-            {
-                for(var i = 0 ; i < $scope.users.length; i++)
-                {
-                    if ($scope.users[i].id == userid)
-                    {
+            $scope.addusertogroup = function (userid) {
+                for (var i = 0 ; i < $scope.users.length; i++) {
+                    if ($scope.users[i].id == userid) {
                         return;
                     }
                 }
@@ -200,13 +206,11 @@ app.directive('groupChat', function () {
                 $scope.users.push(user);
             }
 
-            $scope.refeshusers = function()
-            {
+            $scope.refeshusers = function () {
                 $http.get("../../service/getUserInGroup?groupid=" + $scope.idgroup).success(function (data) {
 
                     $scope.users = [];
-                    for (var i = 0; i < data.length; i++)
-                    {
+                    for (var i = 0; i < data.length; i++) {
                         var user = user_manage_service.getuser(data[i]);
                         $scope.users.push(user);
                     }
@@ -226,7 +230,7 @@ app.directive('groupChat', function () {
                 $rootScope.$broadcast('maintab::closetab', $scope.idgroup);
             }
             $scope.showemotions = function () {
-                $rootScope.$broadcast('emotionpanelcontroller::showpanel', '_groupchat_input_'+$scope.idgroup);
+                $rootScope.$broadcast('emotionpanelcontroller::showpanel', '_groupchat_input_' + $scope.idgroup);
             }
 
             // set the function will be excuted when server send a message to client
@@ -316,7 +320,7 @@ app.directive('privateChat', function () {
             $scope.messages = [];
             $scope.inputMessage = "";
 
-            
+
             $scope.init = function (id) {
                 $scope.id = id;
                 var user = user_manage_service.getuser(id);
@@ -386,7 +390,7 @@ app.directive('privateChat', function () {
             $scope.showemotions = function () {
                 $rootScope.$broadcast('emotionpanelcontroller::showpanel', "_privatechat_input_" + $scope.id);
             }
-           // privatechat_manage_service.receivemessage($scope.addmessage);
+            // privatechat_manage_service.receivemessage($scope.addmessage);
         },
         controllerAs: 'controller'
     }
@@ -423,7 +427,7 @@ app.directive('modalUserInfor', function () {
                     });
                 }
             }
-           
+
         },
         controllerAs: 'controller'
     }
@@ -444,7 +448,7 @@ app.directive('friendsBox', function () {
                 $scope.getonlinelist();
             }
 
-            $scope.createprivatechat = function (userid) {               
+            $scope.createprivatechat = function (userid) {
                 privatechat_manage_service.addprivatechat(userid);
             }
 
@@ -487,7 +491,7 @@ app.directive('friendsBox', function () {
                     }
 
                     for (var i = 0; i < data.length; i++) {
-                        var user = user_manage_service.getuser(data[i]);                       
+                        var user = user_manage_service.getuser(data[i]);
                         $scope.onlines.push(user);
                     }
                     $scope.isloading = false;
@@ -518,22 +522,20 @@ app.directive('minigamedirective', function () {
     return {
         restrict: 'A',
         controller: function ($scope, $http, $compile, my_alert_service, mini_games_manage_service) {
-            
+
             $scope.href = "";
             $scope.id = "";
             $scope.width = "700px";
             $scope.height = "450px";
             $scope.init = function (href) {
-                if (href)
-                {
+                if (href) {
                     $scope.href = href;
                     $scope.id = mini_games_manage_service.addGame(href);
-                }                
+                }
             }
 
-            $scope.remove = function()
-            {
-               mini_games_manage_service.removeGame($scope.id);
+            $scope.remove = function () {
+                mini_games_manage_service.removeGame($scope.id);
             }
         },
         controllerAs: 'controller'
@@ -541,7 +543,7 @@ app.directive('minigamedirective', function () {
 });
 
 
-function scrollToBottomDiv(id_div) {    
+function scrollToBottomDiv(id_div) {
     $('#' + id_div).stop().animate({
         scrollTop: $("#" + id_div)[0].scrollHeight
     }, 800);
