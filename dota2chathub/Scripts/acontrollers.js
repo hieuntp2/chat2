@@ -62,9 +62,8 @@ function ($scope, $rootScope, $http, $compile, $timeout, hub_service, account_in
         $http.get(address).success(function (data) {
             var el = $compile(data)($scope);
             $("#main_col_3_left").append(el);
-
-            $rootScope.$broadcast('reciverprivatemessage', userid, message);
-
+                        
+            $rootScope.$broadcast('directivePM::receivemessage', userid, message);
         }).error(function () {
             my_alert_service.show_my_alert("Lỗi khi lấy module " + address);
             return "error";
