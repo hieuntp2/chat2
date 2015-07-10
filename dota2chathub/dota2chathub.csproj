@@ -191,6 +191,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Class\StaticData.cs" />
+    <Compile Include="Hubs\GroupHub.cs" />
+    <Compile Include="Hubs\PrivateHub.cs" />
     <Compile Include="Migrations\201504131636416_Init.cs" />
     <Compile Include="Migrations\201504131636416_Init.Designer.cs">
       <DependentUpon>201504131636416_Init.cs</DependentUpon>
@@ -312,6 +314,7 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
       <LastGenOutput>DBModel.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="Models\DBModel.edmx.sql" />
     <Content Include="Models\DBModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DBModel.edmx</DependentUpon>

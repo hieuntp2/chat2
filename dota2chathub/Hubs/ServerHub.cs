@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace dota2chathub.Module.PublicChat
 {
     [HubName("ServerHub")]
-    public class ServerHub : Hub
+    public partial class ServerHub : Hub
     {
         ProjectDEntities db = new ProjectDEntities();
         ////////////////////////////////
@@ -25,63 +25,6 @@ namespace dota2chathub.Module.PublicChat
                 message = message
             };
             Clients.Others.acceptGreet(Newtonsoft.Json.JsonConvert.SerializeObject(mess));
-        }
-
-        ////////////////////////////////
-        /////// Private CHAT ROOM //////
-        ////////////////////////////////
-
-#if DEBUG
-        public void sendprivateMessage(string fromuser, string touser, string message)
-        {
-            Clients.Caller.reciverprivatemessage(fromuser, message);
-        }
-#else
-        public void sendprivateMessage(string fromuser, string touser, string message)
-        {
-            try
-            {
-                string connectionId = StaticData.getConnectionID(touser);
-                if(string.IsNullOrWhiteSpace(connectionId))
-                {
-                    Clients.Caller.reciverprivatemessage(touser, "Server: User is offline");
-                    //Clients.Client(StaticData.getConnectionID(fromuser)).reciverprivatemessage(touser, "Server: User is offline");
-                }
-                else
-                {
-                    Clients.Client(connectionId).reciverprivatemessage(fromuser, message);
-                }                
-            }
-            catch
-            {
-                Clients.Caller.reciverprivatemessage("", "User is offline");
-            }
-        }
-#endif
-
-        ////////////////////////////////
-        /////// GROUP CHAT ROOM ///////
-        ////////////////////////////////     
-        public void GroupChatSend(string userid, string groupid, string message)
-        {
-            ChatMessageObject mess = new ChatMessageObject()
-            {
-                userid = userid,
-                message = message
-            };
-            Clients.OthersInGroup(groupid).reciveGroupChatMessage(Newtonsoft.Json.JsonConvert.SerializeObject(mess), groupid);
-        }
-
-        public async Task joingroup(string groupid, string userid)
-        {
-            StaticData.addUsertoGroup(userid, groupid);
-
-            // Lấy giá trị connectionID của userid
-#if DEBUG
-            Groups.Add(StaticData.getConnectionID("151312"), groupid);
-#else
-            Groups.Add(StaticData.getConnectionID(userid), groupid);
-#endif
         }
 
         //////////////////////////////////////
