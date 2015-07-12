@@ -84,14 +84,14 @@
       <PropertyRef Name="userid" />
     </Key>
     <Property Name="userid" Type="nvarchar" MaxLength="128" Nullable="false" />
-    <Property Name="username" Type="nvarchar" MaxLength="255" />
+    <Property Name="username" Type="nvarchar" MaxLength="255" Nullable="false" />
     <Property Name="language" Type="nchar" MaxLength="2" />
     <Property Name="location" Type="nchar" MaxLength="2" />
     <Property Name="steamid" Type="nvarchar" MaxLength="128" />
     <Property Name="linkavatar" Type="nvarchar(max)" />
     <Property Name="displayname" Type="nvarchar" MaxLength="255" />
     <Property Name="Totalscore" Type="int" />
-    <Property Name="birthday" Type="date" />
+    <Property Name="birthday" Type="datetime" />
     <Property Name="dotarank" Type="int" />
   </EntityType>
   <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">

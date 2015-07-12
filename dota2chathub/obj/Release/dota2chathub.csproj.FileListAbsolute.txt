@@ -202,7 +202,6 @@ F:\5. Project\8. chat\trunk\dota2chathub\bin\Microsoft.Owin.Security.Google.xml
 F:\5. Project\8. chat\trunk\dota2chathub\bin\Microsoft.Owin.Security.Twitter.xml
 F:\5. Project\8. chat\trunk\dota2chathub\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 F:\5. Project\8. chat\trunk\dota2chathub\obj\Release\dota2chathub.csproj.App.config
-F:\5. Project\8. chat\trunk\dota2chathub\obj\Release\dota2chathub.csprojResolveAssemblyReference.cache
 F:\5. Project\8. chat\trunk\dota2chathub\obj\Release\dota2chathub.Migrations.Init.resources
 F:\5. Project\8. chat\trunk\dota2chathub\obj\Release\dota2chathub.csproj.GenerateResource.Cache
 F:\5. Project\8. chat\trunk\dota2chathub\obj\Release\dota2chathub.dll
